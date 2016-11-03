@@ -109,7 +109,7 @@ int servoExtend() {
 	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
 	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
 	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0xFA);
-	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x1);
 
 
 	printf("Extending servo 1.3ms - sleeping _ extend_servo\n");

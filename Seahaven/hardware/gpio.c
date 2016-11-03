@@ -139,7 +139,7 @@ int GpioGetValue(char* pin) {
   FILE *fp;
   char value_path[64];
   char value[8];
-  int return_value;
+//  int return_value;
   
   sprintf(value_path, "/sys/class/gpio/gpio%s/value", pin);
 
@@ -150,8 +150,13 @@ int GpioGetValue(char* pin) {
   }
 
   fscanf(fp, "%s", value);
+
+  fclose(fp);
+  return atoi(value); 
   
-  if (strncmp(value, "0", 1)) {
+
+
+  /*if (strncmp(value, "0", 1)) {
     return_value = 0;
   } else if (strncmp(value, "1", 1)) {
     return_value = 1;
@@ -159,7 +164,6 @@ int GpioGetValue(char* pin) {
     return_value = -1;
     printf("ERROR: Unknown value of %s\n", value);
   }
- 
-  fclose(fp);
-  return return_value;
+  printf("return value: %d", return_value);
+  return return_value;*/
 }

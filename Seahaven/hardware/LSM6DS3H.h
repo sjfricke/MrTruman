@@ -8,12 +8,16 @@
 #define GYRO_ADDRESS 0x6A
 
 // define addresses we will be using. The rest can be left at default values 
+#define LSM6DS3H_FUNC_CFG_ACCESS 0x01
 #define LSM6DS3H_FUNC_SRC 0x53 
 #define LSM6DS3H_TAP_CFG 0x58 
 #define LSM6DS3H_MD1_CFG 0x5E // could use MD2 if we wanted to route tilt int to INT2 
 #define LSM6DS3H_CTRL10_C 0x19 
 #define LSM6DS3H_CTRL6_C 0x15 
 #define LSM6DS3H_CTRL2_G 0x11 
+
+// enable embedded functions register
+#define ENABLE_EMB_FUNC_REG 0x80
 
 // enable tilt event detection, two LSB conclude two ops (idk what they are) 
 #define TILT_EV_DETECT 0x23     // 0b0010 0011 

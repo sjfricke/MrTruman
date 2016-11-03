@@ -92,36 +92,59 @@ static void testGyro() {
     // turn on Gyro
     enableGyroTilt();
 
+
     // Gyro INT1 is on GPIO_E (pin 27 on dragonboard)
     //  Set GPIO_E dir as input
     //  Poll to determine when interrupted
-    char* pin = GpioDB410cMapping(27);
-    printf("using pin %s", pin);
-    printf(" with curr direction %d", GpioGetDirection(pin)); 
-    printf(" with GPIO val %d\n", GpioGetValue(pin));
-    GpioEnablePin(pin);
-    GpioSetDirection(pin, INPUT_PIN);
+    //
+    //
+    //
+   LSM6DS3H_Start();
+  I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_ADDRESS);
+   char* pin = GpioDB410cMapping(27);
+   //printf("using pin %s", pin);
+    //printf(" with curr direction %d", GpioGetDirection(pin)); 
+    //printf(" with GPIO val %d\n", GpioGetValue(pin));
+    //GpioEnablePin(pin);
+    //GpioSetDirection(pin, 0);
 
-    printf("Now direction is %d", GpioGetDirection(pin)); 
-    printf(" with GPIO val %d\n", GpioGetValue(pin));
+    //printf("Now direction is %d", GpioGetDirection(pin)); 
+    //printf(" with GPIO val %d\n", GpioGetValue(pin));
     uint8_t data;
+
     // enable tilt event detection, two LSB conclude two ops (idk what they are) 
-    I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
+    //I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
+    //printf("data of interrupt status: %x\n", data);
     int interrupted = 0;
-    while (!interrupted) {
-        if (GpioGetValue(pin) > 0) {
-            interrupted = 1;
+
+
+    while (interrupted < 10) {
+	    data = GpioGetValue(pin);
+        if (data == 0) {
+	    printf("Detected int \n");
+            interrupted++;
+    	    I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
+	    printf("data at interrupt %x\n", data);
+	    usleep(1000000);
         }
     }
-    printf("GPIO val %d\n", GpioGetValue(pin));
+
+    //I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
+    //printf("data of interrupt status: %x\n", data);
+    //printf("GPIO val %d\n", GpioGetValue(pin));
     // clear 
     I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
-    printf("FUNC_SRC reg is 0x%x", data);
-    printf("\nGRYO INT1 DETECTED\n");
+    //printf("FUNC_SRC reg is 0x%x", data);
+    //printf("\nGRYO INT1 DETECTED\n");
+}
+
+static int testCamera() {
+  printf("\nTesting Camera\n");
 }
 
 int main ( int argc, char* argv[] ) {
   printf("test\n");
-  //testGyro();
-  testLEDFanServo();
+  testGyro();
+  //testLEDFanServo();
+  //testCamera();
 }
