@@ -99,10 +99,7 @@ static void testGyro() {
     //
     //
     //
-   LSM6DS3H_Start();
-  I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_ADDRESS);
-   char* pin = GpioDB410cMapping(27);
-   //printf("using pin %s", pin);
+       //printf("using pin %s", pin);
     //printf(" with curr direction %d", GpioGetDirection(pin)); 
     //printf(" with GPIO val %d\n", GpioGetValue(pin));
     //GpioEnablePin(pin);
@@ -110,16 +107,20 @@ static void testGyro() {
 
     //printf("Now direction is %d", GpioGetDirection(pin)); 
     //printf(" with GPIO val %d\n", GpioGetValue(pin));
+
     uint8_t data;
 
+    char* interrupt_pin;
+    
     // enable tilt event detection, two LSB conclude two ops (idk what they are) 
     //I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
     //printf("data of interrupt status: %x\n", data);
     int interrupted = 0;
 
+    interrupt_pin = GpioDB410cMapping(GYRO_INTERRUPT_PIN);
 
     while (interrupted < 10) {
-	    data = GpioGetValue(pin);
+	    data = GpioGetValue(interrupt_pin);
         if (data == 0) {
 	    printf("Detected int \n");
             interrupted++;

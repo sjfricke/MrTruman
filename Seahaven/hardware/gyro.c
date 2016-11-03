@@ -3,10 +3,18 @@
 int enableGyroTilt() {
 
     uint8_t data;
-    // Open bus
-    LSM6DS3H_Start();
+    char* interrupt_pin;
+    
+    // setup gpio pin for interrupt it singal
+    // needs to set GPIO pin 115 (27 front facing) to input
+    interrupt_pin = GpioDB410cMapping(GYRO_INTERRUPT_PIN);
+    GpioEnablePin(interrupt_pin);
+    GpioSetDirection(interrupt_pin, INPUT_PIN);
 
-    I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_ADDRESS); 
+    // Open I2C bus
+    LSM6DS3H_Start();
+    
+    I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_I2C_ADDRESS); 
     
     I2cWriteByte(LSM6DS3H_I2C_BUS, 0x10, 0x20);  
     //I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL10_C, &data);    

@@ -5,7 +5,7 @@
 #include "gpio.h"
 
 #define LSM6DS3H_I2C_BUS 0x00
-#define GYRO_ADDRESS 0x6A
+#define GYRO_I2C_ADDRESS 0x6A
 
 // define addresses we will be using. The rest can be left at default values 
 #define LSM6DS3H_FUNC_CFG_ACCESS 0x01
@@ -36,6 +36,8 @@
 
 // output gyro at 208Hz at full scale selection at 500 dps (needed?) 
 #define GYRO_SPD 0x54           // 0b0101 0100
+
+#define GYRO_INTERRUPT_PIN 27
 
 // Bus startup
 void LSM6DS3H_Start();
