@@ -2,8 +2,8 @@ CC = gcc
 CFLAGS = -Wall -Werror -c
 SPHINX = -I/usr/local/include -I/usr/local/include/sphinxbase -I/usr/local/include/pocketsphinx -L/usr/local/lib -lpocketsphinx -lsphinxbase -lsphinxad
 OBJ_SERVER = server/util.o server/server.o server/websocket.o server/http.o server/sha1.o server/base64.o
-OBJ_AUDIO = audio/voice.o audio/option.o
-OBJ_HW = hardware/i2c.o hardware/PCA9685.o  hardware/clock.o hardware/fan.o hardware/gpio.o hardware/gyro.o  hardware/led.o hardware/LSM6DS3H.o  hardware/servo.o
+OBJ_AUDIO = audio/voice.o audio/command.o
+OBJ_HW = hardware/i2c.o hardware/PCA9685.o  hardware/clock.o hardware/fan.o hardware/gpio.o hardware/gyro.o  hardware/led.o hardware/LSM6DS3H.o  hardware/servo.o hardware/hardware_test.o
 SHARED = -lpthread -lpocketsphinx -lsphinxbase -lsphinxad
 
 main: hardware audio server
