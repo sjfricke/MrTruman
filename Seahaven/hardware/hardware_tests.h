@@ -2,3 +2,5 @@
 #define __HARDWARE_HARDWARE_TESTS_H__
 
 void hardwareTests();
+
+#endif
