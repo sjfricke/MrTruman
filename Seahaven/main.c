@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "hardware/PCA9685.h"
-#include "harware/hardware_tests.h"
+#include "hardware/hardware_tests.h"
 
 extern server_t* g_server;
 
