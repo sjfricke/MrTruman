@@ -1,7 +1,13 @@
 #include "PCA9685.h"
 #include "hardware_tests.h"
+#include "gpio.h"
 
 void hardwareTests() {
+    testGyro();
+    // testLEDFanServo();
+}
+
+void testLEDFanServo() {
     retractServo();
     fanOn(.99);
   
@@ -84,4 +90,24 @@ void hardwareTests() {
     setLED(PCA9685_GREEN_ADDRESS, 0, 0x3FF);
     fanOff();
     servoOff();
+}
+
+void testGyro() {
+    // turn on Gyro
+    enableGyroTilt();
+
+    // Gyro INT1 is on GPIO_E (pin 27 on dragonboard)
+    //  Set GPIO_E dir as input
+    //  Poll to determine when interrupted
+    char* pin = GpioDB410cMapping(27);
+    GpioEnablePin(pin);
+    GpioSetDirection(pin, IN);
+
+    int interrupted = 0;
+    while (!interrupted) {
+        if (GpioGetValue() > 0) {
+            interrupted = 1;
+        }
+    }
+    printf("\nGRYO INT1 DETECTED");
 }

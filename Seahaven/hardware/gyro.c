@@ -31,7 +31,7 @@ int enableGyroTilt() {
     // Not sure which register we should write to clear interrupt 
 
     // terminate bus
-    LSM6DS3H_End();
+    // LSM6DS3H_End();
 
     return 0;
 }
