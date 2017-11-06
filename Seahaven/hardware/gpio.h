@@ -12,6 +12,8 @@
 #define LOW "0"
 #define OUT "out"
 #define IN "in"
+#define INPUT_PIN 0
+#define OUTPUT_PIN 1
 
 #define GPIO_EXPORT_PATH "/sys/class/gpio/export"
 #define GPIO_UNEXPORT_PATH "/sys/class/gpio/unexport"

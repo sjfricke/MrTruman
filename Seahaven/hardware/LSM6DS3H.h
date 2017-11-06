@@ -3,7 +3,7 @@
 
 #include "i2c.h"
 #define LSM6DS3H_I2C_BUS 0x00
-#define GYRO_ADDRESS 0x5A
+#define GYRO_ADDRESS 0x6A
 
 // define addresses we will be using. The rest can be left at default values 
 #define LSM6DS3H_FUNC_SRC 0x53 

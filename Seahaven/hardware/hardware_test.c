@@ -1,13 +1,9 @@
 #include "PCA9685.h"
 #include "hardware_tests.h"
 #include "gpio.h"
+#include "LSM6DS3H.h"
 
-void hardwareTests() {
-    testGyro();
-    // testLEDFanServo();
-}
-
-void testLEDFanServo() {
+static void testLEDFanServo() {
     retractServo();
     fanOn(.99);
   
@@ -92,7 +88,8 @@ void testLEDFanServo() {
     servoOff();
 }
 
-void testGyro() {
+static void testGyro() {
+    
     // turn on Gyro
     enableGyroTilt();
 
@@ -100,14 +97,32 @@ void testGyro() {
     //  Set GPIO_E dir as input
     //  Poll to determine when interrupted
     char* pin = GpioDB410cMapping(27);
+    printf("using pin %s", pin);
+    printf(" with curr direction %d", GpioGetDirection(pin)); 
+    printf(" with GPIO val %d\n", GpioGetValue(pin));
     GpioEnablePin(pin);
-    GpioSetDirection(pin, IN);
+    GpioSetDirection(pin, INPUT_PIN);
 
+    printf("Now direction is %d", GpioGetDirection(pin)); 
+    printf(" with GPIO val %d\n", GpioGetValue(pin));
+    uint8_t data;
+    // enable tilt event detection, two LSB conclude two ops (idk what they are) 
+    I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
     int interrupted = 0;
     while (!interrupted) {
-        if (GpioGetValue() > 0) {
+        if (GpioGetValue(pin) > 0) {
             interrupted = 1;
         }
     }
-    printf("\nGRYO INT1 DETECTED");
+    printf("GPIO val %d\n", GpioGetValue(pin));
+    // clear 
+    I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
+    printf("FUNC_SRC reg is 0x%x", data);
+    printf("\nGRYO INT1 DETECTED\n");
 }
+
+void hardwareTests() {
+    testGyro();
+    if (0) testLEDFanServo();
+}
+
