@@ -1,6 +1,7 @@
 #include "PCA9685.h"
+#include "hardware_tests.h"
 
-void hardware_tests() {
+void hardwareTests() {
     retractServo();
     fanOn(.99);
   

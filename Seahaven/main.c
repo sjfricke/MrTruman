@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "hardware/PCA9685.h"
+#include "harware/hardware_tests.h"
 
 extern server_t* g_server;
 
@@ -68,5 +69,5 @@ void takePhoto( void ) {
 }
 
 int main ( int argc, char* argv[] ) {
-    hardware_tests();
+    hardwareTests();
 }
