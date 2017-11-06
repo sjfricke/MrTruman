@@ -1,0 +1,101 @@
+
+#Path to XFree86 Source
+
+#XF86SRC.401=/root/Projects/TouchPanelUSB/ref/xf86.401/
+
+#XF86SRC.336=/root/Project/TouchPanel/Reference/X336/xc/
+
+#############################################################################
+
+XVERSION = $(shell tcl ../utility/xversion.tcl)
+
+include ../include/configSTR.mak
+
+XMKMF = xmkmf
+
+DRV_NAME = touchkit
+
+MOD_NAME = TouchKit
+
+CMDFILE = cmd.tmp
+
+TARGET = $(DRV_NAME)_drv.o xf86$(MOD_NAME).so
+
+all: rebuild
+	if [ $(XVERSION) -gt 400 ]; then				\
+		if [ -f $(DRV_NAME)_drv.o ]; then			\
+			cp -f $(DRV_NAME)_drv.o bin;			\
+		fi;											\
+	else											\
+		if [ -f xf86$(MOD_NAME).so ]; then			\
+			cp -f xf86$(MOD_NAME).so bin;			\
+		fi;											\
+	fi
+
+rebuild: Makefile 
+	make -s proceed
+
+auto:
+	if [ $(XVERSION) -gt 400 ]; then				\
+		cp -f bin/$(DRV_NAME)_drv.o .;				\
+	else											\
+		cp -f bin/xf86$(MOD_NAME).so .;				\
+	fi
+
+proceed:
+	if [ $(XVERSION) -gt 400 ]; then					\
+		if [ -d ${XF86SRC.401} ]; then					\
+			make $(DRV_NAME)_drv.o;						\
+		else											\
+			echo '###############################################################';\
+			echo '##  XF86 src does NOT exist; use precompiled binary instead  ##';\
+			echo '###############################################################';\
+			cp -f bin/$(DRV_NAME)_drv.o .;				\
+		fi;												\
+	else												\
+		if [ -d ${XF86SRC.336} ]; then					\
+			make xf86$(MOD_NAME).so;					\
+		else											\
+			echo '###############################################################';\
+			echo '##  XF86 src does NOT exist; use precompiled binary instead  ##';\
+			echo '###############################################################';\
+			cp -f bin/xf86$(MOD_NAME).so .;				\
+		fi;												\
+	fi
+
+new: clean all
+
+$(DRV_NAME)_drv.o : xf86$(MOD_NAME).c xf86$(MOD_NAME).h ../include/TouchCmd.h
+	make -f Makefile -n -s | tcl ../utility/replace.tcl "-I./" -I${XF86SRC.401} > ${CMDFILE}
+	tcl ../utility/explicit.tcl ${CMDFILE} 
+	if [ -f $@ ]; then cp $@ bin; fi;
+	rm -f ${CMDFILE}
+
+xf86$(MOD_NAME).so : xf86$(MOD_NAME).c xf86$(MOD_NAME).h ../include/TouchCmd.h
+	echo Hi > xf86Summa.c
+	make -f Makefile -n -s xf86Summa.so | tcl ../utility/replace.tcl "-I./" -I${XF86SRC.336} | tcl ../utility/replace.tcl "Summa" "$(MOD_NAME)" > ${CMDFILE}
+	$(RM) xf86Summa.c
+	tcl ../utility/explicit.tcl ${CMDFILE}
+	if [ -f $@ ]; then cp $@ bin; fi;
+	rm -f ${CMDFILE}
+
+clean:
+	rm -f *.o *.so core *.bak Makefile Imakefile xf86Summa.* *.tmp
+
+Imakefile: Imakefile.401a Imakefile.336
+	@xversion=`tcl ../utility/xversion.tcl`;					\
+	echo "X version: $$xversion";								\
+	if [ "$$xversion" -gt 400 ]; then							\
+		cp -f Imakefile.401a $@;								\
+	else														\
+		cp -f Imakefile.336 $@;									\
+	fi
+
+Makefile:	Imakefile
+	@if which $(XMKMF) > /dev/null 2>&1 ; then		\
+		$(XMKMF);									\
+	else											\
+		echo '$(XMKMF): Command not found (package XFree86-devel required)';\
+		false;										\
+	fi
+

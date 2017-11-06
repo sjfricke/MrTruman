@@ -1,0 +1,40 @@
+
+CC = gcc
+
+INCLUDE = -I. -I../include
+
+C_FLAGS = -g -O -Wall $(INCLUDE)
+
+TARGET = tpaneld
+
+INCLUDED = ../include/device.c ../include/tpanel.h ../include/eeprom.c \
+			../include/correct.c
+
+all: rebuild
+	for t in $(TARGET); do				\
+		if [ -f $$t ];  then			\
+			cp -f $$t bin;				\
+		fi;								\
+	done
+
+rebuild: $(TARGET)
+
+auto:
+	done=false;							\
+	for t in $(TARGET); do				\
+		if [ -f bin/$$t ];  then		\
+			cp -f bin/$$t .;			\
+			done=true;					\
+		fi;								\
+	done;								\
+	$$done
+
+clean:
+	$(RM) $(TARGET)
+
+new: clean all
+
+tpaneld: tpaneld.c $(INCLUDED) Makefile
+	$(CC) -o $@ $< $(C_FLAGS) $(L_FLAGS)
+#	strip $@
+	

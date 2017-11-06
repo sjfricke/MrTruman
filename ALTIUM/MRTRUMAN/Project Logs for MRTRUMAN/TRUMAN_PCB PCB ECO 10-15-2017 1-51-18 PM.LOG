@@ -1,0 +1,76 @@
+Added Component: Designator=J1(57202_40_PIN_HEADER)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Colour"; Value = "Black"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "https://datasheet.ciiva.com/9473/57202-9473862.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "https://datasheet.ciiva.com/9473/57202-9473862.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "https://datasheet.ciiva.com/711/57202-711726.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "https://datasheet.ciiva.com/711/57202-711726.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Connector Type"; Value = "Male Pin"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Gender"; Value = "Male"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Material"; Value = "Bronze,Copper Alloy"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Mating Length"; Value = "0.157inch"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Plating"; Value = "Nickel,Gold,GXT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Resistance"; Value = "25mR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current Rating"; Value = "2A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Depth"; Value = "4mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Gender"; Value = "Male"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Housing Colour"; Value = "Black"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Housing Material"; Value = "Thermoplastic"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Insulation Resistance"; Value = "1GR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Free"; Value = "Lead Free"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Length"; Value = "40mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Amphenol FCI"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part Number"; Value = "57202-G52-20LF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mating Post Length"; Value = "4mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Max Operating Temperature"; Value = "125°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Max Voltage Rating (AC)"; Value = "650V"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Min Operating Temperature"; Value = "-55°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mount"; Value = "Surface Mount"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Contacts"; Value = "40"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Positions"; Value = "40"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Rows"; Value = "2"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Orientation"; Value = "Straight"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package Quantity"; Value = "100"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Bulk"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Pitch"; Value = "2mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Pricing 1"; Value = "1=4.58, 10=4.395, 100=3.6624, 500=3.113, 1000=2.6552 (USD)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Radiation Hardening"; Value = "No"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "REACH SVHC"; Value = "No SVHC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Row Spacing"; Value = "0.079inch"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Stock 1"; Value = "3189"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "Digi-Key"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "609-2632-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination"; Value = "Solder"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage Rating"; Value = "650V"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Width"; Value = "4mm"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=J1-1
+Added Pin To Net: NetName=GND Pin=J1-2
+Added Pin To Net: NetName=DB_SPI0_CLK Pin=J1-8
+Added Pin To Net: NetName=DB_SPI0_MISO Pin=J1-10
+Added Pin To Net: NetName=UART1_TX Pin=J1-11
+Added Pin To Net: NetName=DB_SPI0_CSn Pin=J1-12
+Added Pin To Net: NetName=UART1_RX Pin=J1-13
+Added Pin To Net: NetName=SPI0_MOSI Pin=J1-14
+Added Pin To Net: NetName=DB_I2C0_SCL Pin=J1-15
+Added Pin To Net: NetName=DB_I2C0_SDA Pin=J1-17
+Added Pin To Net: NetName=DB_I2C1_SCL Pin=J1-19
+Added Pin To Net: NetName=DB_I2C1_SDA Pin=J1-21
+Added Pin To Net: NetName=LineIn_Detect Pin=J1-23
+Added Pin To Net: NetName=DB_PWM_CNTRL Pin=J1-24
+Added Pin To Net: NetName=GPIO_C Pin=J1-25
+Added Pin To Net: NetName=GPIO_D Pin=J1-26
+Added Pin To Net: NetName=DB_GYRO_INT Pin=J1-27
+Added Pin To Net: NetName=DB_LED_CONTROL Pin=J1-28
+Added Pin To Net: NetName=GPIO_G Pin=J1-29
+Added Pin To Net: NetName=GPIO_H Pin=J1-30
+Added Pin To Net: NetName=DB_CAM_ENABLE Pin=J1-31
+Added Pin To Net: NetName=GPIO_J Pin=J1-32
+Added Pin To Net: NetName=DB_LED_EN Pin=J1-33
+Added Pin To Net: NetName=GPIO_L Pin=J1-34
+Added Pin To Net: NetName=1V8_PREFUSE Pin=J1-35
+Added Pin To Net: NetName=12V_BATTIN Pin=J1-36
+Added Pin To Net: NetName=SYS_5P0 Pin=J1-37
+Added Pin To Net: NetName=12V_BATTIN Pin=J1-38
+Added Pin To Net: NetName=GND Pin=J1-39
+Added Pin To Net: NetName=GND Pin=J1-40
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component J1 DragonBoard_LOW_SPEED

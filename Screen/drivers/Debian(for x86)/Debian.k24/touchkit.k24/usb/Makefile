@@ -1,0 +1,133 @@
+
+include ../include/configINT.mak
+
+include ../include/configSTR.mak
+
+####################################################################
+
+DAEMON = usbpnpd
+
+MODULE = tkusb
+
+CMDFILE = /tmp/mkmodule
+
+FRIEND = mousedev
+
+USB_PRESENT = $(shell test -d /proc/bus/usb; expr 1 - $$?)
+
+GLOBAL = ../include/configINT.tcl ../include/configSTR.tcl
+
+CC = gcc
+
+INCLUDE = -I ../include
+
+C_FLAGS = -Wall -O -pipe $(INCLUDE)
+
+K_VERSION = $(shell uname -r)
+
+K_INC = /usr/src/kernel-headers-$(shell uname -r)/include
+
+K_FLAGS = -I../include -D__KERNEL__ -DMODULE -O -Wall -I$(K_INC) -c 
+
+LINUX_PATH = $(shell ls -1d /usr/src/linux* 2> /dev/null | head -n 1)
+
+ifneq ($(LINUX_PATH),)
+	K_PRESENT = $(shell test -f $(LINUX_PATH)/include/linux/modversions.h;\
+					 expr 1 - $$?)
+ifneq ($(LINUX_PATH),/usr/src/linux)
+	EXEC = $(shell ln -s $(LINUX_PATH) /usr/src/linux; echo link)
+endif
+else
+	K_PRESENT = $(shell rpm -qa | grep kernel | grep source > /dev/null ;\
+					 expr 1 - $$?)
+endif
+
+ifeq ($(EXEC),)
+endif
+    
+###################################################################
+
+all: rebuild
+	@if [ -f $(DAEMON) ]; then		\
+		cp -f $(DAEMON) bin;		\
+	fi
+	@if [ -f $(MODULE).o ] 			\
+		&& [ -f $(CMDFILE) ] 		\
+		&& diff $(CMDFILE) mkmodule.cmd > /dev/null ; then	\
+		cp -f $(MODULE).o bin/$(K_VERSION);					\
+	fi
+
+auto: auto_module
+	cp -f bin/$(DAEMON) .
+	
+auto_module:
+	@if [ -f bin/$(K_VERSION) ]; then										\
+		cp -f bin/$(K_VERSION) $(MODULE).o;									\
+	else																	\
+		echo '+---------------------------------------+';					\
+		echo '| USB module: building process skipped  |';					\
+		echo '+---------------------------------------+';					\
+	fi
+
+rebuild:
+	make -s _rebuild
+	
+_rebuild:
+	@if [ $(USB_PRESENT) -eq 1 ]; then				\
+		echo '(I) USB subsystem detected';			\
+		make do_rebuild;							\
+	else											\
+		echo '(I) USB subsystem NOT detected; skip building';\
+	fi
+
+do_rebuild: $(DAEMON) build_module
+
+$(DAEMON): $(DAEMON).c Makefile $(GLOBAL)
+	echo $(CC) -o $@ $(DAEMON).c $(C_FLAGS) $(L_FLAGS)
+	$(CC) -o $@ $(DAEMON).c $(C_FLAGS) $(L_FLAGS)
+	strip $@
+
+build_module:
+	@if [ 1 -eq 1 ]; then			\
+		make do_build_module;					\
+	else										\
+		echo '(!) ';							\
+		echo '(!) Failed to build kernel module; package "kernel-source" not installed';\
+		echo '(!) ';							\
+		false;									\
+	fi;											\
+
+clean:
+	rm -f $(DAEMON) $(MODULE).o $(CMDFILE) core *.bak
+
+new: clean all
+
+do_build_module: 
+	$(CC) $(K_FLAGS) tkusb.c
+#%.o: %.h %_dbg.h $(CMDFILE) $(GLOBAL)
+#	tcl ../utility/mkmodule.tcl $(CMDFILE) $(FRIEND) $@ $(INCLUDE)
+#
+#$(CMDFILE): mkmodule.cmd
+#	cp -f $< $@
+	
+#get_setting:
+#	make -s _get_setting
+	
+#_get_setting:
+#	echo '(I) Detect kernel settings...'
+#	lnxpath=`ls -1d /usr/src/linux* | head -n 1`;					\
+#	pushd . > /dev/null;											#\
+#	echo '(*) "cd $(LINUX_PATH)"';									#\
+#	cd $$lnxpath;													#\
+#	echo '(*) "make oldconfig"';									#\
+#	make -s oldconfig > /dev/null 2> /dev/null;						#\
+#	echo '(*) "make dep"';											#\
+#	make -s dep > /dev/null 2> /dev/null;							#\
+#	echo '(*) "make modules" ';										#\
+#	make -n modules 2> /dev/null | grep $(FRIEND).c > $(CMDFILE);
+#	echo '(I) Kernel settings saved ['$(CMDFILE)']'
+
+# tab size: 4
+
+
+

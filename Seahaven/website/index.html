@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mr Trueman</title>    
+  </head>
+  <body>
+    <h1> Press a key to send back to Dragonboard </h1>
+    <hr>
+    <button onclick="simulateData('1','255,0,0')">Red Lights</button>
+    <button onclick="simulateData('1','0,255,0')">Green Lights</button>
+    <button onclick="simulateData('1','0,0,255')">Blue Lights</button>
+    <br>
+    <button onclick="simulateLightAnimation()">Simulate Light Animation</button>
+    <br><br>
+    <button onclick="simulateData('5', '0')">Take Photo</button>
+    <br><br>
+    <span>
+      Speaker Status:  <text id="speakerStatus"></text>
+    </span>
+    <br><br>
+    <span>
+      Gyroscope rotation level:  <text id="rotationLevel"></text>
+    </span>
+  </body>
+
+  <script src="javascript/demo.js"></script>
+</html>

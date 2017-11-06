@@ -1,0 +1,84 @@
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C3
+Removed Member From Class: ClassName=05 SERVO_FAN Member=C3
+Removed Member From Class: ClassName=06 Gyro Member=C4
+Removed Member From Class: ClassName=06 Gyro Member=C5
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C9
+Removed Member From Class: ClassName=05 SERVO_FAN Member=C9
+Removed Member From Class: ClassName=07 Audio Member=C9
+Removed Member From Class: ClassName=02 LEDs Member=C39
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C39
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C40
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C44
+Removed Member From Class: ClassName=02 LEDs Member=C45
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C45
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C46
+Removed Member From Class: ClassName=03 POWER Member=D8
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R26
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP2
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP4
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP5
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP6
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP8
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP9
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP10
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP11
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP12
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP13
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP14
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP15
+Removed Member From Class: ClassName=03 POWER Member=TP18
+Removed Member From Class: ClassName=03 POWER Member=TP20
+Removed Member From Class: ClassName=03 POWER Member=TP25
+Removed Member From Class: ClassName=03 POWER Member=TP29
+Removed Member From Class: ClassName=03 POWER Member=TP43
+Removed Member From Class: ClassName=03 POWER Member=TP47
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP71
+Removed Member From Class: ClassName=05 SERVO_FAN Member=TP73
+Removed Member From Class: ClassName=02 LEDs Member=U5
+Removed Member From Class: ClassName=02 LEDs Member=U8
+Removed Member From Class: ClassName=06 Gyro Member=U8
+Removed Member From Class: ClassName=02 LEDs Member=U12
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=U12
+Removed Member From Class: ClassName=05 SERVO_FAN Member=U13
+Added Member To Class: ClassName=02 LEDs Member=Component C2 CAP_0805_10u_16V
+Added Member To Class: ClassName=02 LEDs Member=Component C6 CAP_0805_10u_16V
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C31 CAP_0805_.1u_250V
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C32 CAP_0805_.1u_250V
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C33 CAP_0805_10u_16V
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C34 CAP ALUM 220UF 20% 25V SMD
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C35 CAP_0805_.1u_250V
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C36 CAP_0805_.1u_250V
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C37 CAP_0805_10u_16V
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component C38 CAP_0805_10u_16V
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component C41 CAP_0805_10u_16V
+Added Member To Class: ClassName=06 Gyro Member=Component C42 CAP_0805_.1u_250V
+Added Member To Class: ClassName=06 Gyro Member=Component C43 CAP_0805_.1u_250V
+Added Member To Class: ClassName=07 Audio Member=Component C47 CAP_0805_.1u_250V
+Added Member To Class: ClassName=03 POWER Member=Component D5 LED_RED_636nm
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R24 RES_0805_2K
+Added Member To Class: ClassName=03 POWER Member=Component TP2 TP
+Added Member To Class: ClassName=03 POWER Member=Component TP3 TP
+Added Member To Class: ClassName=03 POWER Member=Component TP5 TP
+Added Member To Class: ClassName=03 POWER Member=Component TP10 TP
+Added Member To Class: ClassName=03 POWER Member=Component TP13 TP
+Added Member To Class: ClassName=03 POWER Member=Component TP14 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP56 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP58 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP59 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP60 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP62 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP63 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP64 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP65 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP66 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP67 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP68 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP69 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP70 TP
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component TP72 TP
+Added Member To Class: ClassName=02 LEDs Member=Component U1 PCA9685PW
+Added Member To Class: ClassName=02 LEDs Member=Component U2 PCA9685PW
+Added Member To Class: ClassName=02 LEDs Member=Component U3 PCA9685PW
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component U9 TXS0108
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component U10 PCA9685PW
+Added Member To Class: ClassName=06 Gyro Member=Component U11 LSM6DS3HTR

@@ -1,0 +1,9 @@
+CFLAGS = -Wall -ggdb2 -I ../include
+COMMON_HEADER = ../include/eeprom.c
+LOCAL_LIBRARIES = $(XLIB)
+all:: 4pcal
+NormalProgramTarget(4pcal,4pcal.o,$(COMMON_HEADER),$(LOCAL_LIBRARIES),)
+all:: 25pcal
+NormalProgramTarget(25pcal,25pcal.o,$(COMMON_HEADER),$(LOCAL_LIBRARIES),)
+all:: drawtest
+NormalProgramTarget(drawtest,drawtest.o,$(COMMON_HEADER),$(LOCAL_LIBRARIES),)

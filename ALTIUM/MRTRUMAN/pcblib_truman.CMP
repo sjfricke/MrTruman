@@ -1,0 +1,14 @@
+Component   : TO-PMOD-7
+PCB Library : pcblib_truman.PcbLib
+Date        : 10/10/2017
+Time        : 2:01:07 PM
+
+
+
+Dimension : 11.684 x 16.104 mm
+
+ Layer(s)              Pads(s)  Tracks(s)  Fill(s)  Arc(s)  Text(s)
+--------------------------------------------------------------------
+ Top Overlay                 0          9        0       0        1
+--------------------------------------------------------------------
+ Total                       0          9        0       0        1

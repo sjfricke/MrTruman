@@ -1,0 +1,131 @@
+Removed Pin From Net: NetName=DRBD_SPKR- Pin=SPKR6-2
+Removed Pin From Net: NetName=DRBD_SPKR+ Pin=SPKR7-1
+Removed Pin From Net: NetName=DRBD_SPKR+ Pin=TP82-1
+Removed Pin From Net: NetName=DRBD_SPKR- Pin=TP84-1
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C23
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=C24
+Removed Member From Class: ClassName=05 SERVO_FAN Member=C33
+Removed Member From Class: ClassName=07 Audio Member=C41
+Removed Member From Class: ClassName=02 LEDs Member=R22
+Removed Member From Class: ClassName=02 LEDs Member=R26
+Removed Member From Class: ClassName=02 LEDs Member=R30
+Removed Member From Class: ClassName=02 LEDs Member=R31
+Removed Member From Class: ClassName=02 LEDs Member=R32
+Removed Member From Class: ClassName=02 LEDs Member=R34
+Removed Member From Class: ClassName=02 LEDs Member=R35
+Removed Member From Class: ClassName=02 LEDs Member=R36
+Removed Member From Class: ClassName=02 LEDs Member=R37
+Removed Member From Class: ClassName=02 LEDs Member=R39
+Removed Member From Class: ClassName=02 LEDs Member=R40
+Removed Member From Class: ClassName=02 LEDs Member=R41
+Removed Member From Class: ClassName=02 LEDs Member=R43
+Removed Member From Class: ClassName=02 LEDs Member=R58
+Removed Member From Class: ClassName=03 POWER Member=R58
+Removed Member From Class: ClassName=02 LEDs Member=R69
+Removed Member From Class: ClassName=03 POWER Member=R69
+Removed Member From Class: ClassName=02 LEDs Member=R71
+Removed Member From Class: ClassName=03 POWER Member=R71
+Removed Member From Class: ClassName=02 LEDs Member=R72
+Removed Member From Class: ClassName=03 POWER Member=R72
+Removed Member From Class: ClassName=02 LEDs Member=R76
+Removed Member From Class: ClassName=03 POWER Member=R76
+Removed Member From Class: ClassName=02 LEDs Member=R83
+Removed Member From Class: ClassName=03 POWER Member=R83
+Removed Member From Class: ClassName=03 POWER Member=R87
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=R89
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=R90
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=R91
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=R92
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=R93
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=R94
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=R95
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R96
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R97
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R98
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R99
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R100
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R101
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R102
+Removed Member From Class: ClassName=05 SERVO_FAN Member=R104
+Removed Member From Class: ClassName=07 Audio Member=R105
+Removed Member From Class: ClassName=07 Audio Member=R106
+Removed Member From Class: ClassName=07 Audio Member=R107
+Removed Member From Class: ClassName=02 LEDs Member=R108
+Removed Member From Class: ClassName=03 POWER Member=R108
+Removed Member From Class: ClassName=07 Audio Member=R108
+Removed Member From Class: ClassName=07 Audio Member=R109
+Removed Member From Class: ClassName=07 Audio Member=R110
+Removed Member From Class: ClassName=07 Audio Member=R111
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP73
+Removed Member From Class: ClassName=04 DragonBoard_INTF Member=TP74
+Removed Member From Class: ClassName=07 Audio Member=TP82
+Removed Member From Class: ClassName=07 Audio Member=TP88
+Removed Member From Class: ClassName=07 Audio Member=TP89
+Removed Member From Class: ClassName=07 Audio Member=TP93
+Removed Member From Class: ClassName=08 Camera Member=TP93
+Added Pin To Net: NetName=NetSPKR6_2 Pin=SPKR6-2
+Added Pin To Net: NetName=NetSPKR6_2 Pin=SPKR7-1
+Added Net: Name=NetSPKR6_2
+Added Member To Class: ClassName=02 LEDs Member=Component C5 CAP_0805_10u_16V
+Added Member To Class: ClassName=02 LEDs Member=Component C6 CAP_0805_.1u_250V
+Added Member To Class: ClassName=03 POWER Member=Component C9 CAP ALUM 220UF 20% 25V SMD
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C27 CAP_0805_.1u_250V
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component C28 CAP_0805_.1u_250V
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component C37 CAP_0805_.1u_250V
+Added Member To Class: ClassName=07 Audio Member=Component C43 CAP_0805_10u_16V
+Added Member To Class: ClassName=02 LEDs Member=Component R2 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R3 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R4 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R5 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R6 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R7 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R8 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R9 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R10 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R11 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R12 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R13 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R14 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R15 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R16 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R17 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R18 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R19 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R20 RES_0805_10K
+Added Member To Class: ClassName=02 LEDs Member=Component R21 RES_0805_10K
+Added Member To Class: ClassName=03 POWER Member=Component R24 RES_1.43M
+Added Member To Class: ClassName=03 POWER Member=Component R25 RES_0805_2K
+Added Member To Class: ClassName=03 POWER Member=Component R27 RES_63.4K
+Added Member To Class: ClassName=03 POWER Member=Component R28 RES_0805_226K
+Added Member To Class: ClassName=03 POWER Member=Component R29 RES_549K
+Added Member To Class: ClassName=03 POWER Member=Component R33 RES_5.23K
+Added Member To Class: ClassName=03 POWER Member=Component R38 RES_0805_11.8K
+Added Member To Class: ClassName=03 POWER Member=Component R42 RES_0805_1.74M
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component R44 RES_0805_JMP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component R45 RES_0805_JMP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component R46 RES_0805_10K
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component R47 RES_0805_10K
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component R48 RES_0805_JMP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component R49 RES_0805_JMP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component R50 RES_0805_10K
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R51 RES_0805_10K
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R52 RES_0805_10K
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R53 RES_0805_10K
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R54 RES_0805_10K
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R55 RES_0805_10K
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R56 RES_0805_10K
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R57 RES_0805_10K
+Added Member To Class: ClassName=05 SERVO_FAN Member=Component R59 RES_0805_10K
+Added Member To Class: ClassName=07 Audio Member=Component R60 RES_0805_10K
+Added Member To Class: ClassName=07 Audio Member=Component R61 RES_0805_10K
+Added Member To Class: ClassName=07 Audio Member=Component R62 RES_0805_JMP
+Added Member To Class: ClassName=07 Audio Member=Component R63 RES_0805_499
+Added Member To Class: ClassName=07 Audio Member=Component R64 RES_0805_1.2K
+Added Member To Class: ClassName=07 Audio Member=Component R65 RES_0805_JMP
+Added Member To Class: ClassName=07 Audio Member=Component R66 RES_0805_10K
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP67 TP
+Added Member To Class: ClassName=04 DragonBoard_INTF Member=Component TP68 TP
+Added Member To Class: ClassName=07 Audio Member=Component TP77 TP
+Added Member To Class: ClassName=07 Audio Member=Component TP85 TP
+Added Member To Class: ClassName=07 Audio Member=Component TP86 TP
+Added Member To Class: ClassName=08 Camera Member=Component TP87 TP

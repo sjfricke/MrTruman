@@ -1,0 +1,326 @@
+#!/bin/sh
+# the next line restarts using wish\
+	exec wish "$0" "$@" 
+
+set RCLICK_TIMEOUT	30000
+set AFTER_CMD		""
+set BUTTON_COLOR	blue
+
+set OutputChannel /dev/pts/10
+set OutputChannel /dev/null
+
+###########################################################################
+
+proc {Output} {msg} {
+	global OutputChannel
+	catch {exec echo $msg > $OutputChannel}
+}
+
+proc PackLRButton {widget} {
+	pack $widget -side left -expand 1 -fill both
+}	
+
+proc NewLRButton {widget} {
+	button $widget -padx 0 -pady 0
+}
+
+proc CreateImage {name} {
+	if {[string length $name]} {
+		if { ![catch {image create photo -file $name} img] } {
+			return $img
+		}
+	}
+	return 0
+}
+
+proc SetFont {orgFont} {
+	set extra ""
+	if { [scan $orgFont "%s -%d %s" name size extra] < 2 } {
+		return $orgFont
+	}
+	set sWidth [winfo screenwidth .]
+	set size [expr int($sWidth*$size/1024)]
+	
+	if { $size < 10 } {
+		set extra ""
+	}
+	if { $size < 8 } {
+		set size 8
+	}
+	return "$name -$size $extra"
+}
+
+proc SetButton {bname imgsrc txtsrc anchor} {
+	global wWidth wHeight
+	set rval [CreateImage $imgsrc]
+	if {[string compare $rval 0]} {
+		if { [image width $rval] > $wWidth } {
+			set wWidth [image width $rval]
+		} 
+		if { [image height $rval] > $wHeight } {
+			set wHeight [image height $rval]
+		}
+		$bname configure -image $rval
+	} else {
+		set font [$bname cget -font]
+		set font [SetFont $font]
+		$bname configure -text $txtsrc -anchor $anchor -font $font
+	}
+}
+
+proc EnterRightMode {} {
+	pack forget .frMain.frL .frMain.frR
+	pack .frMain.frR -expand 1 -fill both
+}
+
+proc EnterLeftMode {} {
+	pack forget .frMain.frL .frMain.frR
+	pack .frMain.frL -expand 1 -fill both
+}
+
+proc ReportModeToTouchcfg {mode} {
+	global TOUCHCFG_CMD
+	if { [file exists $TOUCHCFG_CMD] 
+		&& ! [string compare [file type $TOUCHCFG_CMD] "fifo"] } {
+		if { ![catch {open $TOUCHCFG_CMD r+} file] } {
+			puts $file $mode
+			close $file
+		} else {
+			Output $file
+		}
+	}
+}
+
+proc Pressed {which} {
+	global AP2D_SETMODE AP2D_RCLICK ETTOUCH_CMDIN
+	switch $which {
+	L {
+			global PRJNAME
+			global ${PRJNAME}_CMDIN
+			global RCLICK_TIMEOUT AFTER_CMD
+			catch {exec echo \[$AP2D_RCLICK\][pid] > [subst $${PRJNAME}_CMDIN]}
+			EnterRightMode
+			set AFTER_CMD [
+				after $RCLICK_TIMEOUT {
+					global AP2D_RCLICKCANCEL
+					catch {exec echo \[$AP2D_RCLICKCANCEL\][pid] > [subst $${PRJNAME}_CMDIN]}
+					set AFTER_CMD ""
+					EnterLeftMode
+				}
+			]
+		}
+	MODE {
+		global PRJNAME
+		global ${PRJNAME}_CMDIN
+		set idx [Text2ModeIdx [.frMain.btMode cget -text]]
+		set idx [GetNextIdx $idx]
+		catch {exec echo \[$AP2D_SETMODE\]$idx > [subst $${PRJNAME}_CMDIN]}
+		ReportModeToTouchcfg [ModeIdx2Text $idx]
+		.frMain.btMode configure -text [ModeIdx2Text $idx] 
+	}
+	}
+}
+
+proc RecvCmd {} {
+	if { [gets stdin line] < 0 } {
+		exit
+	}
+	global RCLICK_LOCK
+	
+	Output "RecvCmd <$line>"
+	
+	switch -regexp $line {
+		OK {
+			global PRJNAME
+			global AFTER_CMD
+			global ${PRJNAME}_CMDIN
+			catch {after cancel $AFTER_CMD}
+			set AFTER_CMD ""
+			EnterLeftMode
+		}
+		ON {
+			wm deiconify .
+			catch {exec echo [pid] 1 > $RCLICK_LOCK}
+		}
+		OFF {
+			wm withdraw .
+			catch {exec echo [pid] 0 > $RCLICK_LOCK}
+		}
+		BEEP {
+			bell	
+			Output "Beep Request"
+			}
+		. {
+			if { [scan $line "%d" num] } {
+				.frMain.btMode configure -text [ModeIdx2Text $num] 
+			 }
+		}
+	}
+}		
+
+proc CheckParent {ppid} {
+	global argv0 argv
+	if { [catch {exec ps j} val] } {
+		Output "exec ps: $val"
+	}
+	set pid [pid]
+	set group [split $val "\n"]
+	set sample [string toupper [lindex $group 0]]
+	set pid [pid]
+	set pididx [lsearch $sample PID]
+	set ppididx [lsearch $sample PPID]
+	foreach line $group {
+		if { [lindex $line $pididx] == $pid } {
+			if { $ppid == [lindex $line $ppididx] } {
+				return 0	
+			}
+		}
+	}
+	return 1
+}
+
+proc FixText {text} {
+	set head [string index $text 0]
+	set tail [string range $text 1 end]
+	return "[string toupper $head][string tolower $tail]"
+}
+
+proc _ModeListInit {} {
+	global _ModeList
+	set _ModeList ""
+	for {set i 0} {1} {incr i} {
+		global ModeButton_Mode$i
+		if { [info exists ModeButton_Mode$i] } {
+			lappend _ModeList [subst \$ModeButton_Mode$i]
+		} else {
+			break
+		}
+	}
+}
+
+proc ModeListInit {} {
+	global _ModeListInited
+	if { ![info exists _ModeListInited] } {
+		_ModeListInit
+		set _ModeListInited 1
+	}	
+}
+
+proc ModeIdx2Text {idx} {
+	global _ModeList
+	ModeListInit
+	return [lindex $_ModeList $idx]
+}	
+
+proc Text2ModeIdx {text} {
+	global _ModeList
+	ModeListInit
+	return [lsearch $_ModeList $text]
+}
+
+proc GetNextIdx {idx} {
+	global _ModeList
+	ModeListInit
+	set cnt [llength $_ModeList]
+	incr idx
+	if { $idx >= $cnt } {
+		set idx 0
+	}
+	return $idx
+}
+
+
+#################################################################
+set lmsg L
+set mmsg M
+set rmsg R
+
+set lanchor w
+set manchor center
+set ranchor e
+
+if { [catch {winfo screenheight .}] } {
+	exit
+}
+
+set wHeight [expr int([winfo screenheight .] * 0.08)]
+set wWidth $wHeight
+
+set Pad [expr int($wHeight * 0.625)]
+
+#################################################################
+
+if { [CheckParent [lindex $argv 2]] } {
+	Output "Not called by $TPANELD_NAME"
+	exit
+}
+
+set Status [lindex $argv 3]
+catch {exec echo [pid] $Status > $RCLICK_LOCK}
+catch {exec chmod 666 $RCLICK_LOCK}
+
+fileevent stdin readable RecvCmd
+
+# We don't need SetButton(*.gif, alterText, anchor) now
+#
+# SetButton .frR.btL [lindex $argv 0]	$lmsg $lanchor 
+
+frame .frMain -relief groove -borderwidth 2
+pack .frMain -expand 1 -fill both
+
+button .frMain.btMode -text [ModeIdx2Text [lindex $argv 4]] \
+	-padx 0 -pady 0 -command {Pressed MODE}
+.frMain.btMode configure -font [SetFont [.frMain.btMode cget -font]]
+pack .frMain.btMode -side bottom -expand 1 -fill both
+
+
+foreach fr {L R} {
+	set frame .frMain.fr$fr
+	frame $frame
+	foreach bt {L R} {
+		NewLRButton $frame.bt$bt
+		PackLRButton $frame.bt$bt
+	}
+}
+
+.frMain.frL.btL configure -command {Pressed L} \
+	-background $BUTTON_COLOR -activebackground $BUTTON_COLOR
+.frMain.frL.btR configure -command {Pressed L}
+
+.frMain.frR.btR configure \
+	-background $BUTTON_COLOR -activebackground $BUTTON_COLOR
+.frMain.frR.btL configure
+
+
+set joblist ""
+bind . <Visibility> {
+	catch {exec ps -A} psx
+	if { [string first $_4PCAL_NAME $psx] >= 0 } {
+	} else { if { [string first $DRAW_NAME $psx] >= 0 } {
+	} else { if { [string first $_25PCAL_NAME $psx] >= 0 } {
+	} else {
+		lappend joblist [
+			after 200 {
+				if { [llength $joblist] } {
+					raise . 
+					set joblist ""
+				}
+			}
+		]
+		update
+	} } }
+}
+EnterLeftMode
+
+. configure -cursor left_ptr
+wm geometry . [expr $wWidth+4]x[expr $wHeight+4]-$Pad-$Pad
+wm withdraw .
+wm overrideredirect . 1
+wm deiconify .
+
+if { ! $Status } {
+	after 200 {wm withdraw .}
+}
+
+
+
