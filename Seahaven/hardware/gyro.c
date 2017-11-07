@@ -1,5 +1,5 @@
 #include "LSM6DS3H.h"
- 
+
 int enableGyroTilt() {
 
     uint8_t data;
@@ -26,16 +26,16 @@ int enableGyroTilt() {
       printf("MD1_CFG read not correct, was 0x%x should be 0x%x", data, TILT_ON_INT1);
     
     // enable (z,y,x) on gryo and embedded funcs (tilt) 
-    I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL10_C, ENABLE_EMB_FUNC);  
+    I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL10_C, GYRO_ENABLE_EMB_FUNC);  
     I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL10_C, &data); 
-    if (data != ENABLE_EMB_FUNC)
-      printf("CTRL10_C read not correct, was 0x%x should be 0x%x", data, ENABLE_EMB_FUNC);
+    if (data != GYRO_ENABLE_EMB_FUNC)
+      printf("CTRL10_C read not correct, was 0x%x should be 0x%x", data, GYRO_ENABLE_EMB_FUNC);
     
     // Edge triggered, turn off high perf mode for accel 
-    I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL6_C, EDGE_TRIG);  
+    I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL6_C, GYRO_EDGE_TRIG);  
     I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL6_C, &data); 
-    if (data != EDGE_TRIG)
-      printf("CTRL6_C read not correct, was 0x%x should be 0x%x", data, EDGE_TRIG);
+    if (data != GYRO_EDGE_TRIG)
+      printf("CTRL6_C read not correct, was 0x%x should be 0x%x", data, GYRO_EDGE_TRIG);
     // output gyro at 208Hz at full scale selection at 500 dps (needed?) 
     //I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL2_G, GYRO_SPD); 
     

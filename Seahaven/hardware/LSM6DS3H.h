@@ -2,6 +2,8 @@
 #define __HARDWARE_LSM6DS3H_H__
 
 #include "i2c.h"
+#include "gpio.h"
+
 #define LSM6DS3H_I2C_BUS 0x00
 #define GYRO_ADDRESS 0x6A
 
@@ -23,10 +25,10 @@
 #define TILT_ON_INT1 0x02       // 0b0000 0010
 
 // enable (z,y,x) on gryo and embedded funcs (tilt) 
-#define ENABLE_EMB_FUNC 0x3C    // 0b0011 1100
+#define GYRO_ENABLE_EMB_FUNC 0x3C    // 0b0011 1100
 
 // Edge triggered, turn off high perf mode for accel 
-#define EDGE_TRIG 0x90          // 0b1001 0000
+#define GYRO_EDGE_TRIG 0x90          // 0b1001 0000
 
 // output gyro at 208Hz at full scale selection at 500 dps (needed?) 
 #define GYRO_SPD 0x54           // 0b0101 0100

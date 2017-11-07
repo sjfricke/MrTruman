@@ -1,7 +1,4 @@
-#include "PCA9685.h"
-#include "hardware_tests.h"
-#include "gpio.h"
-#include "LSM6DS3H.h"
+#include "main.h"
 
 static void testLEDFanServo() {
     retractServo();
@@ -121,8 +118,8 @@ static void testGyro() {
     printf("\nGRYO INT1 DETECTED\n");
 }
 
-void hardwareTests() {
-    testGyro();
-    if (0) testLEDFanServo();
+int main ( int argc, char* argv[] ) {
+  printf("test\n");
+  //testGyro();
+  testLEDFanServo();
 }
-

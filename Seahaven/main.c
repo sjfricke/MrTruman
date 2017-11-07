@@ -1,24 +1,11 @@
-#include "server/server.h" 
-#include "audio/voice.h"
-#include "hardware/gpio.h"
-#include "hardware/i2c.h"
-#include "hardware/clock.h"
-#include <stdio.h>
-#include <unistd.h>
-#include "hardware/PCA9685.h"
-#include "hardware/hardware_tests.h"
+#include "main.h"
 
 extern server_t* g_server;
 
 static int status;
 static int busy;
 
-// Foward Declartion
-void animationStatus( char* status);
-void updateLED( char* rgb );
-void takePhoto( void );
-
-void webData( int type, char* value ) {
+void webData( int type, char* value) {
   //  printf("Type: %d\nValue: %s\n\n", type, value);
   busy = 0;
   printf("busy = %d\n", busy);
@@ -69,5 +56,15 @@ void takePhoto( void ) {
 }
 
 int main ( int argc, char* argv[] ) {
-    hardwareTests();
+
+  g_server = (server_t*)malloc(sizeof(server_t));
+  g_server->port = 6419;
+  g_server->onData = webData;
+
+  startServer();
+
+  while(1) {}
+
+  // hardwareTests();
+  printf("main\n");
 }
