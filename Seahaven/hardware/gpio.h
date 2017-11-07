@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define HIGH "1"
-#define LOW "0"
+#define HIGH 1
+#define LOW 0
 #define OUT "out"
 #define IN "in"
 #define INPUT_PIN 0

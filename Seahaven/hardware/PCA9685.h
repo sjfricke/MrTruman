@@ -2,6 +2,7 @@
 #define __HARDWARE_PCA9685_H__
 
 #include "i2c.h"
+#include "gpio.h"
 #include <assert.h>
 
 // Devices
@@ -17,15 +18,14 @@
 #define PCA9685_PRESCALE_REG 0xFE
 #define PCA9685_HELD_RESET (1 << 7)
 #define PCA9685_BASE 0x6
-#define PCA9685_SERVO_ON_L 0x6
-#define PCA9685_SERVO_ON_H 0x7
-#define PCA9685_SERVO_OFF_L 0x8
-#define PCA9685_SERVO_OFF_H 0x9
+
 #define PCA9685_FAN_ON_L 0xA
 #define PCA9685_FAN_ON_H 0xB
 #define PCA9685_FAN_OFF_L 0xC
 #define PCA9685_FAN_OFF_H 0xD
+
 #define PCA9685_BIT_RESOLUTION 4096
+
 #define PCA9685_ALL_LED_ON_L 0xFA 
 #define PCA9685_ALL_LED_ON_H 0xFB 
 #define PCA9685_ALL_LED_OFF_L 0xFC 
@@ -50,17 +50,43 @@
 void PCA9685_Start();
 void PCA9685_End();
 
-// Servo commands
-int extendServo();
-int retractServo();
-int servoOff();
+////////////////////
+// Servo commands //
+////////////////////
 
-// Fan commands
+#define SERVO_GPIO_PIN 24
+
+#define SERVO_ON_L 0x6
+#define SERVO_ON_H 0x7
+#define SERVO_OFF_L 0x8
+#define SERVO_OFF_H 0x9
+
+// setups GPIO and PCA9685 for servo to be ready
+// returns 0 on success
+int servoStart();
+
+// sets GPIO and PCA9685 for servo to turn off
+// Assumes that servoStart() was called before at least once
+// returns 0 on success
+int servoStop();
+
+// Rotates servo to extend speakers out of house
+// returns 0 on success
+int servoExtend();
+
+// Rotates servo to retract speakers into the house
+// returns 0 on success
+int servoRetract();
+
+//////////////////
+// Fan commands //
+//////////////////
 int fanOn(double duty);
 int fanOff();
 
-
-// LED commands
+//////////////////
+// LED commands //
+//////////////////
 int initLED(uint8_t rgb); 
 int initLEDs(); // Enables all LED drivers 
 int turnOffLEDs();

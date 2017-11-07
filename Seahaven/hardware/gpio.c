@@ -122,9 +122,9 @@ int GpioSetValue(char* pin, int value) {
   }
 
   if (value == 0) {
-    fputs(LOW, fp);
+    fputs("0", fp);
   } else if (value == 1) {
-    fputs(HIGH, fp);
+    fputs("1", fp);
   } else {
     printf("ERROR: Could not set value %d\n", value);
     fclose(fp);
@@ -151,9 +151,9 @@ int GpioGetValue(char* pin) {
 
   fscanf(fp, "%s", value);
   
-  if (strncmp(value, LOW, 1)) {
+  if (strncmp(value, "0", 1)) {
     return_value = 0;
-  } else if (strncmp(value, HIGH, 1)) {
+  } else if (strncmp(value, "1", 1)) {
     return_value = 1;
   } else {
     return_value = -1;

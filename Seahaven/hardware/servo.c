@@ -1,10 +1,28 @@
 #include "PCA9685.h"
 
+static char* servo_gpio; 
 
-int servoOff(){
+int servoStart() {
+  
+  // needs to set GPIO pin 12 (24 front facing) to 0 or servo wont go
+  servo_gpio = GpioDB410cMapping(SERVO_GPIO_PIN);
+  GpioEnablePin(servo_gpio);
+  GpioSetDirection(servo_gpio, OUTPUT_PIN);
+  GpioSetValue(servo_gpio, LOW);
+
+  // Initialize I2C Bus
+  PCA9685_Start();
+
+  return 0;
+}
+
+int servoStop() {
 
 	// TODO: Error Checking
 
+        // Turn high the gpio pin
+        GpioSetValue(servo_gpio, HIGH);
+  
 	// Initialize Bus
 	PCA9685_Start();
 
@@ -12,10 +30,10 @@ int servoOff(){
 
 	// Write all off.
 	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_L, 0x0);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_H, 0x0);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_L, 0x0);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_H, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
 	printf("Servo should be off now.\n");
 
@@ -25,12 +43,9 @@ int servoOff(){
 	return 0;
 }
 
-int extendServo(){
+int servoExtend() {
 
 	// TODO: Error Checking
-
-	// Initialize Bus
-	PCA9685_Start();
 
 	// Now initialize the chip with a reset and enable the 
 	// gpio enable if needed (I don't think its neccessary yet)
@@ -72,7 +87,7 @@ int extendServo(){
 	// Read until the device is on
 	// int on = 0;
 	// while(on == 0){
-	// 	I2cSetSlave(PCA9685_I2C_BUS, SERVO_FAN_ADDRESS);
+	// 	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
 	// 	I2cReadByte(PCA9685_I2C_BUS, PCA9685_MODE_REG, &temp_reg);
 	// 	if(temp_reg & (PCA9685_HELD_RESET) == 0){
 	// 		on = 1;
@@ -91,10 +106,10 @@ int extendServo(){
 	//    1.3               21.3
 	//
 	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_L, 0x0);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_H, 0x0);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_L, 0xFA);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_H, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0xFA);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
 
 	printf("Extending servo 1.3ms - sleeping _ extend_servo\n");
@@ -106,10 +121,10 @@ int extendServo(){
 	// Turn off the outputs.
 	// Can turn into a single write once verified.
 //	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
-//	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_L, 0x0);
-//	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_H, 0x0);
-//	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_L, 0x0);
-//	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_H, 0x0);
+//	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
+//	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
+//	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x0);
+//	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
 	// Terminate Bus
 	PCA9685_End();
@@ -117,7 +132,7 @@ int extendServo(){
 	return 0;
 }
 
-int retractServo(){
+int servoRetract(){
 
 
 	PCA9685_Start();
@@ -181,10 +196,10 @@ int retractServo(){
 	//    1.7               21.7
 	//
 	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_L, 0x0);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_H, 0x0);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_L, 0x41);
-	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_H, 0x1);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x41);
+	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x1);
 
 	printf("Retracting servo 1.3ms - sleeping _ retract_servo\n");
 	// Wait two seconds (or however long the it takes to extend)
@@ -195,10 +210,10 @@ int retractServo(){
 	// Turn off the outputs.
 	// Can turn into a single write once verified.
 //	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
-//	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_L, 0x0);
-//	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_ON_H, 0x0);
-//	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_L, 0x0);
-//	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_SERVO_OFF_H, 0x0);
+//	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
+//	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
+//	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x0);
+//	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
 	// Terminate Bus
 	PCA9685_End();

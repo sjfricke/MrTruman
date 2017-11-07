@@ -1,7 +1,9 @@
 #include "main.h"
 
 static void testLEDFanServo() {
-    retractServo();
+
+    servoStart();
+    servoRetract();
     fanOn(.99);
   
     initLEDs();
@@ -29,7 +31,7 @@ static void testLEDFanServo() {
     }
   
     usleep(1000000);
-    extendServo();
+    servoExtend();
     setLED(PCA9685_RED_ADDRESS, .85, 0x3FF);
     usleep(1000000);
     setLED(PCA9685_RED_ADDRESS, 0, 0x3FF);
@@ -82,7 +84,7 @@ static void testLEDFanServo() {
     usleep(1000000);
     setLED(PCA9685_GREEN_ADDRESS, 0, 0x3FF);
     fanOff();
-    servoOff();
+    servoStop();
 }
 
 static void testGyro() {
