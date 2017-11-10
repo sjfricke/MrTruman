@@ -21,9 +21,12 @@ int main() {
   snd_pcm_uframes_t frames;
   char *buffer;
 
+  unsigned int tmp;
+
   /* Open PCM device for recording (capture). */
-  rc = snd_pcm_open(&handle, "default",
+  rc = snd_pcm_open(&handle, "plughw:0,2",
                     SND_PCM_STREAM_CAPTURE, 0);
+		   
   if (rc < 0) {
     fprintf(stderr,
             "unable to open pcm device: %s\n",
@@ -47,13 +50,17 @@ int main() {
   snd_pcm_hw_params_set_format(handle, params,
                               SND_PCM_FORMAT_S16_LE);
 
+
   /* Two channels (stereo) */
-  snd_pcm_hw_params_set_channels(handle, params, 2);
+  snd_pcm_hw_params_set_channels(handle, params, 1);
 
   /* 44100 bits/second sampling rate (CD quality) */
-  val = 44100;
+  val = 48000;
   snd_pcm_hw_params_set_rate_near(handle, params,
                                   &val, &dir);
+
+
+
 
   /* Set period size to 32 frames. */
   frames = 32;
@@ -64,15 +71,19 @@ int main() {
   rc = snd_pcm_hw_params(handle, params);
   if (rc < 0) {
     fprintf(stderr,
-            "unable to set hw parameters: %s\n",
+            "unable MEK to set hw parameters: %s\n",
             snd_strerror(rc));
     exit(1);
   }
 
   /* Use a buffer large enough to hold one period */
   snd_pcm_hw_params_get_period_size(params,
-                                      &frames, &dir);
-  size = frames * 4; /* 2 bytes/sample, 2 channels */
+                                      &frames, 0);
+                                      //&frames, &dir);
+
+
+  unsigned int channels = 1;
+  size = frames * channels * 2;                     /* 2 bytes/sample, 2 channels */
   buffer = (char *) malloc(size);
 
   /* We want to loop for 5 seconds */
