@@ -6,7 +6,7 @@
 
 - `sudo apt-get update`
 - `sudo apt-get upgrade`
-- `sudo apt-get install autoconf libtool automake bison python-dev swig libpulse-dev`
+- `sudo apt-get install autoconf libtool automake bison python-dev swig libasound2-dev`
 
 ## Get PocketSphinx and SphinxBase
 
@@ -26,13 +26,21 @@
 - `make`
 - `sudo make install`
 
+## Turn off PulseAudio
+
+We need to make sure PulseAudio is off because we are using ALSA
+
+`apt purge libpulse-dev`
+
+
 ## Run
 
 - `export LD_LIBRARY_PATH=/usr/local/lib`
 - `export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig`
 
-- `pocketsphinx_continuous -infile <wav.file>`
-- `pocketsphinx_continuous -inmic yes`
+- `pocketsphinx_continuous -adcdev plughw:0,2 -infile <wav.file>`
+- `pocketsphinx_continuous -adcdev plughw:0,2 -inmic yes`
+    - Note with ALSA it will complain about buffer size being overwritten too fast, this is not an issue when running a custom program
 
 ## Hello World
 

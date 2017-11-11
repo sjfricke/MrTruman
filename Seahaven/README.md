@@ -1,3 +1,5 @@
+[How to setup board for Seahaven](./docs/setup.md)
+
 # Seahaven mappings
 
 Each event is given a index number to save from having to send a string. A future enum will be created in the host portion.
