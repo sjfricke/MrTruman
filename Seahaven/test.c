@@ -145,7 +145,8 @@ static int testCamera() {
 
 int main ( int argc, char* argv[] ) {
   printf("test\n");
-  testGyro();
+  //testGyro();
   //testLEDFanServo();
   //testCamera();
+  loopback();
 }
