@@ -11,27 +11,55 @@
 #include "loopback.h"
 void *analyze_buffer(void* buff) {
     char* buffer = (char*) buff;
+    int red_count = 0;
+    int blue_count = 0;
+    int green_count = 0;
+    int buff_size = 7526;
+    char* freeze_buf = (char *)malloc(buff_size);
+    // red spectrum 1000 - 3000
+    // green spectrum 3000 - 5000
+    // blue spectrum 5000 - buff_sz
     while (1) {
-        if (buffer[15] < 0x10) {
+        // get current buffer before it is modified again by reading/writing
+        freeze_buf = memcpy(freeze_buf, buff, buff_size);
+        for (int i = 1000; i < 3000; i++) {
+            if (freeze_buf[i] > 0x10) {
+                red_count++;
+            }
+        }        
+        for (int i = 3000; i < 5000; i++) {
+            if (freeze_buf[i] > 0x10) {
+                green_count++;
+            }
+        }
+        for (int i = 5000; i < buff_sz; i++) {
+            if (freeze_buf[i] > 0x10) {
+                blue_count++;
+            }
+        }
+
+        if (red_count/1000 > 0) {
             setLED(PCA9685_RED_ADDRESS, .5, 0x3ff);
         }
         else {
             setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
         }
 
-        if (buffer[10] < 0x10) {
+        if (green_count/1000 > 0) {
             setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
         }
         else {
             setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
         }
 
-        if (buffer[5] < 0x10) {
+        if (blue_count/1000 > 0) {
             setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
         }
         else {
             setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
         }
+        // sleep for .1 sec
+        usleep(100);
     }
 }
 
