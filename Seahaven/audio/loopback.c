@@ -6,30 +6,33 @@
  */
 
 /* Use the newer ALSA API */
+#include <pthread.h>
+
 #include "loopback.h"
-int analyze_buffer(char* buffer, int len) {
-    if (buffer[0] < 0x80) {
-        setLED(PCA9685_ALL_CALL, 0, 0x3ff);
-        setLED(PCA9685_RED_ADDRESS, .3, 0x3ff);
-    }
-    else if (buffer[0] >= 0x80) {
+void *analyze_buffer(void* buff) {
+    char* buffer = (char*) buff;
+    while (1) {
+        if (buffer[15] < 0x10) {
+            setLED(PCA9685_RED_ADDRESS, .5, 0x3ff);
+        }
+        else {
+            setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+        }
 
+        if (buffer[10] < 0x10) {
+            setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+        }
+        else {
+            setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+        }
 
-        setLED(PCA9685_ALL_CALL, 0, 0x3ff);
-        setLED(PCA9685_BLUE_ADDRESS, 0.9, 0x3ff);
-    }/*
-    else if (buffer[2] ) {
-        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+        if (buffer[5] < 0x10) {
+            setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+        }
+        else {
+            setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+        }
     }
-    else if (buffer[0] == '3') {
-        setLED(PCA9685_RED_ADDRESS, .5, 0x3ff);
-    }
-    else if (buffer[1] == '4') {
-        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-    }
-    else if (buffer[2] == '5') {
-        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-    }*/
 }
 
 int loopback() {
@@ -185,14 +188,17 @@ int loopback() {
 	/* We want to loop for 5 seconds */
 	snd_pcm_hw_params_get_period_time(params,
 			&val, &dir);
-	loops = 5000000 / val;
+    loops = 5000000 / val;
+    
+    pthread_t tid;
+    pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 
 	while (1) {
 		snd_pcm_readi(inhandle, buffer, (frames));
-                analyze_buffer(buffer, size);
 		snd_pcm_writei(outhandle, buffer, framesout);
 	}
-
+    pthread_join(tid, NULL);
+    
 	snd_pcm_drain(inhandle);
 	snd_pcm_close(inhandle);
 	free(buffer);
