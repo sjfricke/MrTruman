@@ -8,24 +8,28 @@
 /* Use the newer ALSA API */
 #include "loopback.h"
 int analyze_buffer(char* buffer, int len) {
-    if (buffer[0] == '5') {
-        setLED(ALL_CALL_RED_ADDRESS, .5, 0x3ff);
+    if (buffer[0] < 0x80) {
+        setLED(PCA9685_ALL_CALL, 0, 0x3ff);
+        setLED(PCA9685_RED_ADDRESS, .3, 0x3ff);
     }
-    else if (buffer[1] == '5') {
-        setLED(ALL_CALL_BLUE_ADDRESS, .5, 0x3ff);
-    }
-    else if (buffer[2] == '5') {
-        setLED(ALL_CALL_GREEN_ADDRESS, .5, 0x3ff);
+    else if (buffer[0] >= 0x80) {
+
+
+        setLED(PCA9685_ALL_CALL, 0, 0x3ff);
+        setLED(PCA9685_BLUE_ADDRESS, 0.9, 0x3ff);
+    }/*
+    else if (buffer[2] ) {
+        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
     }
     else if (buffer[0] == '3') {
-        setLED(ALL_CALL_RED_ADDRESS, .5, 0x3ff);
+        setLED(PCA9685_RED_ADDRESS, .5, 0x3ff);
     }
-    else if (buffer[1] == '3') {
-        setLED(ALL_CALL_BLUE_ADDRESS, .5, 0x3ff);
+    else if (buffer[1] == '4') {
+        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
     }
-    else if (buffer[2] == '3') {
-        setLED(ALL_CALL_GREEN_ADDRESS, .5, 0x3ff);
-    }
+    else if (buffer[2] == '5') {
+        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+    }*/
 }
 
 int loopback() {
@@ -42,7 +46,8 @@ int loopback() {
 	snd_pcm_uframes_t frames;
 	char *buffer;
 
-
+	initLEDs();
+	
 	/* Open PCM device for recording (capture). */
 	rc = snd_pcm_open(&inhandle, "plughw:0,2",
 			SND_PCM_STREAM_CAPTURE, 0);
@@ -184,7 +189,7 @@ int loopback() {
 
 	while (1) {
 		snd_pcm_readi(inhandle, buffer, (frames));
-        analyze_buffer(buffer, size);
+                analyze_buffer(buffer, size);
 		snd_pcm_writei(outhandle, buffer, framesout);
 	}
 
