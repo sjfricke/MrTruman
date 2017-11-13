@@ -1,0 +1,85 @@
+Language model created by QuickLM on Mon Nov 13 14:31:14 EST 2017
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 12 sentences and 16 words
+
+\data\
+ngram 1=16
+ngram 2=26
+ngram 3=20
+
+\1-grams:
+-0.8846 </s> -0.3010
+-0.8846 <s> -0.2349
+-1.9638 A -0.2915
+-1.6628 FIREPLACE -0.2817
+-1.9638 HELLO -0.2403
+-1.9638 HEY -0.2403
+-1.6628 LIGHTS -0.2817
+-1.6628 OFF -0.2403
+-1.6628 ON -0.2403
+-1.9638 PHOTO -0.2403
+-1.6628 PICTURE -0.2403
+-1.9638 SELFIE -0.2403
+-1.9638 SPENCER -0.2403
+-1.9638 TAKE -0.2963
+-1.9638 TRUMAN -0.2403
+-1.3617 TURN -0.2817
+
+\2-grams:
+-1.3802 <s> HELLO 0.0000
+-1.3802 <s> HEY 0.0000
+-1.3802 <s> PHOTO 0.0000
+-1.3802 <s> PICTURE 0.0000
+-1.3802 <s> SELFIE 0.0000
+-1.3802 <s> SPENCER 0.0000
+-1.3802 <s> TAKE 0.0000
+-1.3802 <s> TRUMAN 0.0000
+-0.7782 <s> TURN 0.0000
+-0.3010 A PICTURE 0.0000
+-0.6021 FIREPLACE OFF 0.0000
+-0.6021 FIREPLACE ON 0.0000
+-0.3010 HELLO </s> -0.3010
+-0.3010 HEY </s> -0.3010
+-0.6021 LIGHTS OFF 0.0000
+-0.6021 LIGHTS ON 0.0000
+-0.3010 OFF </s> -0.3010
+-0.3010 ON </s> -0.3010
+-0.3010 PHOTO </s> -0.3010
+-0.3010 PICTURE </s> -0.3010
+-0.3010 SELFIE </s> -0.3010
+-0.3010 SPENCER </s> -0.3010
+-0.3010 TAKE A 0.0000
+-0.3010 TRUMAN </s> -0.3010
+-0.6021 TURN FIREPLACE 0.0000
+-0.6021 TURN LIGHTS 0.0000
+
+\3-grams:
+-0.3010 <s> HELLO </s>
+-0.3010 <s> HEY </s>
+-0.3010 <s> PHOTO </s>
+-0.3010 <s> PICTURE </s>
+-0.3010 <s> SELFIE </s>
+-0.3010 <s> SPENCER </s>
+-0.3010 <s> TAKE A
+-0.3010 <s> TRUMAN </s>
+-0.6021 <s> TURN FIREPLACE
+-0.6021 <s> TURN LIGHTS
+-0.3010 A PICTURE </s>
+-0.3010 FIREPLACE OFF </s>
+-0.3010 FIREPLACE ON </s>
+-0.3010 LIGHTS OFF </s>
+-0.3010 LIGHTS ON </s>
+-0.3010 TAKE A PICTURE
+-0.6021 TURN FIREPLACE OFF
+-0.6021 TURN FIREPLACE ON
+-0.6021 TURN LIGHTS OFF
+-0.6021 TURN LIGHTS ON
+
+\end\

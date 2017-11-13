@@ -5,5 +5,8 @@ turn lights off
 turn fireplace on
 turn fireplace off
 take a picture
+photo
+selfie
+picture
 hello
 hey
