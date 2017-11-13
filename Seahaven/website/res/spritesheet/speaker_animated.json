@@ -1,0 +1,57 @@
+{"frames": {
+
+"speaker1Sequence_1.png": {
+    "frame": {"x":2,"y":0,"w":63,"h":220},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":63,"h":220},
+    "sourceSize": {"w":63,"h":220}
+},
+"speaker1Sequence_2.png":
+{
+    "frame": {"x":65,"y":0,"w":63,"h":220},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":63,"h":220},
+    "sourceSize": {"w":63,"h":220}
+},
+"speaker1Sequence_3.png":
+{
+    "frame": {"x":128,"y":0,"w":63,"h":220},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":63,"h":220},
+    "sourceSize": {"w":63,"h":220}
+},
+"speaker1Sequence_4.png":
+{
+    "frame": {"x":191,"y":0,"w":63,"h":220},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":63,"h":220},
+    "sourceSize": {"w":63,"h":220}
+},
+"speaker1Sequence_5.png":
+{
+    "frame": {"x":128,"y":0,"w":63,"h":220},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":63,"h":220},
+    "sourceSize": {"w":63,"h":220}
+},
+"speaker1Sequence_6.png":
+{
+    "frame": {"x":65,"y":0,"w":63,"h":220},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":63,"h":220},
+    "sourceSize": {"w":63,"h":220}
+}},
+"meta": {
+    "version": "1.0",
+    "image": "speaker_animated.png",
+    "format": "RGBA8888",
+    "size": {"w":256,"h":256},
+    "scale": "1.0"
+}
+}
