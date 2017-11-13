@@ -41,6 +41,10 @@ We need to make sure PulseAudio is off because we are using ALSA
 - `pocketsphinx_continuous -adcdev plughw:0,2 -infile <wav.file>`
 - `pocketsphinx_continuous -adcdev plughw:0,2 -inmic yes`
     - Note with ALSA it will complain about buffer size being overwritten too fast, this is not an issue when running a custom program
+   
+   Follow this link to upload a custom recognition file - [http://www.speech.cs.cmu.edu/tools/lmtool-new.html]
+- `pocketsphinx_continuous -adcdev plughw:0,2 -inmic yes -dict <custom_dictionary.dic> -lm <custom_language_model.lm>`
+  
 
 ## Hello World
 
