@@ -12,13 +12,31 @@ static uint32_t buf_count;
 static int32_t k;
 char const* voice_str;
 
-void voiceDictionarySetup()
-{
+void voiceHardwareSetup() {
+  char command[256];
 
+  // Set up output through speakers
+  sprintf(command, "amixer -c 0 cset iface=MIXER,name='SPK DAC Switch' 1");
+  system(command);
+  sprintf(command, "amixer -c 0 cset iface=MIXER,name='RX3 MIX1 INP1' 'RX1'");
+  system(command);
+  sprintf(command, "amixer cset iface=MIXER,name='RX3 Digital Volume' 145");
+  system(command);
+
+  // default input to mic over audio jack
+  sprintf(command, "amixer -c 0 cset iface=MIXER,name='DEC1 MUX' 'ADC2'");
+  system(command);
+  sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 4");
+  system(command);
+  sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
+  system(command);
+}
+
+void voiceDictionarySetup() {
   config = cmd_ln_init(NULL, ps_args(), TRUE,
 		       "-hmm", "/usr/local/share/pocketsphinx/model/en-us/en-us",
-		       "-lm", "/usr/local/share/pocketsphinx/model/en-us/en-us.lm.bin",
-		       "-dict", "/usr/local/share/pocketsphinx/model/en-us/cmudict-en-us.dict",
+		       "-lm", PS_TRUMAN_LM,
+		       "-dict", PS_TRUMAN_DICT,
 		       NULL);
   
   if (config == NULL) {
@@ -33,9 +51,8 @@ void voiceDictionarySetup()
   }
 }
 
-int voiceCommand()
-{
-  if ((ad = ad_open_dev(cmd_ln_str_r(config, "-adcdev"), 16000)) == NULL) {
+int voiceCommand() {
+  if ((ad = ad_open_dev(PS_ALSA_VOICE_MIC_HW, 16000)) == NULL) {
     fprintf(stderr, "Failed to open audio device\n");
     exit(-1);
   }
@@ -51,7 +68,10 @@ int voiceCommand()
     return -1;
   }
 
-  buf_count = 15;
+  uint8_t utt_started = 0;
+  uint8_t in_speech;
+  
+  //  buf_count = 15;
   for (;;) {
 
     // Start getting data
@@ -60,18 +80,21 @@ int voiceCommand()
       ad_close(ad);
       return -1;
     }
-
-    printf("process...\n");
-    ps_process_raw(ps, adbuf, k, FALSE, FALSE);
-    //    in_speech = ps_get_in_speech(ps);
-    buf_count--;
-    printf("Count: %d\n", buf_count);
     
-    if (buf_count <= 0) {
+    //printf("process...\n");
+    ps_process_raw(ps, adbuf, k, FALSE, FALSE);
+    in_speech = ps_get_in_speech(ps);
+    //buf_count--;
+    //    printf("Count: %d\n", buf_count);
+
+    if (in_speech && !utt_started) {
+      utt_started = 1;
+    }
+    
+    if (!in_speech && utt_started) {
       ps_end_utt(ps);
       voice_str = ps_get_hyp(ps, NULL);
       if (voice_str != NULL) {
-	printf("Said: %s\n", voice_str);
 	// do all the switch case in seperate file
 	ad_close(ad);
 	return commandDetect(voice_str);
