@@ -51,16 +51,17 @@ static inline void deinterleave(void)
 			}
 
 			dst[i + (psize * j)] = resln.i;
-
+                        printf("resin is %d", resln.i);
 			/* only dumping channel 0 raw pcm in shm for plotting program */
-			if (j == 0 && raw_capture_data_map != NULL)
+		/*	if (j == 0 && raw_capture_data_map != NULL)
 				((int32_t *) raw_capture_data_map)[i] = resln.i;
-
+*/
 		}		/* for(j) */
 	}			/* for(i) */
 }
 
 void *analyze_buffer(void* buff) {
+    deinterleave();
     char* buffer = (char*) buff;
     int red_count = 0;
     int blue_count = 0;
@@ -93,21 +94,21 @@ void *analyze_buffer(void* buff) {
         }
 
         if (red_count/1000 > 0) {
-            setLED(PCA9685_RED_ADDRESS, .5, 0x3ff);
+            setLED(PCA9685_RED_ADDRESS, .1, 0x3ff);
         }
         else {
             setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
         }
 
         if (green_count/1000 > 0) {
-            setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+            setLED(PCA9685_GREEN_ADDRESS, .1, 0x3ff);
         }
         else {
             setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
         }
 
         if (blue_count/1000 > 0) {
-            setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+            setLED(PCA9685_BLUE_ADDRESS, .1, 0x3ff);
         }
         else {
             setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
