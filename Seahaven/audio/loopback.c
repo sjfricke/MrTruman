@@ -6,9 +6,14 @@
  */
 
 /* Use the newer ALSA API */
-#include "pthread.h"
-
 #include "loopback.h"
+
+
+void loopbackSetup() {
+
+  
+}
+
 static inline void deinterleave(void)
 {
 	int i, j, k, chnls = hwparams.channels;

@@ -8,10 +8,11 @@
 #include <unistd.h>
 
 
-void webData( int type, char* value);
+// This function is used to send data from Web to Host
+// Everything is assuming the README under the Seahaven folder
+void webDataCallback( int type, char* value );
 
-void animationStatus( char* status);
-
-void updateLED( char* rgb );
-
-void takePhoto( void );
+// This is a void argument hardware setup
+// This is for setting up things like componenets but will not give references
+// This means you will need to still get a mapping of the GPIO pin for the main function
+void HardwareSetup( void );

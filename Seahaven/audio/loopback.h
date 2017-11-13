@@ -2,10 +2,15 @@
 
 #include <stdio.h>
 #include <alsa/asoundlib.h>
+#include <pthread.h>
 #include "../hardware/PCA9685.h"
 
 #define PCM_DEVICE "default"
+
 int loopback();
+
+// setup ALSA to run
+void loopbackSetup();
 
 static char *device = "plughw:0,0";
 static snd_pcm_t *handle;
