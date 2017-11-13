@@ -6,7 +6,7 @@
  */
 
 /* Use the newer ALSA API */
-#include <pthread.h>
+#include "pthread.h"
 
 #include "loopback.h"
 static inline void deinterleave(void)

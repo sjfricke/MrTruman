@@ -1,0 +1,9 @@
+spencer
+truman
+turn lights on
+turn lights off
+turn fireplace on
+turn fireplace off
+take a picture
+hello
+hey
