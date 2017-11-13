@@ -3,7 +3,7 @@
 int enableGyroTilt() {
 
     uint8_t data;
-    char* interrupt_pin;
+    uint16_t interrupt_pin;
     
     // setup gpio pin for interrupt it singal
     // needs to set GPIO pin 115 (27 front facing) to input

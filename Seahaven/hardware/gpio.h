@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #define HIGH 1
 #define LOW 0
@@ -22,36 +23,36 @@
 // GPIO pins on the J8 40-pin header to the pin
 // recognized in Linux. This function is used
 // to get the Linux pin with the J8 pin
-// Returns NULL of invalid pin
-char* GpioDB410cMapping(int header_pin);
+// Returns 0 of invalid pin
+uint16_t GpioDB410cMapping(int header_pin);
 
 // Enables access to GPIO pin
 // Return 0 if successful, otherwise failed
-int GpioEnablePin(char* pin);
+int GpioEnablePin(uint16_t pin);
 
 // Disables access to GPIO pin
 // Return 0 if successful, otherwise failed
-int GpioDisablePin(char* pin);
+int GpioDisablePin(uint16_t pin);
 
 // Sets the direction of pin passed in
 // Input direction  == 0
 // Output direction == 1
 // Return 0 if successful, otherwise failed
-int GpioSetDirection(char* pin, int direction);
+int GpioSetDirection(uint16_t pin, int direction);
 
 // Gets the direction of pin passed in
 // Invalid pin      == -1
 // Input direction  ==  0
 // Output direction ==  1
-int GpioGetDirection(char* pin);
+int GpioGetDirection(uint16_t pin);
 
 // TODO: skip validation to increase speed?
 // Sets the value of pin passed in
 // Return 0 if successful, otherwise failed
-int GpioSetValue(char* pin, int value);
+int GpioSetValue(uint16_t pin, int value);
 
 // Gets the value of pin passed in
 // Returns -1 for invalid pin
-int GpioGetValue(char* pin);
+int GpioGetValue(uint16_t pin);
 
 #endif
