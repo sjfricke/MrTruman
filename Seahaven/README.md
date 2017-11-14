@@ -52,4 +52,4 @@ Each event has two parts `<type> <value>`
 
 ## State Machine
 
-![State Machine](Animation_State_Machine.png)
+![State Machine](./docs/Animation_State_Machine.png)
