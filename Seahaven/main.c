@@ -40,7 +40,7 @@ void HardwareSetup() {
 }
 
 int main ( int argc, char* argv[] ) {
-/*
+
   uint16_t headphone_jack;
 
   uint16_t headphone_jack;
@@ -64,27 +64,6 @@ int main ( int argc, char* argv[] ) {
     usleep(50000); // 50ms
     
   }
-<<<<<<< HEAD
-*/
-  FILE * audiofile = fopen("./audiosamples.txt", "r");
-  FILE * processed = fopen("PROCSAMPLES.txt", "w");
-
-  int tmp = 0;
-  int16_t sample=0;
-  int go = 1;
-  int count = 0;
-  while(count < 500000){
-	  
-    sample = fgetc(audiofile);
-//    if(sample < EOF) go = 0;
-    sample |= fgetc(audiofile) << 8;
-    fprintf(processed,"%d\n",sample);
-    count++;
-  }
-  fclose(audiofile);
-  fclose(processed);
-=======
->>>>>>> 21a608572536200cef479c4206de219ab1251341
 
   // hardwareTests();
   printf("main\n");

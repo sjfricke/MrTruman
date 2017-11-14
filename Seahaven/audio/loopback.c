@@ -200,17 +200,11 @@ int loopback() {
     pthread_t tid;
     int wr;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 	/* Audio data dump */
 	FILE *datfile = fopen("./audiosamples.txt","w");
 
-=======
->>>>>>> 21a608572536200cef479c4206de219ab1251341
 	pthread_t tid;
-=======
->>>>>>> 10ab09750ffe6711567c522408d78c9ac4da7c49
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
     // loop the entire time the aux cord is plugged in
 	while (GpioGetValue(pin) == 0) {
@@ -221,13 +215,10 @@ int loopback() {
 		  snd_pcm_recover(outhandle, wr, 0);
 		}
 	}
-<<<<<<< HEAD
 
 	/* Audio data dump close */
 	fclose(datfile);
 
-=======
->>>>>>> 21a608572536200cef479c4206de219ab1251341
 	pthread_join(tid, NULL);
 
 	return 0;
