@@ -110,7 +110,7 @@ static void testGyro() {
 
     uint8_t data;
 
-    char* interrupt_pin;
+    uint16_t interrupt_pin;
     
     // enable tilt event detection, two LSB conclude two ops (idk what they are) 
     //I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);

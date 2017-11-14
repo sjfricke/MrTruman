@@ -60,7 +60,7 @@ int loopback() {
 	unsigned int val;
 	int dir;
 	snd_pcm_uframes_t frames;
-	char *buffer;
+	void *buffer;
 
 	initLEDs();
 
@@ -186,7 +186,7 @@ int loopback() {
 	size = frames * channels * 2;   /* 2 bytes/sample, 2 channels */
 	buff_size = size;
 	printf("size is %d\n", size);
-	buffer = (char *) malloc(size);
+	buffer = (void *) malloc(size);
 
 	/* We want to loop for 5 seconds */
 	snd_pcm_hw_params_get_period_time(params,
@@ -194,10 +194,14 @@ int loopback() {
 
 	pthread_t tid;
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
-
+        int wr;
 	while (1) {
 		snd_pcm_readi(inhandle, buffer, frames);	
-	        snd_pcm_writei(outhandle, buffer, framesout);	
+	        wr = snd_pcm_writei(outhandle, buffer, framesout);	
+		if (wr < 0) {
+		  printf("WRITE ERR %s\n", snd_strerror(wr));
+		  snd_pcm_recover(outhandle, wr, 0);
+		}
 	}
 	pthread_join(tid, NULL);
 	snd_pcm_drain(inhandle);
