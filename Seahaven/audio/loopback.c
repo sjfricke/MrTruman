@@ -9,11 +9,7 @@ void *buffer;
 double PI;
 typedef double complex cplx;
 
-void loopbackSetup() {
-    initLEDs();
-    loopInputSetup();
-    loopOutputSetup();
-}
+
 
 void loopbackTerminate() {
 	snd_pcm_drain(inhandle);
@@ -121,8 +117,8 @@ static void loopOutputSetup() {
 	buffer = (void *) malloc(buff_size);
 
 	/* We want to loop for 5 seconds */
-	snd_pcm_hw_params_get_period_time(params,
-			&val, &dir);
+//	snd_pcm_hw_params_get_period_time(paramsout,
+//TODO DEFINE VAL			&val, &dir);
 }
 
 static void loopInputSetup() {
@@ -200,7 +196,7 @@ int loopback() {
 	/* Audio data dump */
 	FILE *datfile = fopen("./audiosamples.txt","w");
 
-	pthread_t tid;
+//	pthread_t tid;
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
     // loop the entire time the aux cord is plugged in
 	while (GpioGetValue(pin) == 0) {
@@ -220,6 +216,12 @@ int loopback() {
 	return 0;
 }
 
+
+void loopbackSetup() {
+    initLEDs();
+    loopInputSetup();
+    loopOutputSetup();
+}
 
 
 ////////////////////// SAMPLE FFT CODE 1 ////////////////////
@@ -390,8 +392,8 @@ void fftTest() {
 	  data[lc] = atof(tempread);
   }
 
-  printf("\ntype 16 point input vector\n");
-  scanf("%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",&data[0],&data[1],&data[2],&data[3],&data[4],&data[5],&data[6],&data[7],&data[8],&data[9],&data[10],&data[11],&data[12],&data[13],&data[14],&data[15]);
+ // printf("\ntype 16 point input vector\n");
+ // scanf("%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",&data[0],&data[1],&data[2],&data[3],&data[4],&data[5],&data[6],&data[7],&data[8],&data[9],&data[10],&data[11],&data[12],&data[13],&data[14],&data[15]);
   
   sixteenFFT(data,output);
   printf("\nresult is:\n");
@@ -416,7 +418,7 @@ void fftTest() {
 
 
 /////////// SAMPLE FFT CODE 2 ///////////////////
- 
+/* 
 void _fft(cplx buf[], cplx out[], int n, int step)
 {
 	if (step < n) {
@@ -462,7 +464,7 @@ int fftTest2()
  
 	return 0;
 }
-
+*/
 
 
 
