@@ -8,21 +8,32 @@
 /* Use the newer ALSA API */
 #include "loopback.h"
 
+snd_pcm_t *inhandle;
+snd_pcm_t *outhandle;
+snd_pcm_uframes_t frames, framesout;
+void *buffer;
+
 void loopbackSetup() {
-  
+    initLEDs();
+    loopInputSetup();
+    loopOutputSetup();
+}
+
+void loopbackTerminate() {
+	snd_pcm_drain(inhandle);
+	snd_pcm_close(inhandle);
+	snd_pcm_drain(outhandle);
+	snd_pcm_close(outhandle);
+	free(buffer);
 }
 
 void *analyze_buffer(void* buff) {
 	int16_t* buffer = (int16_t*) buff;
-	int red_count, blue_count, green_count;
-	uint8_t count = 0;
+
 	while (1) {
 		// get current buffer before it is modified again by reading/writing
 		int16_t sample = buffer[0];
 		
-		red_count = 0;
-		blue_count = 0;
-		green_count = 0;
 		if (sample > 200 && sample < 300) {
 			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 		}
@@ -43,99 +54,25 @@ void *analyze_buffer(void* buff) {
 		else {
 			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
 		}
-		// sleep for .1 sec
-		//usleep(100);
 	}
 }
 
-int loopback() {
-
-	//////////////////////////////////////////////////
-	/////////////// INPUT SETUP //////////////////////
-	//////////////////////////////////////////////////
-
-	int size, rc;
-	snd_pcm_t *inhandle;
-	snd_pcm_hw_params_t *params;
-	unsigned int val;
-	int dir;
-	snd_pcm_uframes_t frames;
-	void *buffer;
-
-	initLEDs();
-
-	/* Open PCM device for recording (capture). */
-	rc = snd_pcm_open(&inhandle, "plughw:0,2",
-			SND_PCM_STREAM_CAPTURE, 0);
-
-	if (rc < 0) {
-		fprintf(stderr,
-				"unable to open pcm device: %s\n",
-				snd_strerror(rc));
-		exit(1);
-	}
-
-	/* Allocate a hardware parameters object. */
-	snd_pcm_hw_params_alloca(&params);
-
-	/* Fill it in with default values. */
-	snd_pcm_hw_params_any(inhandle, params);
-
-	/* Set the desired hardware parameters. */
-
-	/* Interleaved mode */
-	snd_pcm_hw_params_set_access(inhandle, params,
-			SND_PCM_ACCESS_RW_INTERLEAVED);
-
-	/* Signed 16-bit little-endian format */
-	snd_pcm_hw_params_set_format(inhandle, params,
-			SND_PCM_FORMAT_S16_LE);
-
-
-	/* Two channels (stereo) */
-	snd_pcm_hw_params_set_channels(inhandle, params, 1);
-
-	/* 44100 bits/second sampling rate (CD quality) */
-	val = 44100;
-	snd_pcm_hw_params_set_rate_near(inhandle, params,
-			&val, &dir);
-
-
-	/* Set period size to 32 frames. */
-	frames = 32;
-	snd_pcm_hw_params_set_period_size_near(inhandle,
-			params, &frames, &dir);
-
-	/* Write the parameters to the driver */
-	rc = snd_pcm_hw_params(inhandle, params);
-	if (rc < 0) {
-		fprintf(stderr,
-				"unable MEK to set hw parameters: %s\n",
-				snd_strerror(rc));
-		exit(1);
-	}
-
-	/* Use a buffer large enough to hold one period */
-	snd_pcm_hw_params_get_period_size(params,
-			&frames, 0);
+static void loopOutputSetup() {
 
 	//////////////////////////////////////////////////
 	///////////////// OUTPUT SETUP ///////////////////
 	//////////////////////////////////////////////////
 
 	unsigned int pcm, tmp;
-	int rate, channels, seconds;
-	snd_pcm_t *outhandle;
-	snd_pcm_hw_params_t *paramsout;
-	snd_pcm_uframes_t framesout;
-	int buff_size;
-
-	rate 	 = 44100;
-	channels = 1;
-	seconds  = 100;
+	int rate, channels, seconds, buff_size;
+    snd_pcm_hw_params_t *paramsout;
+    
+    rate = RATE;
+    channels = CHANNELS;
+    seconds = SECONDS;
 
 	/* Open the PCM device in playback mode */
-	if (pcm = snd_pcm_open(&outhandle, "plughw:0,1",
+	if (pcm = snd_pcm_open(&outhandle, PCM_DEVICE,
 				SND_PCM_STREAM_PLAYBACK, 0) < 0) 
 		printf("ERROR: Can't open \"%s\" PCM device. %s\n",
 				PCM_DEVICE, snd_strerror(pcm));
@@ -183,32 +120,97 @@ int loopback() {
 	printf("FRAMES: %d\n",framesout);
 	printf("Other frames: %d\n",frames);
 
-	size = frames * channels * 2;   /* 2 bytes/sample, 2 channels */
-	buff_size = size;
-	printf("size is %d\n", size);
-	buffer = (void *) malloc(size);
+	buff_size = frames * channels * 2;   /* 2 bytes/sample, 2 channels */
+	printf("size is %d\n", buff_size);
+	buffer = (void *) malloc(buff_size);
 
 	/* We want to loop for 5 seconds */
 	snd_pcm_hw_params_get_period_time(params,
 			&val, &dir);
+}
 
-	pthread_t tid;
+static void loopInputSetup() {
+    //////////////////////////////////////////////////
+	/////////////// INPUT SETUP //////////////////////
+	//////////////////////////////////////////////////
+
+	int rc;
+	snd_pcm_hw_params_t *params;
+	unsigned int val;
+	int dir;
+
+	/* Open PCM device for recording (capture). */
+	rc = snd_pcm_open(&inhandle, "plughw:0,2",
+			SND_PCM_STREAM_CAPTURE, 0);
+
+	if (rc < 0) {
+		fprintf(stderr,
+				"unable to open pcm device: %s\n",
+				snd_strerror(rc));
+		exit(1);
+	}
+
+	/* Allocate a hardware parameters object. */
+	snd_pcm_hw_params_alloca(&params);
+
+	/* Fill it in with default values. */
+	snd_pcm_hw_params_any(inhandle, params);
+
+	/* Set the desired hardware parameters. */
+
+	/* Interleaved mode */
+	snd_pcm_hw_params_set_access(inhandle, params,
+			SND_PCM_ACCESS_RW_INTERLEAVED);
+
+	/* Signed 16-bit little-endian format */
+	snd_pcm_hw_params_set_format(inhandle, params,
+			SND_PCM_FORMAT_S16_LE);
+
+
+	/* Two channels (stereo) */
+	snd_pcm_hw_params_set_channels(inhandle, params, 1);
+
+	/* 44100 bits/second sampling rate (CD quality) */
+	val = RATE;
+	snd_pcm_hw_params_set_rate_near(inhandle, params,
+			&val, &dir);
+
+
+	/* Set period size to 32 frames. */
+	frames = 32;
+	snd_pcm_hw_params_set_period_size_near(inhandle,
+			params, &frames, &dir);
+
+	/* Write the parameters to the driver */
+	rc = snd_pcm_hw_params(inhandle, params);
+	if (rc < 0) {
+		fprintf(stderr,
+				"unable MEK to set hw parameters: %s\n",
+				snd_strerror(rc));
+		exit(1);
+	}
+
+	/* Use a buffer large enough to hold one period */
+	snd_pcm_hw_params_get_period_size(params,
+			&frames, 0);
+}
+
+int loopback() {
+    uint16_t pin = GpioDB410cMapping(23);
+    pthread_t tid;
+    int wr;
+
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
-        int wr;
-	while (1) {
+    // loop the entire time the aux cord is plugged in
+	while (GpioGetValue(pin) == 0) {
 		snd_pcm_readi(inhandle, buffer, frames);	
-	        wr = snd_pcm_writei(outhandle, buffer, framesout);	
+	    wr = snd_pcm_writei(outhandle, buffer, framesout);	
 		if (wr < 0) {
 		  printf("WRITE ERR %s\n", snd_strerror(wr));
 		  snd_pcm_recover(outhandle, wr, 0);
 		}
 	}
 	pthread_join(tid, NULL);
-	snd_pcm_drain(inhandle);
-	snd_pcm_close(inhandle);
-	snd_pcm_drain(outhandle);
-	snd_pcm_close(outhandle);
-	free(buffer);
 
 	return 0;
 }
