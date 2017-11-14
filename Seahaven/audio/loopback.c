@@ -192,26 +192,31 @@ int loopback() {
 	snd_pcm_hw_params_get_period_time(params,
 			&val, &dir);
 
+<<<<<<< HEAD
 
 	/* Audio data dump */
 	FILE *datfile = fopen("./audiosamples.txt","w");
 
+=======
+>>>>>>> 21a608572536200cef479c4206de219ab1251341
 	pthread_t tid;
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
         int wr;
 	while (1) {
-		snd_pcm_readi(inhandle, buffer, frames);
-	        fwrite(buffer, sizeof(int16_t), size/sizeof(int16_t), datfile);
+		snd_pcm_readi(inhandle, buffer, frames);	
 	        wr = snd_pcm_writei(outhandle, buffer, framesout);	
 		if (wr < 0) {
 		  printf("WRITE ERR %s\n", snd_strerror(wr));
 		  snd_pcm_recover(outhandle, wr, 0);
 		}
 	}
+<<<<<<< HEAD
 
 	/* Audio data dump close */
 	fclose(datfile);
 
+=======
+>>>>>>> 21a608572536200cef479c4206de219ab1251341
 	pthread_join(tid, NULL);
 	snd_pcm_drain(inhandle);
 	snd_pcm_close(inhandle);

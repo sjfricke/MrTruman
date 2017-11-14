@@ -43,6 +43,8 @@ int main ( int argc, char* argv[] ) {
 /*
   uint16_t headphone_jack;
 
+  uint16_t headphone_jack;
+
   g_server = (server_t*)malloc(sizeof(server_t));
   g_server->port = 6419;
   g_server->onData = webDataCallback;
@@ -62,6 +64,7 @@ int main ( int argc, char* argv[] ) {
     usleep(50000); // 50ms
     
   }
+<<<<<<< HEAD
 */
   FILE * audiofile = fopen("./audiosamples.txt", "r");
   FILE * processed = fopen("PROCSAMPLES.txt", "w");
@@ -80,6 +83,8 @@ int main ( int argc, char* argv[] ) {
   }
   fclose(audiofile);
   fclose(processed);
+=======
+>>>>>>> 21a608572536200cef479c4206de219ab1251341
 
   // hardwareTests();
   printf("main\n");
