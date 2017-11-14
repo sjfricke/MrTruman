@@ -375,9 +375,20 @@ void sixteenFFT(float input[16],float output[16]) {
 void fftTest() {
 
   FILE* procsamps = fopen("./audio/sampledataproc.txt", "r");	
+  char * tempread = (char *) malloc(50*sizeof(char));
+  int skip = 0;
+  for(skip = 0; skip < 90000; skip++) {
+	  fgets(tempread, 49, procsamps);
+  }
   float data[16];
   float output[16];
   float zero=0;
+  int lc = 0;
+  for(lc=0;lc<16;lc++){
+	  fgets(tempread, 49, procsamps);
+	  printf("sample %d: %s\n", (lc+1), tempread);
+	  data[lc] = atof(tempread);
+  }
 
   printf("\ntype 16 point input vector\n");
   scanf("%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",&data[0],&data[1],&data[2],&data[3],&data[4],&data[5],&data[6],&data[7],&data[8],&data[9],&data[10],&data[11],&data[12],&data[13],&data[14],&data[15]);
@@ -385,7 +396,7 @@ void fftTest() {
   sixteenFFT(data,output);
   printf("\nresult is:\n");
   printf("k,\t\tReal Part\t\tImaginary Part\n");
-    printf("0\t\t%.9f\t\t%.9f\n",output[0],zero);
+  printf("0\t\t%.9f\t\t%.9f\n",output[0],zero);
   printf("1\t\t%.9f\t\t%.9f\n",output[1],output[9]);
   printf("2\t\t%.9f\t\t%.9f\n",output[2],output[10]);
   printf("3\t\t%.9f\t\t%.9f\n",output[3],output[11]);
