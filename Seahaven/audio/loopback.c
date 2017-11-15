@@ -29,36 +29,83 @@ void loopbackTerminate() {
 	free(buffer);
 }
 
-void *analyze_buffer(void* buff) {
-	int16_t* buffer = (int16_t*) buff;
-
-	while ((aux_in = GpioGetValue(pin)) == 1) {
-		// get current buffer before it is modified again by reading/writing
-		int16_t sample = buffer[0];
-
-		if (sample > 200 && sample < 300) {
-			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-		}
-		else {
-			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-		}
-
-		if (sample > 300 && sample < 400) {
-			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-		}
-		else {
-			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
-		}
-
-		if (sample > 400) {
-			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-		}
-		else {
-			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-		}
-	}
+static int get_max(int16_t* buffer) {
+  int16_t max = 0;
+  int16_t curr;
+  for (int i = 0; i < 7000; i++) {
+    curr = buffer[i];
+    if (curr > max) {
+	// for some reason each buffer ends in 18161
+	max = curr == 18161 ? max : curr;
+    }
+  }
+  return max;
 }
 
+void *analyze_buffer(void* buff) {
+	int16_t* buffer = (int16_t*) buff;
+        int scale = 400;
+	int comp = 0;
+	uint8_t count = 1;
+	uint8_t rst = 0;
+	while ((aux_in = GpioGetValue(pin)) == 1) {
+		// get current buffer before it is modified again by reading/writing
+		int16_t sample = get_max(buffer);
+
+		if (sample >= scale && sample < 2*scale) {
+			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+		} else if (sample >= 2*scale && sample < 3*scale) {
+			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+		} else if (sample >= 3*scale && sample < 4*scale) {
+			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+		} else if (sample >= 4*scale && sample < 5*scale) {
+			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+		} else if (sample >= 5*scale && sample < 6*scale) {
+			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+		} else if (sample >= 6*scale && sample < 7*scale) {
+			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+		} else if (sample >= 7*scale) {
+			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+		} else {
+			rst = 1;
+		}
+		if (comp/2 > sample || comp*2 > sample) {
+			// rst for big changes
+			rst = 1;
+			comp = sample;
+		}
+		if (sample > 8*scale) {
+			// rst when loud, but dont give people siezures
+			rst = 1;
+			usleep(50000);
+		}
+		if (rst) {
+			rst = 0;
+			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+		}
+		//usleep(80000);
+	}
+	// turn all off before leaving
+	setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+}
 static void loopOutputSetup() {
 
 	//////////////////////////////////////////////////
@@ -210,18 +257,21 @@ int loopback() {
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 	// loop the entire time the aux cord is plugged in
 	while (aux_in == 1) {
-		snd_pcm_readi(inhandle, buffer, frames);	
+		snd_pcm_readi(inhandle, buffer, frames);		
 		wr = snd_pcm_writei(outhandle, buffer, framesout);	
 		if (wr < 0) {
 			printf("WRITE ERR %s\n", snd_strerror(wr));
-			snd_pcm_recover(outhandle, wr, 0);
+			//snd_pcm_recover(outhandle, wr, 0);
+			loopbackTerminate();
+			loopbackSetup();
+			printf("Re initialized: Lets retry that\n");
 		}
 	}
 
 	/* Audio data dump close */
 	fclose(datfile);
 
-        printf("Aux unplugged, see ya next time\n");
+	printf("Aux unplugged, see ya next time\n");
 	pthread_join(tid, NULL);
 	return 0;
 }
