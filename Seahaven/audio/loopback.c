@@ -15,6 +15,7 @@ int aux_in = 1;
 static uint16_t pin;
 void *buffer;
 
+
 void loopbackSetup() {
 	initLEDs();
 	loopInputSetup();
@@ -32,7 +33,8 @@ void loopbackTerminate() {
 static int get_max(int16_t* buffer) {
   int16_t max = 0;
   int16_t curr;
-  for (int i = 0; i < 7000; i++) {
+  for (int i = 0; i < 1500; i++) {
+    	  
     curr = buffer[i];
     if (curr > max) {
 	// for some reason each buffer ends in 18161
@@ -44,7 +46,7 @@ static int get_max(int16_t* buffer) {
 
 void *analyze_buffer(void* buff) {
 	int16_t* buffer = (int16_t*) buff;
-        int scale = 400;
+        int scale = 700;
 	int comp = 0;
 	uint8_t count = 1;
 	uint8_t rst = 0;
@@ -248,11 +250,7 @@ static void loopInputSetup() {
 int loopback() {
 	pin = GpioDB410cMapping(23);
 	pthread_t tid;
-	int wr;
-
-
-	/* Audio data dump */
-	FILE *datfile = fopen("./audiosamples.txt","w");
+	int wr=0;
 
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 	// loop the entire time the aux cord is plugged in
@@ -267,9 +265,6 @@ int loopback() {
 			printf("Re initialized: Lets retry that\n");
 		}
 	}
-
-	/* Audio data dump close */
-	fclose(datfile);
 
 	printf("Aux unplugged, see ya next time\n");
 	pthread_join(tid, NULL);

@@ -93,6 +93,9 @@ int servoExtend() {
 
   printf("Device is Running _ extend_servo\n");
 
+
+
+
   // Need to turn on the outputs for a 1.3ms on time for the 21.3ms period.
   // On Value = 0x0 (0,0)
   // Off Value = 0xFA *(0,FA)
@@ -105,23 +108,23 @@ int servoExtend() {
   I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
-  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0xFA);
+  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x2D);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x1);
 
 
   printf("Extending servo 1.3ms - sleeping _ extend_servo\n");
   // Wait two seconds (or however long the it takes to extend)
-  //usleep(TWOSECONDS);
+  usleep(TWOSECONDS);
 
   printf("Waking up, shutting down servo _ extend_servo\n");
 
   // Turn off the outputs.
   // Can turn into a single write once verified.
-  //	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
-  //	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
-  //	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
-  //	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x0);
-  //	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
+  	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
+  	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
+  	I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
+  	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x0);
+  	I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
   // Terminate Bus
   PCA9685_End();

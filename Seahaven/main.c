@@ -43,8 +43,6 @@ int main ( int argc, char* argv[] ) {
 
   uint16_t headphone_jack;
 
-  uint16_t headphone_jack;
-
   g_server = (server_t*)malloc(sizeof(server_t));
   g_server->port = 6419;
   g_server->onData = webDataCallback;

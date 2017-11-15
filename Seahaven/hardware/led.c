@@ -39,6 +39,17 @@ int setLED(uint8_t rgb, double duty, uint16_t mask){
     uint8_t low = off & 0xFF;
     uint8_t high = (off >> 8) & 0xFF;
 
+
+    if(mask == 0x3FF){
+       I2cSetSlave(PCA9685_I2C_BUS, rgb);
+       I2cWriteByte(PCA9685_I2C_BUS, PCA9685_ALL_LED_ON_L, 0x0);    
+       I2cWriteByte(PCA9685_I2C_BUS, PCA9685_ALL_LED_ON_H, 0x0);    
+       I2cWriteByte(PCA9685_I2C_BUS, PCA9685_ALL_LED_OFF_L, low);    
+       I2cWriteByte(PCA9685_I2C_BUS, PCA9685_ALL_LED_OFF_H, high);    
+       return 0;
+    }
+
+
     int j;
     // Loop through and set the ones that need setting 
     for(j = 0; j < 10; j++){

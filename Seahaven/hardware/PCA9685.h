@@ -44,7 +44,7 @@
 #define MODE1_VAL 0x01 // enable all_on, use internal clock
 
 // Constants
-#define TWOSECONDS 2000000
+#define TWOSECONDS (2000000-162000)
 
 // Chip level startup
 void PCA9685_Start();
