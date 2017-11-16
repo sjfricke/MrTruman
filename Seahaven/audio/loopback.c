@@ -14,117 +14,127 @@ snd_pcm_uframes_t frames, framesout;
 int aux_in = 1;
 static uint16_t pin;
 void *buffer;
+int buff_size;
 
 
-void loopbackSetup() {
-	initLEDs();
+static void setupHandles() {
 	loopInputSetup();
 	loopOutputSetup();
 }
 
-void loopbackTerminate() {
+static void closeHandles() {
 	snd_pcm_drain(inhandle);
 	snd_pcm_close(inhandle);
 	snd_pcm_drain(outhandle);
 	snd_pcm_close(outhandle);
+}
+
+void loopbackSetup() {
+	initLEDs();
+	setupHandles();
+	buffer = (void *) malloc(buff_size);
+}
+
+void loopbackTerminate() {
+	closeHandles();
 	free(buffer);
 }
 
 static int get_max(int16_t* buffer) {
-  int16_t max = 0;
-  int16_t curr;
-  for (int i = 0; i < 1500; i++) {
-    	  
-    curr = buffer[i];
-    if (curr > max) {
-	// for some reason each buffer ends in 18161
-	max = curr == 18161 ? max : curr;
-    }
-  }
-  return max;
+	int16_t max = 0;
+	int16_t curr;
+	for (int i = 0; i < 1500; i++) {
+
+		curr = buffer[i];
+		if (curr > max) {
+			// for some reason each buffer ends in 18161
+			max = curr == 18161 ? max : curr;
+		}
+	}
+	return max;
 }
 
 // Returns 1 if we should reset the LEDs
 static int change_LED_from_sample(int16_t sample, int scale) {
-    if (sample >= scale && sample < 2*scale) {
-        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-        setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-        setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
-    } else if (sample >= 2*scale && sample < 3*scale) {
-        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-        setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-    } else if (sample >= 3*scale && sample < 4*scale) {
-        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-        setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-        setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-    } else if (sample >= 4*scale && sample < 5*scale) {
-        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-        setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-    } else if (sample >= 5*scale && sample < 6*scale) {
-        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-        setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
-        setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-    } else if (sample >= 6*scale && sample < 7*scale) {
-        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-        setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
-    } else if (sample >= 7*scale) {
-        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-    } else {
-        return 1;
-    }
-    return 0;
+	if (sample >= scale && sample < 2*scale) {
+		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+		setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+		setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+	} else if (sample >= 2*scale && sample < 3*scale) {
+		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+		setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+	} else if (sample >= 3*scale && sample < 4*scale) {
+		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+		setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+		setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+	} else if (sample >= 4*scale && sample < 5*scale) {
+		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+		setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+	} else if (sample >= 5*scale && sample < 6*scale) {
+		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+		setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+		setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+	} else if (sample >= 6*scale && sample < 7*scale) {
+		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+		setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+	} else if (sample >= 7*scale) {
+		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+	} else {
+		return 1;
+	}
+	return 0;
 }
 
 static void turn_off_all_LEDs() {
-    setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-    setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-    setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
 }
 
 // Function that thread runs through until Aux unplugged
 void *analyze_buffer(void* buff) {
-    int16_t* buffer = (int16_t*) buff;
-    int base_scale = 100;
-    int scale = 700;
+	int16_t* buffer = (int16_t*) buff;
+	int base_scale = 100;
+	int scale = 700;
 	int comp = 0;
 	uint8_t count = 1;
-    uint8_t rst = 0;
-    
+	uint8_t rst = 0;
+
 	while ((aux_in = GpioGetValue(pin)) == 1) {
 		// get max ampl in buffer
 		int16_t sample = get_max(buffer);
-        // change LEDs based on the sample and scale
-        rst = change_LED_from_sample(sample, scale);
+		// change LEDs based on the sample and scale
+		rst = change_LED_from_sample(sample, scale);
 
-        // see if we should change the scale to make the LED
-        //  feedback more interesting
-        //  we dont want to cap out
-        if (sample >= 8*scale) {
-            // increase scale if we get loud
-            scale += 100;
+		// see if we should change the scale to make the LED
+		//  feedback more interesting
+		//  we dont want to cap out
+		if (sample >= 8*scale) {
+			// increase scale if we get loud
+			scale += 100;
 		} else if (sample < scale && (scale-100) >= base_scale) {
-            // decrease scale if the song is quiet
-            scale -= 100;
-        }
+			// decrease scale if the song is quiet
+			scale -= 100;
+		}
 
-        // flash LEDs for large amplitude changes
+		// flash LEDs for large amplitude changes
 		if (comp/2 > sample || comp*2 > sample) {
 			// rst for big changes
 			rst = 1;
 			comp = sample;
-        }
-        
+		}
+
 		if (rst) {
-            turn_off_all_LEDs();
+			turn_off_all_LEDs();
 		}
 	}
 	// turn all off before leaving
-    turn_off_all_LEDs();
+	turn_off_all_LEDs();
 }
 static void loopOutputSetup() {
 
@@ -133,7 +143,7 @@ static void loopOutputSetup() {
 	//////////////////////////////////////////////////
 
 	unsigned int pcm, tmp;
-	int rate, channels, seconds, buff_size;
+	int rate, channels, seconds;
 	snd_pcm_hw_params_t *paramsout;
 
 	rate = RATE;
@@ -191,7 +201,6 @@ static void loopOutputSetup() {
 
 	buff_size = frames * channels * 2;   /* 2 bytes/sample, 2 channels */
 	printf("size is %d\n", buff_size);
-	buffer = (void *) malloc(buff_size);
 
 }
 
@@ -278,8 +287,8 @@ int loopback() {
 		if (wr < 0) {
 			printf("WRITE ERR %s\n", snd_strerror(wr));
 			//snd_pcm_recover(outhandle, wr, 0);
-			loopbackTerminate();
-			loopbackSetup();
+			closeHandles();
+			setupHandles();
 			printf("Re initialized: Lets retry that\n");
 		}
 	}

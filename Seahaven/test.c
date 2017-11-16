@@ -154,11 +154,11 @@ int main ( int argc, char* argv[] ) {
   //testGyro();
   //testLEDFanServo();
   //testCamera();
-//  initAuxGPIO();
-  //loopbackSetup();
-  //loopback();
+  initAuxGPIO();
+  loopbackSetup();
+  loopback();
   //
   //
-  servoStart();
-  servoExtend();
+  //servoStart();
+  //servoExtend();
 }
