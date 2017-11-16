@@ -44,69 +44,87 @@ static int get_max(int16_t* buffer) {
   return max;
 }
 
+// Returns 1 if we should reset the LEDs
+static int change_LED_from_sample(int16_t sample, int scale) {
+    if (sample >= scale && sample < 2*scale) {
+        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+        setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+        setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+    } else if (sample >= 2*scale && sample < 3*scale) {
+        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+        setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+    } else if (sample >= 3*scale && sample < 4*scale) {
+        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+        setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+        setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+    } else if (sample >= 4*scale && sample < 5*scale) {
+        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+        setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+    } else if (sample >= 5*scale && sample < 6*scale) {
+        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+        setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+        setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+    } else if (sample >= 6*scale && sample < 7*scale) {
+        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+        setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+    } else if (sample >= 7*scale) {
+        setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+        setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+    } else {
+        return 1;
+    }
+    return 0;
+}
+
+static void turn_off_all_LEDs() {
+    setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+    setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+    setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+}
+
+// Function that thread runs through until Aux unplugged
 void *analyze_buffer(void* buff) {
-	int16_t* buffer = (int16_t*) buff;
-        int scale = 700;
+    int16_t* buffer = (int16_t*) buff;
+    int base_scale = 100;
+    int scale = 700;
 	int comp = 0;
 	uint8_t count = 1;
-	uint8_t rst = 0;
+    uint8_t rst = 0;
+    
 	while ((aux_in = GpioGetValue(pin)) == 1) {
-		// get current buffer before it is modified again by reading/writing
+		// get max ampl in buffer
 		int16_t sample = get_max(buffer);
+        // change LEDs based on the sample and scale
+        rst = change_LED_from_sample(sample, scale);
 
-		if (sample >= scale && sample < 2*scale) {
-			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
-		} else if (sample >= 2*scale && sample < 3*scale) {
-			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-		} else if (sample >= 3*scale && sample < 4*scale) {
-			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-		} else if (sample >= 4*scale && sample < 5*scale) {
-			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-		} else if (sample >= 5*scale && sample < 6*scale) {
-			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
-			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-		} else if (sample >= 6*scale && sample < 7*scale) {
-			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
-		} else if (sample >= 7*scale) {
-			setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-			setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-			setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-		} else {
-			rst = 1;
-		}
+        // see if we should change the scale to make the LED
+        //  feedback more interesting
+        //  we dont want to cap out
+        if (sample >= 8*scale) {
+            // increase scale if we get loud
+            scale += 100;
+		} else if (sample < scale && (scale-100) >= base_scale) {
+            // decrease scale if the song is quiet
+            scale -= 100;
+        }
+
+        // flash LEDs for large amplitude changes
 		if (comp/2 > sample || comp*2 > sample) {
 			// rst for big changes
 			rst = 1;
 			comp = sample;
-		}
-		if (sample > 8*scale) {
-			// rst when loud, but dont give people siezures
-			rst = 1;
-			usleep(50000);
-		}
+        }
+        
 		if (rst) {
-			rst = 0;
-			setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-			setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-			setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+            turn_off_all_LEDs();
 		}
-		//usleep(80000);
 	}
 	// turn all off before leaving
-	setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+    turn_off_all_LEDs();
 }
 static void loopOutputSetup() {
 
