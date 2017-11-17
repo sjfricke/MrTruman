@@ -11,7 +11,7 @@
 #define PCA9685_RED_ADDRESS 0x50
 #define PCA9685_BLUE_ADDRESS 0x44
 #define PCA9685_GREEN_ADDRESS 0x48
-#define PCA9685_ALL_CALL 0x70 
+#define PCA9685_ALL_CALL 0x70
 
 // Specific Registers
 #define PCA9685_MODE_REG 0x00
@@ -26,25 +26,25 @@
 
 #define PCA9685_BIT_RESOLUTION 4096
 
-#define PCA9685_ALL_LED_ON_L 0xFA 
-#define PCA9685_ALL_LED_ON_H 0xFB 
-#define PCA9685_ALL_LED_OFF_L 0xFC 
-#define PCA9685_ALL_LED_OFF_H 0xFD 
+#define PCA9685_ALL_LED_ON_L 0xFA
+#define PCA9685_ALL_LED_ON_H 0xFB
+#define PCA9685_ALL_LED_OFF_L 0xFC
+#define PCA9685_ALL_LED_OFF_H 0xFD
 
 // set distinct all call addr for R, G, B. LSB must be 0
 #define ALL_CALL_RED_ADDRESS 0xE8
 #define ALL_CALL_GREEN_ADDRESS 0xE4
 #define ALL_CALL_BLUE_ADDRESS 0xE2
 
-// Below is configured for 20% duty cycle with 10% delay from start of counter 
-#define ALL_LED_ON_L_VAL 0x99 
-#define ALL_LED_ON_H_VAL 0x01 // 4 LSBs are LEDn_ON count 
-#define ALL_LED_OFF_L_VAL 0xCC // count 
-#define ALL_LED_OFF_H_VAL 0x04 
+// Below is configured for 20% duty cycle with 10% delay from start of counter
+#define ALL_LED_ON_L_VAL 0x99
+#define ALL_LED_ON_H_VAL 0x01  // 4 LSBs are LEDn_ON count
+#define ALL_LED_OFF_L_VAL 0xCC // count
+#define ALL_LED_OFF_H_VAL 0x04
 #define MODE1_VAL 0x01 // enable all_on, use internal clock
 
 // Constants
-#define TWOSECONDS 2000000
+#define TWOSECONDS (2000000 - 162000)
 
 // Chip level startup
 void PCA9685_Start();
@@ -87,11 +87,10 @@ int fanOff();
 //////////////////
 // LED commands //
 //////////////////
-int initLED(uint8_t rgb); 
-int initLEDs(); // Enables all LED drivers 
+int initLED(uint8_t rgb);
+int initLEDs(); // Enables all LED drivers
 int turnOffLEDs();
-int setLED(uint8_t rgb, double duty, uint16_t mask); // Set color to specific 
+int setLED(uint8_t rgb, double duty, uint16_t mask); // Set color to specific
 int turnOffLEDPWM(uint8_t rgb);
-
 
 #endif

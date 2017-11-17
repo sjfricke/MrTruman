@@ -1,4 +1,3 @@
-
 # Setup
 
 Here are the things needed to setup board to run everything we need
@@ -43,7 +42,51 @@ We are using ALSA for sound which requires a few things to set up:
 
 ## PocketSphinx
 
-[Check out the PocketSphinx doc](./PocketSphinx)
+> How to install PocketSphinx on Dragonboard Linaro
+>
+> Tested on Linaro 4.9.39
+
+## Update board
+
+- `sudo apt-get update`
+- `sudo apt-get upgrade`
+- `sudo apt-get install autoconf libtool automake bison python-dev swig libasound2-dev`
+
+## Get PocketSphinx and SphinxBase
+
+- `git clone https://github.com/cmusphinx/pocketsphinx.git`
+- `git clone https://github.com/cmusphinx/sphinxbase.git`
+
+## Setting up
+
+- `cd sphinxbase`
+- `./autogen.sh`
+- `./configure`
+- `make`
+- `sudo make install`
+- `cd ../pocketsphinx`
+- `./autogen.sh`
+- `./configure`
+- `make`
+- `sudo make install`
+
+## Turn off PulseAudio
+
+We need to make sure PulseAudio is off because we are using ALSA
+
+`apt purge libpulse-dev`
+
+## Run
+
+- `export LD_LIBRARY_PATH=/usr/local/lib`
+- `export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig`
+
+- `pocketsphinx_continuous -adcdev plughw:0,2 -infile <wav.file>`
+- `pocketsphinx_continuous -adcdev plughw:0,2 -inmic yes`
+    - Note with ALSA it will complain about buffer size being overwritten too fast, this is not an issue when running a custom program
+   
+   Follow this link to upload a custom recognition file - [http://www.speech.cs.cmu.edu/tools/lmtool-new.html]
+- `pocketsphinx_continuous -adcdev plughw:0,2 -inmic yes -dict <custom_dictionary.dic> -lm <custom_language_model.lm>`
 
 ## Camera
 
