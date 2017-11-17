@@ -8,9 +8,9 @@
 
 #define PCM_DEVICE "plughw:0,1"
 
-#define RATE 	 44100
+#define RATE 44100
 #define CHANNELS 1
-#define SECONDS  100
+#define SECONDS 100
 
 // used to actually run music
 // make sure to call loopbackSetup() first
