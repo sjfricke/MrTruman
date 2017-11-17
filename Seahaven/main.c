@@ -75,7 +75,7 @@ void HardwareSetup() {
   gyroClearInterrupt();
 
   // Calls PCA9685_Start and Servo GPIO
-  //  servoStart();
+  servofanStart();
   initLEDs();
 }
 

@@ -2,7 +2,7 @@
 
 static uint16_t servo_gpio;
 
-int servoStart()
+int servofanStart()
 {
 
   // needs to set GPIO pin 12 (24 front facing) to 0 or servo wont go
@@ -20,7 +20,7 @@ int servoStart()
 int servoStop()
 {
 
-  GpioSetValue(servo_gpio, HIGH);
+ // GpioSetValue(servo_gpio, HIGH);
 
   // Write all off.
   I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);

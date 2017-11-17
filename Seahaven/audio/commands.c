@@ -1,7 +1,7 @@
 #include "commands.h"
 
 static char* c_lights = "LIGHT";
-
+static char* c_fire = "FIRE";
 static char* c_picture = "PICTURE";
 static char* c_take = "TAKE";
 /*
@@ -36,6 +36,13 @@ int commandDetect(char const* voice_str)
   detect = strstr(voice_str, c_picture);
   if (detect != NULL) {
     broadcastString("4", "0");
+    animation_on = TRUE;
+    return 0;
+  }
+
+  detect = strstr(voice_str, c_fire);
+  if (detect != NULL) {
+    broadcastString("2", "0");
     animation_on = TRUE;
     return 0;
   }

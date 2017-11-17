@@ -63,7 +63,7 @@ void PCA9685_End();
 
 // setups GPIO and PCA9685 for servo to be ready
 // returns 0 on success
-int servoStart();
+int servofanStart();
 
 // sets GPIO and PCA9685 for servo to turn off
 // Assumes that servoStart() was called before at least once
