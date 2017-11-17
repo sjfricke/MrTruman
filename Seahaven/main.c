@@ -16,6 +16,7 @@ void webDataCallback( int type, char* value) {
   case 3:
     break;
   case 4:
+    printf("\nSPEAKER IS READY IN ANIMAION\n");
     break;
   case 5:
     break;
@@ -39,10 +40,12 @@ void HardwareSetup() {
   // initLEDs();
 }
 
+static uint8_t headphone_status;
+
 int main ( int argc, char* argv[] ) {
 
   uint16_t headphone_jack;
-
+  
   g_server = (server_t*)malloc(sizeof(server_t));
   g_server->port = 6419;
   g_server->onData = webDataCallback;
@@ -54,11 +57,22 @@ int main ( int argc, char* argv[] ) {
   headphone_jack = GpioDB410cMapping(23);
   GpioEnablePin(headphone_jack);
   GpioSetDirection(headphone_jack, INPUT_PIN);
-
+  headphone_status = GpioGetValue(headphone_jack);
+  
   
   while(1) {
-    printf("START TALKING\n");
-    voiceCommand();
+
+    if (GpioGetValue(headphone_jack) == 1) {
+      broadcastString("5", "0");
+      headphone_status = 1;
+    } else if (headphone_status == 1 && GpioGetValue(headphone_jack) == 0) {
+      // unplugged
+      broadcastString("5", "3");
+      headphone_status = 0;
+    }
+    
+    // printf("START TALKING\n");    
+    //    voiceCommand();    
     usleep(50000); // 50ms
     
   }

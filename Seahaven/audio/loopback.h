@@ -24,3 +24,4 @@ void loopbackTerminate();
 
 static void loopInputSetup();
 static void loopOutputSetup();
+static void setupHandles();

@@ -12,12 +12,12 @@ function wsOnMessage(event) {
     case 0:
         animateSpineBoy();
       break;
-    case 1:
+    case 5:
         if (message.value == 0) { 
-          renderer.app.ticker.add(speakersOff);
-          wsTurnSpeakersOff()
-        } else if (message.value == 1) { 
           renderer.app.ticker.add(speakersOn);
+          wsTurnSpeakersOff()
+        } else if (message.value == 3) { 
+          renderer.app.ticker.add(speakersOff);
         }
       break;
     case 2:

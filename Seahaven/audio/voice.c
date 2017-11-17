@@ -28,7 +28,8 @@ void voiceHardwareSetup() {
   system(command);
   sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 4");
   system(command);
-  sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
+  // INP3 is for mic on board, INP2 is for audio mezz
+  sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'");
   system(command);
 }
 
