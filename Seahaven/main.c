@@ -22,6 +22,8 @@ void webDataCallback( int type, char* value) {
 
   // FAN Callback    
   case 2:
+    fanOn();
+    animation_on = FALSE;
     break;
 
   // CAMERA Callback
@@ -47,7 +49,6 @@ void webDataCallback( int type, char* value) {
       animation_on = FALSE;
     }
     break;
-
 
   // GREEK Callback  
   case 5:
