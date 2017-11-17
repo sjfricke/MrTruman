@@ -17,6 +17,29 @@ void *buffer;
 int buff_size;
 
 
+double a_low[8] = {1, -6.7202, 19.3599, -30.9938, 29.7792, -17.1719, 5.5025, -.7559};
+double b_low[8] = {.0022, -.0109, .0195, -.0108, -.0108, .0195, -.0109, .0022};
+double a_mid[15] = {1, -12.6, 74.3, -269.5, 673.8, -1228.4, 168.38, -1762.9, 1416.8, -869.7, 401.4, -135.1, 31.3, -4.5, .3}
+double b_mid[15] = {.0114, -.1286, .6591, -2.0144, 4.0078, -5.2074, 3.8451, 0, -3.8541, 5.2074, -4.0078, 2.0144, -.6591, .1286, -.0114}
+double a_high[8] = {1, -5.8135, 14.6698, -20.8069, 17.9004, -9.3349, 2.7308, -.3456}
+double b_high[8] = {.5878, -4.0315, 11.9311, -19.7506, 19.7506, -11.9311, 4.0315, -.5878}
+
+static void lpfilter(int16_t* buffer_in, int16_t* buffer_out){
+	int i = 0;
+	int j,k;
+	for(i=20; i < buff_size; i++){
+		double t1 = 0;
+		for(j = 0; j < 8; j++){
+			double += b_low[j]*buffer_in[i-j]
+		}
+		double t2 = 0;
+		for(k = 1; k < 8; k++){
+			double += a_low[k]*buffer_in[i-k]
+		}
+		buffer_out[i] = t1-t2;
+	}
+}
+
 static void setupHandles() {
 	loopInputSetup();
 	loopOutputSetup();
@@ -279,11 +302,14 @@ int loopback() {
 	pthread_t tid;
 	int wr=0;
 
+	lpfilt_buff = (void *) malloc(sizeof(buff_size))
+
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 	// loop the entire time the aux cord is plugged in
 	while (aux_in == 1) {
-		snd_pcm_readi(inhandle, buffer, frames);		
-		wr = snd_pcm_writei(outhandle, buffer, framesout);	
+		snd_pcm_readi(inhandle, buffer, frames);
+		lpfilter(buffer, lpfilt_buff)
+		wr = snd_pcm_writei(outhandle, lpfilt_buff, framesout);	
 		if (wr < 0) {
 			printf("WRITE ERR %s\n", snd_strerror(wr));
 			//snd_pcm_recover(outhandle, wr, 0);
