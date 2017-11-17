@@ -4,6 +4,7 @@ int disableGyro()
 {
   // terminate bus
   LSM6DS3H_End();
+  return 0;
 }
 
 /**
