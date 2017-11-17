@@ -41,8 +41,6 @@ static void lpfilter(int16_t* buffer_in, int16_t* buffer_out){
 	}
 }
 
-
-
 static void closeHandles() {
 	snd_pcm_drain(inhandle);
 	snd_pcm_close(inhandle);
@@ -51,13 +49,10 @@ static void closeHandles() {
 }
 
 
-
 void loopbackTerminate() {
 	closeHandles();
 	free(buffer);
 }
-
-
 
 static int get_max(int16_t* buffer) {
 	int16_t max = 0;
@@ -299,7 +294,6 @@ static void setupHandles() {
 }
 
 void loopbackSetup() {
-	initLEDs();
 	setupHandles();
 	buffer = (void *) malloc(buff_size);
 }
@@ -313,7 +307,7 @@ int loopback() {
 
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 	// loop the entire time the aux cord is plugged in
-	while (aux_in == 1) {
+	while (GpioGetValue(pin) == 1) {
 		snd_pcm_readi(inhandle, buffer, frames);
 		//lpfilter(buffer, lpfilt_buff);
 //		wr = snd_pcm_writei(outhandle, lpfilt_buff, framesout);	
@@ -329,7 +323,10 @@ int loopback() {
 
 	printf("Aux unplugged, see ya next time\n");
 	pthread_join(tid, NULL);
+	audio_plugged_in = FALSE;
+	animation_on = TRUE;
 	return 0;
+
 }
 
 

@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include "../hardware/PCA9685.h"
 #include "../hardware/gpio.h"
+#include "../status.h"
 
 #define PCM_DEVICE "plughw:0,1"
 

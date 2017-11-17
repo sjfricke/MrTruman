@@ -1,3 +1,4 @@
+#include "status.h"
 #include "server/server.h" 
 #include "audio/voice.h"
 #include "hardware/LSM6DS3H.h"
