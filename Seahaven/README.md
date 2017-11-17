@@ -13,21 +13,23 @@ Each event has two parts `<type> <value>`
 - `1` - Light switch animation
   - `0` - Turn on
   - `1` - Turn off
+  - `2` - Toggle Lights
 - `2` - Change lights color animation
   - Value given as RGB with commas 
   - Ex.) `0,255,0` would be green
 - `3` - Fireplace animation
   - `0` - Turn on
   - `1` - Turn off
+  - `2` - Toggle Fire
 - `4` - Camera animation
   - `0` - About to take picture
   - `1` - Take picture (flash)
   - `2` - Make GET request for photo and put it up
 - `5` - Speakers animation
-  - `0` - Turn on
+  - `0` - Bring out speakers
   - `1` - Music playing
-  - `2` - Music stopedd
-  - `3` - Turn off
+  - `2` - Music stoped
+  - `3` - Put away speakers
 - `6` - Music BPM
   - Value int of BPM
 - `7` - Gyro animation
