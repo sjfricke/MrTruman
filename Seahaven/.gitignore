@@ -1,6 +1,9 @@
 Seahaven
 TestSeahaven
 
+# Node test server
+node_modules
+
 # Prerequisites
 *.d
 
