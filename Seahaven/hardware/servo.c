@@ -153,8 +153,8 @@ int servoRetract()
   I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
-  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x41);
-  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x1);
+  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x2D);
+  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
   // Wait two seconds (or however long the it takes to extend)
   usleep(TWOSECONDS);
