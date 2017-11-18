@@ -137,30 +137,31 @@ function setup() {
             type: 'add',
             name: 'picture',
             path: resPath.picture,
-            pt: new PIXI.Point(0.85, 0.6)
+            pt: new PIXI.Point(0.25, 0.6)
         },
         {
             type: 'add',
             name: 'frame',
             path: resPath.frame,
-            pt: new PIXI.Point(0.85, 0.6)
+            pt: new PIXI.Point(0.25, 0.6)
+        },        
+        {
+            type: 'add',
+            name: 'firePlace',
+            path: resPath.firePlace,
+            pt: new PIXI.Point(0.88, 1),
+            scale: 1.0
         },
         {           
             type: 'addSpritesheet',
             name: 'fireAnimated',
             path: resPath.fireAnimated,
-            pt: new PIXI.Point(0.85, 0.975),
+            pt: new PIXI.Point(0.878, 0.943),
             count: 15,
             framePrefix : "fire",
-            start: true,
-            scale: 0.5
-        },
-        {
-            type: 'add',
-            name: 'firePlace',
-            path: resPath.firePlace,
-            pt: new PIXI.Point(0.85, 1),
-            scale: 0.5
+            start: false,
+            hide: true,
+            scale: 0.8
         },
         {
             type: 'add',

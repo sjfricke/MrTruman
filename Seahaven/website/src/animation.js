@@ -30,19 +30,19 @@ function speakersOn(delta) {
 	wsTurnSpeakersOn();
 	}
 
-    if (speaker1.position.y > window.outerHeight * 1.05) {
+    if (speaker1.position.y > window.outerHeight) {
         speaker1.position.y -= speakerRate * speaker1.position.y * speaker1.position.y;
     } else {
     	speaker1Ready = true;
-    	speaker1.position.y = window.outerHeight * 1.05;
+    	speaker1.position.y = window.outerHeight;
     }
 
-    if (speaker2.position.y > window.outerHeight  * 1.05) {
+    if (speaker2.position.y > window.outerHeight) {
         speaker2.position.y -= speakerRate * speaker2.position.y * speaker2.position.y;
     }
     else { 
     	speaker2Ready = true;
-    	speaker2.position.y = window.outerHeight  * 1.05;       
+    	speaker2.position.y = window.outerHeight ;       
     }
 }
 
@@ -74,6 +74,17 @@ function speakersOff() {
     	speaker2.position.y = speaker2StartY;       
     }
 }
+
+function fireOn() {
+    renderer.app.stage.addChild(renderer.getElemByID("fireAnimated"));
+    renderer.getElemByID("fireAnimated").gotoAndPlay(0);
+}
+
+function fireOff() {
+    renderer.getElemByID("fireAnimated").stop();
+    renderer.app.stage.removeChild(renderer.getElemByID("fireAnimated"));
+}
+
 
 function animateSpineBoy() {
     if (playerMovingForward == true || playerMovingBackward == true) {

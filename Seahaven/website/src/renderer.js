@@ -39,41 +39,7 @@ class Renderer {
         }
     }
 
-    doStuff() {
-        // load spine data
-        PIXI.loader
-            .add('spineboy', 'res/json/spineboy.json')
-            .load(onAssetsLoaded);
-
-        var that = this;
-        function onAssetsLoaded(loader, res) {
-            // create a spine boy
-            var spineBoy = new PIXI.spine.Spine(res.spineboy.spineData);
-
-            // set the position
-            spineBoy.x = that.app.renderer.width / 2;
-            spineBoy.y = that.app.renderer.height;
-
-            spineBoy.scale.set(1.5);
-
-            // set up the mixes!
-            spineBoy.stateData.setMix('walk', 'jump', 0.2);
-            spineBoy.stateData.setMix('jump', 'walk', 0.4);
-
-            // play animation
-            spineBoy.state.setAnimation(0, 'walk', true);
-
-            that.app.stage.on('pointerdown', function () {
-                spineBoy.state.setAnimation(0, 'jump', false);
-                spineBoy.state.addAnimation(0, 'walk', true, 0);
-            });
-            that.app.stage.on('pointermove', function (e) {
-                spineBoy.state.addAnimation(0, 'walk', true, 0);
-                spineBoy.x = (spineBoy.x + 5) % 1650;
-            });
-        }
-    }
-
+  
     checkload(id, path, pos) {
         if (typeof id !== 'string' || this.testID(id)) {
             log('Renderer', 'Could not add because ID (= %O) is already in use.', id);
@@ -241,6 +207,7 @@ class Renderer {
             containerID = data.containerID,
             count = data.count,
             framePrefix = data.framePrefix,
+            hide = data.hide,
             scale = data.scale || 1,
             start = data.start || true;
 
@@ -279,6 +246,8 @@ class Renderer {
             } else {
                 that.elems[id].gotoAndStop(0);
             }
+
+            if (hide) { that.elems[id].hideOnLoad = true; }
 
             if (scale !== undefined && typeof scale === 'number' && scale > 0) {
                 that.elems[id].scale.x = scale;

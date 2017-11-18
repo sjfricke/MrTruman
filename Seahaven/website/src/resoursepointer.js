@@ -2,7 +2,6 @@
     "baseboard": "res/img/baseboard.png",
     "couch": "res/img/couch.png",
     "desk": "res/img/desk.png",
-    "fire": "res/img/fire.png",
     "fireAnimated": "res/spritesheet/fire_animated.json",
     "firePlace": "res/img/fire_place.png",
     "frame": "res/img/frame.png",

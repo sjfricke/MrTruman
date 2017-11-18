@@ -10,9 +10,10 @@ function testFunctions(e) {
 			wsTurnLightsOff();
 			break;
 		case 69: // E
+			fireOn();
 			break;
       	case 82: // R
-            animateRain();
+            fireOff();
 			break;
 		case 65: // A
 			startLightOnAnimation();
