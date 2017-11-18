@@ -47,7 +47,6 @@ int fanOn(double duty)
 	//      -----------------
 	//    duty               1
 	//
-
 	// Bounds checking
 	if ((duty < 0) || (duty > 1))
 	{

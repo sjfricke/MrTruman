@@ -1,5 +1,6 @@
 #include "voice.h"
 
+
 // Single instance of PocketSphinx voice
 // ps variables
 static ps_decoder_t *ps;
@@ -28,7 +29,8 @@ void voiceHardwareSetup() {
   system(command);
   sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 4");
   system(command);
-  sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
+  // INP3 is for mic on board, INP2 is for auxilliary line in.
+  sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'");
   system(command);
 }
 
@@ -70,9 +72,15 @@ int voiceCommand() {
 
   uint8_t utt_started = 0;
   uint8_t in_speech;
-  
+  uint16_t headphone_jack;
+  uint16_t gyro_int;
+  headphone_jack = GpioDB410cMapping(23);
+
   //  buf_count = 15;
   for (;;) {
+
+    if(GpioGetValue(headphone_jack) == 1){ audio_plugged_in = TRUE; return 0; }
+    if(gyroInterruptPoll()) {gyro_tripped = TRUE; return 0; }
 
     // Start getting data
     if ((k = ad_read(ad, adbuf, PS_BUF_SIZE)) < 0) {
