@@ -89,44 +89,20 @@ function setup() {
             pt: new PIXI.Point(0, .948),
             height: 25
         },
-        // {
-        //     type: 'add',
-        //     name: 'sceneBounds',
-        //     path: resPath.scene,
-        //     pt: new PIXI.Point(0.25, 0.65),
-        //     scale: 1.3
-        // },
-        // {
-        //     type: 'add',
-        //     name: 'scene',
-        //     path: resPath.scene,
-        //     pt: new PIXI.Point(0.25, 0.65),
-        //     scale: 1.3
-        // },
-        // {
-        //     type: 'add',
-        //     name: 'lightning',
-        //     path: resPath.lightning,
-        //     pt: new PIXI.Point(0.25, 0.65),
-        //     scale: 1.3
-        // },
-        // {
-        //     type: 'addSpritesheet',
-        //     name: 'rainAnimated',
-        //     path: resPath.rainAnimated,
-        //     pt: new PIXI.Point(0.25, 0.5),
-        //     count: 15,
-        //     framePrefix: "rain",
-        //     start: true,
-        //     scale: 1.3
-        // },
-        // {
-        //     type: 'add',
-        //     name: 'window',
-        //     path: resPath.window,
-        //     pt: new PIXI.Point(0.25, 0.65),
-        //     scale: 1.3
-        // },
+        {
+            type: 'add',
+            name: 'scene',
+            path: resPath.scene,
+            pt: new PIXI.Point(0.65, 0.62),
+            scale: 1.1
+        },
+        {
+            type: 'add',
+            name: 'window',
+            path: resPath.window,
+            pt: new PIXI.Point(0.65, 0.62),
+            scale: 1.1
+        },
         {
             type: 'add',
             name: 'switch',
@@ -137,13 +113,15 @@ function setup() {
             type: 'add',
             name: 'picture',
             path: resPath.picture,
-            pt: new PIXI.Point(0.25, 0.6)
+            pt: new PIXI.Point(0.25, 0.6),
+            scale: 1.25
         },
         {
             type: 'add',
             name: 'frame',
             path: resPath.frame,
-            pt: new PIXI.Point(0.25, 0.6)
+            pt: new PIXI.Point(0.25, 0.6),
+            scale: 1.25
         },        
         {
             type: 'add',
@@ -216,13 +194,6 @@ function run() {
 	// need to set start to know how far to bring back down in future
 	speaker1StartY =  renderer.getElemByID('speaker1').position.y;
 	speaker2StartY = renderer.getElemByID('speaker2').position.y;
-    // Mask rain animation so it only shows behind window
-	// let rain = renderer.getElemByID('rainAnimated');
-	// rain.mask = renderer.getElemByID('sceneBounds');
-	// rain.pivot.y = -rain.height / 2; // For rain rotation
-
-	// let lightning = renderer.getElemByID('lightning');
-	// lightning.alpha = 0;
 
     // player.interactive = true; // for clicking    
     // lightSwitch.interactive = true; // for clicking

@@ -21,10 +21,8 @@ function wsOnMessage(event) {
         }
       break;
     case 2:
-      animateRain();
       break;
   case 3:
-      animateLightning();
       break;
     default:
   	  warn("WebSocket", "No case for data: %0", message);

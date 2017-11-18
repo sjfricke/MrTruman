@@ -3,14 +3,6 @@ var speaker2Ready = false;
 var speaker1StartY = 0;
 var speaker2StartY = 0;
 
-var rainAnim = false;
-var rainAnimSpd = 2;
-var rot = 0;
-
-var lightningAnim = false;
-var lightningFrame = 0;
-var lightningSpd = 0.2;
-
 var speakerRate = 0.00004;
 
 var playerMovingForward = false;
@@ -133,48 +125,6 @@ function toggleLightSwitch() {
         lightOffTexture = lightSwitch.texture;
         lightSwitch.texture = lightOnTexture;
         wsTurnLightsOn();
-    }
-}
-    
-function animateRain() {
-    if (!rainAnim) {
-        renderer.app.ticker.add(rainAnimFrame);
-        rainAnim = true;
-    }
-}
-function rainAnimFrame() {
-    let rain = renderer.getElemByID('rainAnimated');
-    let x = rot;
-    if (rot > 1) x = 2 - rot;
-    if (rot > 2) {
-        rot = 0;
-        renderer.app.ticker.remove(rainAnimFrame);
-        rainAnim = false;
-    }
-    else {
-        rain.rotation = -1 * x * x + 2 * x;
-        rot += 0.01 * rainAnimSpd;
-    }
-}
-
-function animateLightning() {
-    if (!lightningAnim) {
-        renderer.app.ticker.add(lightningAnimFrame);
-        lightningAnim = true;
-    }
-}
-
-function lightningAnimFrame() {
-    let lightning = renderer.getElemByID('lightning');
-    let x = lightningFrame + 1;
-    if (lightningFrame > 1) {
-        lightningFrame = 0;
-        renderer.app.ticker.remove(lightningAnimFrame);
-        lightningAnim = false;
-    }
-    else {
-        lightning.alpha = -1 * x * x + 2 * x;
-        lightningFrame += 0.1 * lightningSpd;
     }
 }
 
