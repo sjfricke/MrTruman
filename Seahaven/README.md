@@ -28,7 +28,7 @@ Each event has two parts `<type> <value>`
 - `5` - Speakers animation
   - `0` - Bring out speakers
   - `1` - Music playing
-  - `2` - Music stoped
+  - `2` - Music stopped
   - `3` - Put away speakers
 - `6` - Music BPM
   - Value int of BPM
