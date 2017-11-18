@@ -12,6 +12,8 @@
 #define RATE 44100
 #define CHANNELS 1
 #define SECONDS 100
+#define BROADCASTCOLORS 1
+#define SCALECOLORS 255
 
 // used to actually run music
 // make sure to call loopbackSetup() first

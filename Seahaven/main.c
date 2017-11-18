@@ -10,6 +10,7 @@ void webDataCallback( int type, char* value) {
 
   // PLACEHOLDER Callback 
   case 0:
+    // NOTHING YO
     break;
 
   // LIGHTS Callback  
@@ -22,22 +23,46 @@ void webDataCallback( int type, char* value) {
 
   // FAN Callback    
   case 2:
-    fanOn();
+    int val = atoi(value);
+    if(value == 0){
+      fanOn();
+    }
+    else {
+      fanOff();
+    }
     animation_on = FALSE;
+
     break;
 
   // CAMERA Callback
   case 3:
-      sprintf(command, "ffmpeg -f video4linux2 -s 640x480 -i /dev/video0 -ss 0:0:2 -frames 1 ./trumanpicture.jpg");
-      system(command);
-      animation_on = FALSE;
+      int val = atoi(value);
+      if(val == 0){
+        // Alert animation
+        broadcastString("4","1");
+        // Turn on (flash)
+        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+	    	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	    	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+        // Take picture
+        sprintf(command, "ffmpeg -f video4linux2 -s 640x480 -i /dev/video0 -ss 0:0:2 -frames 1 ./trumanpicture.jpg");
+        system(command);
+        // Turn off
+        setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+	    	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+	    	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+      } else {
+        broadcastString("4","2");
+        animation_on = FALSE;
+      }
+    
     break;
 
   // SPEAKER/SERVO Callback  
   case 4:
     int val = atoi(value);
     if(val == 0){
-      printf("\nSPEAKER IS READY IN ANIMAION\n");  
+      //printf("\nSPEAKER IS READY IN ANIMAION\n");  
       loopback();
       broadcastString("5", "3");
       
@@ -53,6 +78,7 @@ void webDataCallback( int type, char* value) {
   // GREEK Callback  
   case 5:
     gyroClearInterrupt();
+    // Need to really check the direction and send it back. TODO
     animation_on = FALSE;
     break;
     
@@ -62,7 +88,10 @@ void webDataCallback( int type, char* value) {
   }
 }
 
+// Sets up a whole bunch of hardware peripherals 
+// ensures that the truman experience will be buttery smooth
 void HardwareSetup() {
+
   // audio voice
   voiceHardwareSetup();
   voiceDictionarySetup();
@@ -106,8 +135,10 @@ int main ( int argc, char* argv[] ) {
   
   while(1) {
 
-    if(animation_on){continue;}
-      
+    if(animation_on){ usleep(1000); continue;} // Sleep a millisecond cuz come on, who is it really hurting?
+
+    // We check for the audio plug and gyro in voiceCommand and immediately return from it upon
+    // either event, so that voiceCommand(); won't end up blocking.
     voiceCommand();    
 
     if (audio_plugged_in) {
