@@ -1,8 +1,6 @@
 /*
-
    This example reads from the default PCM device
    and writes to standard output for 5 seconds of data.
-
 */
 
 /* Use the newer ALSA API */
@@ -16,7 +14,7 @@ static uint16_t pin;
 void *buffer;
 int buff_size;
 
-
+// Had matlab generate 3 Chebyshev Type 2 for 0-300Hz, 300-2500Hz, and 2500-221000Hz - the midband one might be unstable 
 double a_low[8] = {1, -6.7202, 19.3599, -30.9938, 29.7792, -17.1719, 5.5025, -.7559};
 double b_low[8] = {.0022, -.0109, .0195, -.0108, -.0108, .0195, -.0109, .0022};
 double a_mid[15] = {1, -12.6, 74.3, -269.5, 673.8, -1228.4, 168.38, -1762.9, 1416.8, -869.7, 401.4, -135.1, 31.3, -4.5, .3};
@@ -25,8 +23,7 @@ double a_high[8] = {1, -5.8135, 14.6698, -20.8069, 17.9004, -9.3349, 2.7308, -.3
 double b_high[8] = {.5878, -4.0315, 11.9311, -19.7506, 19.7506, -11.9311, 4.0315, -.5878};
 
 static void lpfilter(int16_t* buffer_in, int16_t* buffer_out){
-	int i = 0;
-	int j,k;
+	int i,j,k;
 	double t1,t2;
 	for(i=0; i < buff_size/2; i++){
 		t1 = 0;
@@ -48,7 +45,6 @@ static void closeHandles() {
 	snd_pcm_close(outhandle);
 }
 
-
 void loopbackTerminate() {
 	closeHandles();
 	free(buffer);
@@ -58,7 +54,6 @@ static int get_max(int16_t* buffer) {
 	int16_t max = 0;
 	int16_t curr;
 	for (int i = 0; i < 1500; i++) {
-
 		curr = buffer[i];
 		if (curr > max) {
 			// for some reason each buffer ends in 18161
@@ -70,37 +65,71 @@ static int get_max(int16_t* buffer) {
 
 // Returns 1 if we should reset the LEDs
 static int change_LED_from_sample(int16_t sample, int scale) {
+
+	int r_comp = 0;
+	int g_comp = 0;
+	int b_comp = 0;
+
 	if (sample >= scale && sample < 2*scale) {
 		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 		setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
 		setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+		r_comp = .99*SCALECOLORS;
+		g_comp = 0*SCALECOLORS;
+		b_comp = 0*SCALECOLORS;
 	} else if (sample >= 2*scale && sample < 3*scale) {
 		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
 		setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+		r_comp = .99*SCALECOLORS;
+		g_comp = .5*SCALECOLORS;
+		b_comp = 0*SCALECOLORS;
 	} else if (sample >= 3*scale && sample < 4*scale) {
 		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
 		setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
 		setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+		r_comp = .5*SCALECOLORS;
+		g_comp = 0*SCALECOLORS;
+		b_comp = 0*SCALECOLORS;
 	} else if (sample >= 4*scale && sample < 5*scale) {
 		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
 		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
 		setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+		r_comp = .5*SCALECOLORS;
+		g_comp = .5*SCALECOLORS;
+		b_comp = 0*SCALECOLORS;
 	} else if (sample >= 5*scale && sample < 6*scale) {
 		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
 		setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
 		setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+		r_comp = .5*SCALECOLORS;
+		g_comp = 0*SCALECOLORS;
+		b_comp = 0*SCALECOLORS;
 	} else if (sample >= 6*scale && sample < 7*scale) {
 		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
 		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 		setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+		r_comp = .5*SCALECOLORS;
+		g_comp = .99*SCALECOLORS;
+		b_comp = 0*SCALECOLORS;
 	} else if (sample >= 7*scale) {
 		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
 		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+		r_comp = .5*SCALECOLORS;
+		g_comp = .99*SCALECOLORS;
+		b_comp = .5*SCALECOLORS;
 	} else {
 		return 1;
 	}
+
+	if(BROADCASTCOLORS){
+		char * broadcaststr = char * malloc(200*sizeof(char));
+		sprintf(broadcaststr, "%d,%d,%d", r_comp, g_comp, b_comp);
+		broadcastString("2", broadcaststr);
+		free(broadcaststr);
+	}
+
 	return 0;
 }
 
@@ -219,6 +248,7 @@ static void loopOutputSetup() {
 }
 
 static void loopInputSetup() {
+
 	//////////////////////////////////////////////////
 	/////////////// INPUT SETUP //////////////////////
 	//////////////////////////////////////////////////
@@ -299,9 +329,13 @@ void loopbackSetup() {
 }
 
 int loopback() {
+
 	pin = GpioDB410cMapping(23);
 	pthread_t tid;
 	int wr=0;
+
+	// Now Playing
+	broadcastString("5", "1");
 
 //	int16_t* lpfilt_buff = (int16_t*) malloc(buff_size);
 
@@ -321,7 +355,10 @@ int loopback() {
 		}
 	}
 
-	printf("Aux unplugged, see ya next time\n");
+	// No Longer Playing
+	broadcastString("5", "2");
+
+	//printf("Aux unplugged, see ya next time\n");
 	pthread_join(tid, NULL);
 	audio_plugged_in = FALSE;
 	animation_on = TRUE;

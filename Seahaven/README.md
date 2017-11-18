@@ -28,12 +28,14 @@ Each event has two parts `<type> <value>`
 - `5` - Speakers animation
   - `0` - Bring out speakers
   - `1` - Music playing
-  - `2` - Music stoped
+  - `2` - Music stopped
   - `3` - Put away speakers
 - `6` - Music BPM
   - Value int of BPM
 - `7` - Gyro animation
   - Value is of rotation in degrees between 0 and 359 where 180 is level
+- `8` - Chatting with Mr T.
+  - Value could be random selection/chat to play back if we write some whimsical quips.
 
 ## Web-to-Host Calls
 - `0` - Ready to record audio
@@ -51,6 +53,7 @@ Each event has two parts `<type> <value>`
   - `0` - Turned on
   - `1` - Turned off
 - `5` - Gyro animation back to ideal mode
+- `6` - Chat Bubble is Done
 
 ## State Machine
 
