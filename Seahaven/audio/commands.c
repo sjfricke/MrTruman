@@ -35,7 +35,7 @@ int commandDetect(char const* voice_str)
     char* detectGreen = strstr(voice_str, "GREEN");
     char* detectBlue = strstr(voice_str, "BLUE");
 
-    char * broadcaststr = char * malloc(200*sizeof(char));
+    char* broadcaststr = (char*)malloc(200*sizeof(char));
    
     if((detectOn != NULL) || (detectOff != NULL)){
         int onoff = (detectOn != NULL) ? 0 : 1;
@@ -66,7 +66,7 @@ int commandDetect(char const* voice_str)
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
 
-    char * broadcaststr = char * malloc(200*sizeof(char));
+    char* broadcaststr = (char*)malloc(200*sizeof(char));
 
     if((detectOn != NULL) || (detectOff != NULL)){
         int onoff = (detectOn != NULL) ? 0 : 1;

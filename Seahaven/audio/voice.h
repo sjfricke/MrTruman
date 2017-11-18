@@ -13,6 +13,9 @@
 #include <pocketsphinx.h>
 
 #include "commands.h"
+#include "../hardware/LSM6DS3H.h"
+#include "../hardware/gpio.h"
+#include "../status.h"
 #define PS_BUF_SIZE 4096
 #define PS_BUF_TIME 15
 

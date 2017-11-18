@@ -143,12 +143,6 @@ static int testCamera() {
   printf("\nTesting Camera\n");
 }
 
-static int initAuxGPIO() {
-    uint16_t pin = GpioDB410cMapping(23);
-    GpioEnablePin(pin);
-    GpioSetDirection(pin, INPUT_PIN);
-}
-
 int main ( int argc, char* argv[] ) {
   printf("test\n");
   //testGyro();

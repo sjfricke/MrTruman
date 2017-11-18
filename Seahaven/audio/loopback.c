@@ -124,7 +124,7 @@ static int change_LED_from_sample(int16_t sample, int scale) {
 	}
 
 	if(BROADCASTCOLORS){
-		char * broadcaststr = char * malloc(200*sizeof(char));
+	        char* broadcaststr = (char*)malloc(200*sizeof(char));
 		sprintf(broadcaststr, "%d,%d,%d", r_comp, g_comp, b_comp);
 		broadcastString("2", broadcaststr);
 		free(broadcaststr);

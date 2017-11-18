@@ -17,3 +17,9 @@ void webDataCallback( int type, char* value );
 // This is for setting up things like componenets but will not give references
 // This means you will need to still get a mapping of the GPIO pin for the main function
 void HardwareSetup( void );
+
+static void initAuxGPIO() {
+    uint16_t pin = GpioDB410cMapping(23);
+    GpioEnablePin(pin);
+    GpioSetDirection(pin, INPUT_PIN);
+}

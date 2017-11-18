@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <alsa/asoundlib.h>
 #include <pthread.h>
+#include "../server/server.h"
 #include "../hardware/PCA9685.h"
 #include "../hardware/gpio.h"
 #include "../status.h"

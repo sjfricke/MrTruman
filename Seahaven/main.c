@@ -2,10 +2,10 @@
 
 extern server_t* g_server;
 
-static int status;
-static int busy;
+static char command[256];
 
 void webDataCallback( int type, char* value) {
+  int val;
   switch(type) {
 
   // PLACEHOLDER Callback 
@@ -23,9 +23,9 @@ void webDataCallback( int type, char* value) {
 
   // FAN Callback    
   case 2:
-    int val = atoi(value);
+    val = atoi(value);
     if(value == 0){
-      fanOn();
+      fanOn(0.99);
     }
     else {
       fanOff();
@@ -36,7 +36,7 @@ void webDataCallback( int type, char* value) {
 
   // CAMERA Callback
   case 3:
-      int val = atoi(value);
+      val = atoi(value);
       if(val == 0){
         // Alert animation
         broadcastString("4","1");
@@ -60,7 +60,7 @@ void webDataCallback( int type, char* value) {
 
   // SPEAKER/SERVO Callback  
   case 4:
-    int val = atoi(value);
+    val = atoi(value);
     if(val == 0){
       //printf("\nSPEAKER IS READY IN ANIMAION\n");  
       loopback();
