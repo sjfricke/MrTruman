@@ -82,6 +82,11 @@ void webDataCallback( int type, char* value) {
     animation_on = FALSE;
     break;
     
+  // Chat interaction over.
+  case 6:
+    animation_on = FALSE;
+    break;
+
   default:
     printf("Not a valid type! [%d]\n", type);
     break;

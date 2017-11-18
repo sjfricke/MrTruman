@@ -87,13 +87,7 @@ int commandDetect(char const* voice_str)
     return 0;
   }
 
-
-  if (strstr(voice_str, c_fan)) {
-    broadcastString("2", "0");
-    animation_on = TRUE;
-    return 0;
-  }
-
+  // Chat bubble
   if (strstr(voice_str, c_chitchat)) {
     broadcastString("8", "0");
     animation_on = TRUE;
