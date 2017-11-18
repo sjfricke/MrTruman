@@ -11,8 +11,8 @@ function testFunctions(e) {
 			break;
 		case 69: // E
 			break;
-          	case 82: // R
-	                animateRain();
+      	case 82: // R
+            animateRain();
 			break;
 		case 65: // A
 			startLightOnAnimation();

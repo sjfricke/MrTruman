@@ -2,8 +2,12 @@ $(window).ready(start());
 
 var renderer;
 var texLoaded = 0;
+var currentWall, startingWall;
 var appData;
+
+// textures
 var lightOnTexture, lightOffTexture;
+var wallTextures = new Array(5);
 
 function start() {
     setWebSocket();
@@ -22,58 +26,107 @@ function setWebSocket() {
 function setup() {
     renderer = new Renderer();
 
-    (new PIXI.loaders.Loader())
-        .add('lightOn', resPath.lightOn)
-        .load(function (loader, res) {
-            lightOnTexture = res.lightOn.texture;
-        });
+    // pick random texture between 0 and 6
+    currentWall = Math.round(Math.random()*5);
+    startingWall = currentWall;
+
+    (new PIXI.loaders.Loader()).add('lightOn', resPath.lightOn).
+        load(function (loader, res) { lightOnTexture = res.lightOn.texture; });
 
     appData = [
         {
-            type: 'addTile',
-            name: 'woodwall',
-            path: resPath.woodWall,
+            type: 'addTexture',
+            name: 'wall0',
+            path: resPath.wall0,
             pt: new PIXI.Point(0, 0),
-            scale: 0.5
+            tile: (0 == currentWall) ? true : false,
+            hide: (0 == currentWall) ? false : true
         },
         {
-            type: 'add',
-            name: 'sceneBounds',
-            path: resPath.scene,
-            pt: new PIXI.Point(0.25, 0.65),
-            scale: 1.3
+            type: 'addTexture',
+            name: 'wall1',
+            path: resPath.wall1,
+            pt: new PIXI.Point(0, 0),
+            tile: (1 == currentWall) ? true : false,
+            hide: (1 == currentWall) ? false : true
         },
         {
-            type: 'add',
-            name: 'scene',
-            path: resPath.scene,
-            pt: new PIXI.Point(0.25, 0.65),
-            scale: 1.3
+            type: 'addTexture',
+            name: 'wall2',
+            path: resPath.wall2,
+            pt: new PIXI.Point(0, 0),
+            tile: (2 == currentWall) ? true : false,
+            hide: (2 == currentWall) ? false : true
         },
         {
-            type: 'add',
-            name: 'lightning',
-            path: resPath.lightning,
-            pt: new PIXI.Point(0.25, 0.65),
-            scale: 1.3
+            type: 'addTexture',
+            name: 'wall3',
+            path: resPath.wall3,
+            pt: new PIXI.Point(0, 0),
+            tile: (3 == currentWall) ? true : false,
+            hide: (3 == currentWall) ? false : true
         },
         {
-            type: 'addSpritesheet',
-            name: 'rainAnimated',
-            path: resPath.rainAnimated,
-            pt: new PIXI.Point(0.25, 0.5),
-            count: 15,
-            framePrefix: "rain",
-            start: true,
-            scale: 1.3
+            type: 'addTexture',
+            name: 'wall4',
+            path: resPath.wall4,
+            pt: new PIXI.Point(0, 0),
+            tile: (4 == currentWall) ? true : false,
+            hide: (4 == currentWall) ? false : true
         },
         {
-            type: 'add',
-            name: 'window',
-            path: resPath.window,
-            pt: new PIXI.Point(0.25, 0.65),
-            scale: 1.3
+            type: 'addTexture',
+            name: 'wall5',
+            path: resPath.wall5,
+            pt: new PIXI.Point(0, 0),
+            tile: (5 == currentWall) ? true : false,
+            hide: (5 == currentWall) ? false : true
         },
+        {
+            type: 'addTile',
+            name: 'baseboard',
+            path: resPath.baseboard,
+            pt: new PIXI.Point(0, .948),
+            height: 25
+        },
+        // {
+        //     type: 'add',
+        //     name: 'sceneBounds',
+        //     path: resPath.scene,
+        //     pt: new PIXI.Point(0.25, 0.65),
+        //     scale: 1.3
+        // },
+        // {
+        //     type: 'add',
+        //     name: 'scene',
+        //     path: resPath.scene,
+        //     pt: new PIXI.Point(0.25, 0.65),
+        //     scale: 1.3
+        // },
+        // {
+        //     type: 'add',
+        //     name: 'lightning',
+        //     path: resPath.lightning,
+        //     pt: new PIXI.Point(0.25, 0.65),
+        //     scale: 1.3
+        // },
+        // {
+        //     type: 'addSpritesheet',
+        //     name: 'rainAnimated',
+        //     path: resPath.rainAnimated,
+        //     pt: new PIXI.Point(0.25, 0.5),
+        //     count: 15,
+        //     framePrefix: "rain",
+        //     start: true,
+        //     scale: 1.3
+        // },
+        // {
+        //     type: 'add',
+        //     name: 'window',
+        //     path: resPath.window,
+        //     pt: new PIXI.Point(0.25, 0.65),
+        //     scale: 1.3
+        // },
         {
             type: 'add',
             name: 'switch',
@@ -163,18 +216,19 @@ function run() {
 	speaker1StartY =  renderer.getElemByID('speaker1').position.y;
 	speaker2StartY = renderer.getElemByID('speaker2').position.y;
     // Mask rain animation so it only shows behind window
-	let rain = renderer.getElemByID('rainAnimated');
-	rain.mask = renderer.getElemByID('sceneBounds');
-	rain.pivot.y = -rain.height / 2; // For rain rotation
+	// let rain = renderer.getElemByID('rainAnimated');
+	// rain.mask = renderer.getElemByID('sceneBounds');
+	// rain.pivot.y = -rain.height / 2; // For rain rotation
 
-	let lightning = renderer.getElemByID('lightning');
-	lightning.alpha = 0;
+	// let lightning = renderer.getElemByID('lightning');
+	// lightning.alpha = 0;
 
     // player.interactive = true; // for clicking    
     // lightSwitch.interactive = true; // for clicking
 
     // Relayers to renderer
     for (var i = 0; i < appData.length; i++) {
+        if (appData[i].hide) { continue; }
         renderer.displayLayerByID(appData[i].name);
     }
 }

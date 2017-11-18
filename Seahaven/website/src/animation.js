@@ -75,7 +75,7 @@ function speakersOff() {
     }
 }
 
- function animateSpineBoy() {
+function animateSpineBoy() {
     if (playerMovingForward == true || playerMovingBackward == true) {
         // Currently performing action, so cannot stop
         return;
@@ -165,4 +165,13 @@ function lightningAnimFrame() {
         lightning.alpha = -1 * x * x + 2 * x;
         lightningFrame += 0.1 * lightningSpd;
     }
+}
+
+function changeWall() {
+    let wall = renderer.getElemByID("wall" + startingWall);
+
+    currentWall++;
+    if (currentWall > 5) { currentWall = 0 }
+
+    wall.texture = renderer.textures["wall" + currentWall];
 }

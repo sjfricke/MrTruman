@@ -11,40 +11,31 @@ class Renderer {
             this.app = new PIXI.Application(window.outerWidth, window.outerHeight, { backgroundColor: 0x1099bb });
             this.$container.append(this.app.view);
             this.elems = {};
+            this.textures = {};
             this.app.stage.interactive = true;
             this.editorFilter = new PIXI.Filter(null, `
                     precision mediump float;
                     varying vec2 vTextureCoord;
                     uniform sampler2D uSampler;
                     uniform float mode;
-                    // Brightness-Saturation-Contrast Filter
-                    vec3 applyBSC(vec4 color, float brightness, float saturation, float contrast)
-                    {
-	                    vec3 color_B  = color.rgb * (1.0 +color.a * (brightness -1.0));
-	                    vec3 intensity = vec3(dot(color_B, vec3(0.2125, 0.7154, 0.0721)));
-	                    vec3 color_BS  = mix(intensity, color_B, 1.0 + color.a * (saturation -1.0));
-	                    vec3 color_BSC  = mix(vec3(0.5, 0.5, 0.5), color_BS, 1.0 + color.a * (contrast - 1.0));
-	                    return color_BSC;
-                    }
+                    vec3 black = vec3(0.0,0.0,0.0);
                     void main(void)
                     {
                         float x = vTextureCoord.x;
                         float y = vTextureCoord.y;
                         vec4 pixel = texture2D(uSampler, vTextureCoord.xy);
-                        if (mode == 1.0
-                            || (((x < 0.192 && x > 0.1382) || (x < 0.2605 && x > 0.205))
-                            && ((y < 0.45996 && y > 0.3232) || (y < 0.603 && y > 0.4718)))) {
+                        if (mode == 1.0) {
                             gl_FragColor = pixel;
                         }
                         else {
-	                        vec3 color = applyBSC(pixel, 0.55, 1.1, 3.0);
+                            // 0 is full black, 1.0 is full on
+	                        vec3 color = mix(black, pixel.xyz, 0.7);
 	                        gl_FragColor = vec4(color, pixel.a);
                         }
                     }`
                 );
             this.editorFilter.uniforms.mode = 0.0;
             this.app.stage.filters = [this.editorFilter];
-
         }
     }
 
@@ -83,6 +74,24 @@ class Renderer {
         }
     }
 
+    checkload(id, path, pos) {
+        if (typeof id !== 'string' || this.testID(id)) {
+            log('Renderer', 'Could not add because ID (= %O) is already in use.', id);
+            return false;
+        }
+        else if (typeof path !== 'string') {
+            log('Renderer', 'Could not add because jsonPath (= %O) is not of a string.', jsonPath);
+            return false;
+        } 
+        else if (!(pos instanceof PIXI.Point)) {
+            log('Renderer', 'Could not add because position (= %O) is not of type PIXI.Point.', pos);
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     addSpine(data, onload) {
         if (data === undefined || typeof data !== 'object') {
             log('Renderer', 'Could not add because data (= %O) is invalid.', data);
@@ -93,18 +102,9 @@ class Renderer {
             pos = data.pt,
             containerID = data.containerID,
             scale = data.scale;
-        if (typeof id !== 'string' || this.testID(id)) {
-            log('Renderer', 'Could not add because ID (= %O) is already in use.', id);
-            return;
-        }
-        if (typeof jsonPath !== 'string') {
-            log('Renderer', 'Could not add because jsonPath (= %O) is not of a string.', jsonPath);
-            return;
-        }
-        if (!(pos instanceof PIXI.Point)) {
-            log('Renderer', 'Could not add because position (= %O) is not of type PIXI.Point.', pos);
-            return;
-        }
+
+        if (!this.checkload(id, jsonPath, pos)) { return; }
+
         var container = this.getElemByID(containerID);
         if (container == null || !(container instanceof PIXI.Container)) {
             container = this.app.stage;
@@ -140,18 +140,9 @@ class Renderer {
             pos = data.pt,
             containerID = data.containerID,
             scale = data.scale;
-        if (typeof id !== 'string' || this.testID(id)) {
-            log('Renderer', 'Could not add because ID (= %O) is already in use.', id);
-            return;
-        }
-        if (typeof imgPath !== 'string') {
-            log('Renderer', 'Could not add because imgPath (= %O) is not of a string.', imgPath);
-            return;
-        }
-        if (!(pos instanceof PIXI.Point)) {
-            log('Renderer', 'Could not add because position (= %O) is not of type PIXI.Point.', pos);
-            return;
-        }
+
+        if (!this.checkload(id, imgPath, pos)) { return; }
+
         let container = this.getElemByID(containerID);
         if (container == null || !(container instanceof PIXI.Container)) {
             container = this.app.stage;
@@ -175,6 +166,41 @@ class Renderer {
         });
     }
 
+    addTexture(data, onload) {
+        if (data === undefined || typeof data !== 'object') {
+            log('Renderer', 'Could not add because data (= %O) is invalid.', data);
+            return;
+        }
+        let id = data.name,
+            imgPath = data.path,
+            pos = data.pt,
+            containerID = data.containerID,
+            tile = data.tile;
+        
+        if (!this.checkload(id, imgPath, pos)) { return; }
+
+        let loader = new PIXI.loaders.Loader();
+        loader.add(id, imgPath);
+        var that = this;
+        loader.load((loader, res) => {
+            that.textures[id] = res[id].texture;
+
+            if (tile) {
+                 that.elems[id] = new PIXI.extras.TilingSprite(
+                    res[id].texture,
+                    data.width || that.app.renderer.width,
+                    data.height || that.app.renderer.height
+                );
+
+                that.elems[id].position.y = pos.y * window.outerHeight
+            }
+
+            if (typeof onload === 'function') {
+                onload(id, that.elems[id]);
+            }
+        });
+    }
+
     addTile(data, onload) {
         if (data === undefined || typeof data !== 'object') {
             log('Renderer', 'Could not add because data (= %O) is invalid.', data);
@@ -184,27 +210,20 @@ class Renderer {
             imgPath = data.path,
             pos = data.pt,
             containerID = data.containerID;
-        if (typeof id !== 'string' || this.testID(id)) {
-            log('Renderer', 'Could not add because ID (= %O) is already in use.', id);
-            return;
-        }
-        if (typeof imgPath !== 'string') {
-            log('Renderer', 'Could not add because imgPath (= %O) is not of a string.', imgPath);
-            return;
-        }
-        if (!(pos instanceof PIXI.Point)) {
-            log('Renderer', 'Could not add because position (= %O) is not of type PIXI.Point.', pos);
-            return;
-        }
+        
+        if (!this.checkload(id, imgPath, pos)) { return; }
+
         let loader = new PIXI.loaders.Loader();
         loader.add(id, imgPath);
         var that = this;
         loader.load((loader, res) => {
             that.elems[id] = new PIXI.extras.TilingSprite(
                 res[id].texture,
-                that.app.renderer.width,
-                that.app.renderer.height
+                data.width || that.app.renderer.width,
+                data.height || that.app.renderer.height
             );
+
+            that.elems[id].position.y = pos.y * window.outerHeight
             if (typeof onload === 'function') {
                 onload(id, that.elems[id]);
             }
@@ -224,18 +243,9 @@ class Renderer {
             framePrefix = data.framePrefix,
             scale = data.scale || 1,
             start = data.start || true;
-        if (typeof id !== 'string' || this.testID(id)) {
-            log('Renderer', 'Could not add because ID (= %O) is already in use.', id);
-            return;
-        }
-        if (typeof jsonPath !== 'string') {
-            log('Renderer', 'Could not add because jsonPath (= %O) is not of a string.', jsonPath);
-            return;
-        }
-        if (!(pos instanceof PIXI.Point)) {
-            log('Renderer', 'Could not add because position (= %O) is not of type PIXI.Point.', pos);
-            return;
-        }
+
+        if (!this.checkload(id, jsonPath, pos)) { return; }
+
         var container = this.getElemByID(containerID);
         if (container == null || !(container instanceof PIXI.Container)) {
             container = this.app.stage;
@@ -330,7 +340,10 @@ class Renderer {
 
     displayLayerByID(id) {
         let layer = this.getElemByID(id);
-        if (layer == null) {
+        if (layer.hideOnLoad) {
+            return;
+        }
+        else if (layer == null) {
             log('Renderer', 'Could not display layer because  ID (= %O) was not found.', id);
             return;
         }
