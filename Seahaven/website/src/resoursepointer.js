@@ -1,6 +1,7 @@
 ﻿const resPath = {
     "baseboard": "res/img/baseboard.png",
     "couch": "res/img/couch.png",
+    "cameraImage": "res/img/camera_image.jpg",
     "desk": "res/img/desk.png",
     "fireAnimated": "res/spritesheet/fire_animated.json",
     "firePlace": "res/img/fire_place.png",

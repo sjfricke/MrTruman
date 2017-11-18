@@ -128,6 +128,20 @@ function toggleLightSwitch() {
     }
 }
 
+function getNewPhoto() { 
+    renderer.app.stage.removeChild(renderer.getElemByID("picture"));
+    delete renderer.elems["picture"];
+
+    renderer.add({
+            name: 'picture',
+            path: resPath.cameraImage,
+            pt: new PIXI.Point(0.25, 0.56),
+            scale: 1.0
+        }, function() {
+            renderer.app.stage.addChild(renderer.getElemByID("picture"));
+        })
+}
+
 function changeWall() {
     let wall = renderer.getElemByID("wall" + startingWall);
 

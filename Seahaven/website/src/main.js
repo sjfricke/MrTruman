@@ -113,15 +113,15 @@ function setup() {
             type: 'add',
             name: 'picture',
             path: resPath.picture,
-            pt: new PIXI.Point(0.25, 0.6),
-            scale: 1.25
+            pt: new PIXI.Point(0.25, 0.56),
+            scale: 1.0
         },
         {
             type: 'add',
             name: 'frame',
             path: resPath.frame,
             pt: new PIXI.Point(0.25, 0.6),
-            scale: 1.25
+            scale: 1.0
         },        
         {
             type: 'add',

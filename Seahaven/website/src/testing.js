@@ -22,6 +22,7 @@ function testFunctions(e) {
 			startLightOffAnimation();
 			break;
 		case 68: // D
+			getNewPhoto();
 			break;
 		case 70: // F
 			break;
