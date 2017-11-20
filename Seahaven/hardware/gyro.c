@@ -109,7 +109,7 @@ int enableGyroTilt()
   I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL1_XL, 0x20);
   // enable (z,y,x) on gryo and embedded funcs (tilt)
   I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL10_C, 0x3C);
-  I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL3_C, 0x04);
+  I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL3_C, 0x44); // SET BDU and 3-WIRE selection.
 
   // tilt calculation enable, LSB is latched interrupt
   I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_TAP_CFG, 0x21);
