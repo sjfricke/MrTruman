@@ -23,15 +23,15 @@ int getTiltDirection() {
     return 0;
 }
 
-int8_t readGyroReg(uint8_t addr) {
+uint8_t readGyroReg(uint8_t addr) {
     uint8_t data;
     I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_I2C_ADDRESS);
     I2cReadByte(LSM6DS3H_I2C_BUS, addr, &data);
-    return (int8_t)data;
+    return data;
 }
 
 int getGyroX() {
-    int8_t dataL, dataH;
+    uint8_t dataL, dataH;
     dataL = readGyroReg(LSM6DS3H_OUTX_L_G);
     dataH = readGyroReg(LSM6DS3H_OUTX_H_G);
     // concatenate
@@ -39,7 +39,7 @@ int getGyroX() {
 }
 
 int getGyroY() {
-    int8_t dataL, dataH;
+    uint8_t dataL, dataH;
     dataL = readGyroReg(LSM6DS3H_OUTY_L_G);
     dataH = readGyroReg(LSM6DS3H_OUTY_H_G);
     // concatenate
@@ -47,7 +47,7 @@ int getGyroY() {
 }
 
 int getAccelX() {
-    int8_t dataL, dataH;
+    uint8_t dataL, dataH;
     dataL = readGyroReg(LSM6DS3H_OUTX_L_XL);
     dataH = readGyroReg(LSM6DS3H_OUTX_H_XL);
     // concatenate
@@ -55,7 +55,7 @@ int getAccelX() {
 }
 
 int getAccelY() {
-    int8_t dataL, dataH;
+    uint8_t dataL, dataH;
     dataL = readGyroReg(LSM6DS3H_OUTY_L_XL);
     dataH = readGyroReg(LSM6DS3H_OUTY_H_XL);
     // concatenate

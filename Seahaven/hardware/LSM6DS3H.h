@@ -58,5 +58,5 @@ int getGyroY();
 int getAccelX();
 int getAccelY();
 int getTiltDirection();
-int8_t readGyroReg(uint8_t addr);
+uint8_t readGyroReg(uint8_t addr);
 #endif
