@@ -21,11 +21,14 @@
 #define LSM6DS3H_OUTX_H_G 0x23
 #define LSM6DS3H_OUTY_L_G 0x24
 #define LSM6DS3H_OUTY_H_G 0x25
+#define LSM6DS3H_OUTZ_L_G 0x26
+#define LSM6DS3H_OUTZ_H_G 0x27
 #define LSM6DS3H_OUTX_L_XL 0x28
 #define LSM6DS3H_OUTX_H_XL 0x29
 #define LSM6DS3H_OUTY_L_XL 0x2A
 #define LSM6DS3H_OUTY_H_XL 0x2B
-
+#define LSM6DS3H_OUTZ_L_XL 0x2C
+#define LSM6DS3H_OUTZ_H_XL 0x2D
 // enable embedded functions register
 #define ENABLE_EMB_FUNC_REG 0x80
 // enable tilt event detection, two LSB conclude two ops (idk what they are)
@@ -53,10 +56,12 @@ int enableGyroTilt();     // Enables Gyro with embedded tilt function
 int disableGyro();        // Turn off access to Gyro
 int gyroInterruptPoll();  // Poll the gyro for an interrupt
 int gyroClearInterrupt(); // Clear the interrupt on the gyro tilt
-int getGyroX();
-int getGyroY();
-int getAccelX();
-int getAccelY();
+int16_t getGyroX();
+int16_t getGyroY();
+int16_t getGyroZ();
+int16_t getAccelX();
+int16_t getAccelY();
+int16_t getAccelZ();
 int getTiltDirection();
 uint8_t readGyroReg(uint8_t addr);
 #endif

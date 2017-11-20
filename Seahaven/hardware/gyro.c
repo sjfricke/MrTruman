@@ -7,19 +7,25 @@ int disableGyro()
   return 0;
 }
 
+// Returns 1 if it thinks the tilt direction is right,
+// -1 if left, 0 if cant determine
 int getTiltDirection() {
-    int x = getAccelX();
-    //int y = getAccelY();
-    //int gx = getGyroX();
-    //int gy = getGyroY();
-    if (x < 1000) {
-        return 1;//right
-    } else if (x > 1000)
-	return -1; //left
-   /* if (y > 1000 && gy > 100)
-	return 2;
-    else if (y < 1000 && gy < 100)
-	return -2;*/
+    int x, z;
+    x = 0;
+    z = 0;
+    for (int i = 0; i < 4; i++) {
+	x += getAccelX();
+	z += getAccelZ();
+    }
+    x = x/4;
+    z = z/4;
+    int16_t x_avg = (int16_t)x;
+    int16_t z_avg = (int16_t)z;
+    // Arrived at these values from trial and error (MACHINE LEARNING)
+    if (x_avg > 1000 && z_avg < 10000 && z_avg > 0) {
+        return -1;
+    } else if (x_avg < -1000 && z_avg < 10000 && z_avg > 0)
+	return 1;
     return 0;
 }
 
@@ -30,7 +36,7 @@ uint8_t readGyroReg(uint8_t addr) {
     return data;
 }
 
-int getGyroX() {
+int16_t getGyroX() {
     uint8_t dataL, dataH;
     dataL = readGyroReg(LSM6DS3H_OUTX_L_G);
     dataH = readGyroReg(LSM6DS3H_OUTX_H_G);
@@ -38,7 +44,7 @@ int getGyroX() {
     return (dataL | (dataH << 8));
 }
 
-int getGyroY() {
+int16_t getGyroY() {
     uint8_t dataL, dataH;
     dataL = readGyroReg(LSM6DS3H_OUTY_L_G);
     dataH = readGyroReg(LSM6DS3H_OUTY_H_G);
@@ -46,7 +52,15 @@ int getGyroY() {
     return (dataL | (dataH << 8));
 }
 
-int getAccelX() {
+int16_t getGyroZ() {
+    uint8_t dataL, dataH;
+    dataL = readGyroReg(LSM6DS3H_OUTZ_L_G);
+    dataH = readGyroReg(LSM6DS3H_OUTZ_H_G);
+    // concatenate
+    return (dataL | (dataH << 8));
+}
+
+int16_t getAccelX() {
     uint8_t dataL, dataH;
     dataL = readGyroReg(LSM6DS3H_OUTX_L_XL);
     dataH = readGyroReg(LSM6DS3H_OUTX_H_XL);
@@ -54,10 +68,18 @@ int getAccelX() {
     return (dataL | (dataH << 8));
 }
 
-int getAccelY() {
+int16_t getAccelY() {
     uint8_t dataL, dataH;
     dataL = readGyroReg(LSM6DS3H_OUTY_L_XL);
     dataH = readGyroReg(LSM6DS3H_OUTY_H_XL);
+    // concatenate
+    return (dataL | (dataH << 8));
+}
+
+int16_t getAccelZ() {
+    uint8_t dataL, dataH;
+    dataL = readGyroReg(LSM6DS3H_OUTZ_L_XL);
+    dataH = readGyroReg(LSM6DS3H_OUTZ_H_XL);
     // concatenate
     return (dataL | (dataH << 8));
 }

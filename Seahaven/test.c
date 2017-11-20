@@ -117,35 +117,53 @@ static void testGyro() {
     //printf("data of interrupt status: %x\n", data);
     int interrupted = 0;
 
-    interrupt_pin = GpioDB410cMapping(GYRO_INTERRUPT_PIN);
+   /* while(1){
+	
+            int16_t x_data = getGyroX();
+            int16_t y_data = getGyroY();
+            int16_t xlx_data = getAccelX();
+            int16_t xly_data = getAccelY();
+            int16_t xlz_data = getAccelZ();
+            int16_t z_data = getGyroZ();
+	    printf("\rGYROX: %d \tGYROY: %d\tGYROZ: %d\tACCELX: %d\tACCELY: %d\tACCELZ: %d", x_data, y_data, z_data, xlx_data, xly_data, xlz_data);
 
-    while (interrupted < 20) {
-	data = GpioGetValue(interrupt_pin);
-        if (data == 1) {
+    }*/
+    initLEDs();
+    gyroClearInterrupt();
+    while (1) {
+        if (gyroInterruptPoll()) {
 	    //printf("Detected int \n");
             interrupted++;
             data = gyroClearInterrupt();
-            int x_data = getGyroX();
-            int y_data = getGyroY();
-            int xlx_data = getAccelX();
-            int xly_data = getAccelY();
+            /*int16_t x_data = getGyroX();
+            int16_t y_data = getGyroY();
+            int16_t xlx_data = getAccelX();
+            int16_t xly_data = getAccelY();
+            int16_t xlz_data = getAccelZ();
+            int16_t z_data = getGyroZ();*/
+	   // printf("GYROX: %d \tGYROY: %d\tGYROZ: %d\tACCELX: %d\tACCELY: %d\tACCELZ: %d\n", x_data, y_data, z_data, xlx_data, xly_data, xlz_data);
+	    //printf("GYROZ: %d\tACCELZ: %d\n", xlz_data, z_data);
 	    int dir = getTiltDirection();
-	    if (dir == 1)
-		    printf("tilted right");
-	    else if (dir == -1)
-		    printf("tilted left");
-	    /*if (dir == 2)
-		    printf("tilted left");
-	    else if (dir == -2)
-		    printf("tilted right");*/
-	    else
-		    printf("could not estimate direction");
-	    printf("\n");
-            /*printf("gyro read x %d\n", x_data);
+	    if (dir == 1 ){
+		    printf("tilted right\n");
+		    setLED(PCA9685_RED_ADDRESS, .9, 0x3ff);	    
+	    }
+	    else if (dir == -1) {
+		    printf("tilted left\n");
+		    setLED(PCA9685_GREEN_ADDRESS, .3, 0x3ff);	    
+	    }else{
+		    printf("neither\n");
+		    setLED(PCA9685_BLUE_ADDRESS, .3, 0x3ff);	    
+	    }
+	    /*printf("\n");
+            printf("gyro read x %d\n", x_data);
             printf("gyro read y %d\n", y_data);
             printf("accel read x %d\n", xlx_data);
-            printf("accel read y %d\n", xly_data);
-        */}
+            printf("accel read y %d\n", xly_data);*/
+	    usleep(100000);
+	    gyroClearInterrupt();
+	    setLED(PCA9685_ALL_CALL, 0, 0x3ff);
+        }
     }
 
     //I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
