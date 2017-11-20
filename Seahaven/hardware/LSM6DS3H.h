@@ -17,6 +17,14 @@
 #define LSM6DS3H_FUNC_SRC 0x53
 #define LSM6DS3H_TAP_CFG 0x58
 #define LSM6DS3H_MD1_CFG 0x5E // could use MD2 if we wanted to route tilt int to INT2
+#define LSM6DS3H_OUTX_L_G 0x22
+#define LSM6DS3H_OUTX_H_G 0x23
+#define LSM6DS3H_OUTY_L_G 0x24
+#define LSM6DS3H_OUTY_H_G 0x25
+#define LSM6DS3H_OUTX_L_XL 0x28
+#define LSM6DS3H_OUTX_H_XL 0x29
+#define LSM6DS3H_OUTY_L_XL 0x2A
+#define LSM6DS3H_OUTY_H_XL 0x2B
 
 // enable embedded functions register
 #define ENABLE_EMB_FUNC_REG 0x80
@@ -45,5 +53,9 @@ int enableGyroTilt();     // Enables Gyro with embedded tilt function
 int disableGyro();        // Turn off access to Gyro
 int gyroInterruptPoll();  // Poll the gyro for an interrupt
 int gyroClearInterrupt(); // Clear the interrupt on the gyro tilt
+int getGryoX();
+int getGryoY();
+int getAccelX();
+int getAccelY();
 
 #endif

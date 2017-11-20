@@ -122,11 +122,19 @@ static void testGyro() {
     while (interrupted < 10) {
 	    data = GpioGetValue(interrupt_pin);
         if (data == 0) {
-	    printf("Detected int \n");
+	        printf("Detected int \n");
             interrupted++;
-    	    I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
-	    printf("data at interrupt %x\n", data);
-	    usleep(1000000);
+            data = gyroClearInterrupt();
+            int x_data = getGryoX();
+            int y_data = getGryoY();
+            int xlx_data = getAccelX();
+            int xly_data = getAccelY();
+            printf("data at interrupt %x\n", data);
+            printf("gyro read x %d\n", x_data);
+            printf("gyro read y %d\n", y_data);
+            printf("accel read x %d\n", xlx_data);
+            printf("accel read y %d\n", xly_data);
+	        usleep(1000000);
         }
     }
 
@@ -145,12 +153,12 @@ static int testCamera() {
 
 int main ( int argc, char* argv[] ) {
   printf("test\n");
-  //testGyro();
+  testGyro();
   //testLEDFanServo();
   //testCamera();
-  initAuxGPIO();
-  loopbackSetup();
-  loopback();
+  //initAuxGPIO();
+  //loopbackSetup();
+  //loopback();
   //
   //
   //servoStart();

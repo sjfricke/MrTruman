@@ -7,6 +7,45 @@ int disableGyro()
   return 0;
 }
 
+int16_t readGyroReg(uint8_t addr) {
+    int16_t data;
+    I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_I2C_ADDRESS);
+    I2cReadByte(LSM6DS3H_I2C_BUS, addr, &data);
+    return data;
+}
+
+int getGryoX() {
+    int16_t dataL, dataH;
+    dataL = readGryoReg(LSM6DS3H_OUTX_L_G);
+    dataH = readGyroReg(LSM6DS3H_OUTX_H_G);
+    // concatenate
+    return dataL & dataH << 16;
+}
+
+int getGyroY() {
+    int16_t dataL, dataH;
+    dataL = readGryoReg(LSM6DS3H_OUTY_L_G);
+    dataH = readGyroReg(LSM6DS3H_OUTY_H_G);
+    // concatenate
+    return dataL & dataH << 16;
+}
+
+int getAccelX() {
+    int16_t dataL, dataH;
+    dataL = readGryoReg(LSM6DS3H_OUTX_L_XL);
+    dataH = readGyroReg(LSM6DS3H_OUTX_H_XL);
+    // concatenate
+    return dataL & dataH << 16;
+}
+
+int getAccelY() {
+    int16_t dataL, dataH;
+    dataL = readGryoReg(LSM6DS3H_OUTY_L_XL);
+    dataH = readGyroReg(LSM6DS3H_OUTY_H_XL);
+    // concatenate
+    return dataL & dataH << 16;
+}
+
 /**
  * This function simply reads the gpio pin associated with the gyro tilt interrupt
  * Returns 0 for no interrupt, 1 for an interrupt

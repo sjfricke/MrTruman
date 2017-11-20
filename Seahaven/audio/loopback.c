@@ -124,7 +124,7 @@ static int change_LED_from_sample(int16_t sample, int scale) {
 	}
 
 	if(BROADCASTCOLORS){
-	        char* broadcaststr = (char*)malloc(200*sizeof(char));
+	    char* broadcaststr = (char*)malloc(200*sizeof(char));
 		sprintf(broadcaststr, "%d,%d,%d", r_comp, g_comp, b_comp);
 		broadcastString("2", broadcaststr);
 		free(broadcaststr);
@@ -329,8 +329,6 @@ void loopbackSetup() {
 }
 
 int loopback() {
-
-	pin = GpioDB410cMapping(23);
 	pthread_t tid;
 	int wr=0;
 
@@ -341,7 +339,7 @@ int loopback() {
 
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 	// loop the entire time the aux cord is plugged in
-	while (GpioGetValue(pin) == 1) {
+	while (aux_in) {
 		snd_pcm_readi(inhandle, buffer, frames);
 		//lpfilter(buffer, lpfilt_buff);
 //		wr = snd_pcm_writei(outhandle, lpfilt_buff, framesout);	
