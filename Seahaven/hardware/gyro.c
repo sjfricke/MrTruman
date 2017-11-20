@@ -7,43 +7,59 @@ int disableGyro()
   return 0;
 }
 
-int16_t readGyroReg(uint8_t addr) {
-    int16_t data;
-    I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_I2C_ADDRESS);
-    I2cReadByte(LSM6DS3H_I2C_BUS, addr, &data);
-    return data;
+int getTiltDirection() {
+    int x = getAccelX();
+    //int y = getAccelY();
+    //int gx = getGyroX();
+    //int gy = getGyroY();
+    if (x < 1000) {
+        return 1;//right
+    } else if (x > 1000)
+	return -1; //left
+   /* if (y > 1000 && gy > 100)
+	return 2;
+    else if (y < 1000 && gy < 100)
+	return -2;*/
+    return 0;
 }
 
-int getGryoX() {
-    int16_t dataL, dataH;
-    dataL = readGryoReg(LSM6DS3H_OUTX_L_G);
+int8_t readGyroReg(uint8_t addr) {
+    uint8_t data;
+    I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_I2C_ADDRESS);
+    I2cReadByte(LSM6DS3H_I2C_BUS, addr, &data);
+    return (int8_t)data;
+}
+
+int getGyroX() {
+    int8_t dataL, dataH;
+    dataL = readGyroReg(LSM6DS3H_OUTX_L_G);
     dataH = readGyroReg(LSM6DS3H_OUTX_H_G);
     // concatenate
-    return dataL & dataH << 16;
+    return dataL & dataH << 8;
 }
 
 int getGyroY() {
-    int16_t dataL, dataH;
-    dataL = readGryoReg(LSM6DS3H_OUTY_L_G);
+    int8_t dataL, dataH;
+    dataL = readGyroReg(LSM6DS3H_OUTY_L_G);
     dataH = readGyroReg(LSM6DS3H_OUTY_H_G);
     // concatenate
-    return dataL & dataH << 16;
+    return dataL & dataH << 8;
 }
 
 int getAccelX() {
-    int16_t dataL, dataH;
-    dataL = readGryoReg(LSM6DS3H_OUTX_L_XL);
+    int8_t dataL, dataH;
+    dataL = readGyroReg(LSM6DS3H_OUTX_L_XL);
     dataH = readGyroReg(LSM6DS3H_OUTX_H_XL);
     // concatenate
-    return dataL & dataH << 16;
+    return dataL & dataH << 8;
 }
 
 int getAccelY() {
-    int16_t dataL, dataH;
-    dataL = readGryoReg(LSM6DS3H_OUTY_L_XL);
+    int8_t dataL, dataH;
+    dataL = readGyroReg(LSM6DS3H_OUTY_L_XL);
     dataH = readGyroReg(LSM6DS3H_OUTY_H_XL);
     // concatenate
-    return dataL & dataH << 16;
+    return dataL & dataH << 8;
 }
 
 /**
@@ -107,5 +123,8 @@ int enableGyroTilt()
   if (data != TILT_ON_INT1)
     printf("MD1_CFG read not correct, was 0x%x should be 0x%x", data, TILT_ON_INT1);
 
+
+  // turn on gyro
+  I2cWriteByte(LSM6DS3H_I2C_BUS, LSM6DS3H_CTRL2_G, 0x54);
   return 0;
 }

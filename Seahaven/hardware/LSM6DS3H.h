@@ -53,9 +53,10 @@ int enableGyroTilt();     // Enables Gyro with embedded tilt function
 int disableGyro();        // Turn off access to Gyro
 int gyroInterruptPoll();  // Poll the gyro for an interrupt
 int gyroClearInterrupt(); // Clear the interrupt on the gyro tilt
-int getGryoX();
-int getGryoY();
+int getGyroX();
+int getGyroY();
 int getAccelX();
 int getAccelY();
-
+int getTiltDirection();
+int8_t readGyroReg(uint8_t addr);
 #endif

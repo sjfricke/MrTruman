@@ -2,7 +2,7 @@
 
 static void testLEDFanServo() {
 
-    servoStart();
+    servofanStart();
     servoRetract();
     fanOn(.99);
   
@@ -119,23 +119,33 @@ static void testGyro() {
 
     interrupt_pin = GpioDB410cMapping(GYRO_INTERRUPT_PIN);
 
-    while (interrupted < 10) {
-	    data = GpioGetValue(interrupt_pin);
-        if (data == 0) {
-	        printf("Detected int \n");
+    while (interrupted < 20) {
+	data = GpioGetValue(interrupt_pin);
+        if (data == 1) {
+	    //printf("Detected int \n");
             interrupted++;
             data = gyroClearInterrupt();
-            int x_data = getGryoX();
-            int y_data = getGryoY();
+            int x_data = getGyroX();
+            int y_data = getGyroY();
             int xlx_data = getAccelX();
             int xly_data = getAccelY();
-            printf("data at interrupt %x\n", data);
-            printf("gyro read x %d\n", x_data);
+	    int dir = getTiltDirection();
+	    if (dir == 1)
+		    printf("tilted right");
+	    else if (dir == -1)
+		    printf("tilted left");
+	    /*if (dir == 2)
+		    printf("tilted left");
+	    else if (dir == -2)
+		    printf("tilted right");*/
+	    else
+		    printf("could not estimate direction");
+	    printf("\n");
+            /*printf("gyro read x %d\n", x_data);
             printf("gyro read y %d\n", y_data);
             printf("accel read x %d\n", xlx_data);
             printf("accel read y %d\n", xly_data);
-	        usleep(1000000);
-        }
+        */}
     }
 
     //I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
