@@ -35,7 +35,7 @@ int getGyroX() {
     dataL = readGyroReg(LSM6DS3H_OUTX_L_G);
     dataH = readGyroReg(LSM6DS3H_OUTX_H_G);
     // concatenate
-    return dataL & dataH << 8;
+    return (dataL | (dataH << 8));
 }
 
 int getGyroY() {
@@ -43,7 +43,7 @@ int getGyroY() {
     dataL = readGyroReg(LSM6DS3H_OUTY_L_G);
     dataH = readGyroReg(LSM6DS3H_OUTY_H_G);
     // concatenate
-    return dataL & dataH << 8;
+    return (dataL | (dataH << 8));
 }
 
 int getAccelX() {
@@ -51,7 +51,7 @@ int getAccelX() {
     dataL = readGyroReg(LSM6DS3H_OUTX_L_XL);
     dataH = readGyroReg(LSM6DS3H_OUTX_H_XL);
     // concatenate
-    return dataL & dataH << 8;
+    return (dataL | (dataH << 8));
 }
 
 int getAccelY() {
@@ -59,7 +59,7 @@ int getAccelY() {
     dataL = readGyroReg(LSM6DS3H_OUTY_L_XL);
     dataH = readGyroReg(LSM6DS3H_OUTY_H_XL);
     // concatenate
-    return dataL & dataH << 8;
+    return (dataL | (dataH << 8));
 }
 
 /**
