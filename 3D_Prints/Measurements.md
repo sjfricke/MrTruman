@@ -13,51 +13,47 @@
 
 ## PCB Board
 
-- Length: `204.47mm`
-- Width: `135.38mm`
-- Offsets
-  - `2mm` shifted down from center of box
-  - Top of board is `65.69mm` from center of box
+- Length: `205mm`
+- Height: `136mm`
+- Thinkness: `1.6mm`
+- Depth from front: `25mm`
   
 ## LCD Screen
 
 - Full Screen With Bezel
-  - Length: `211mm`
-  - Width: `126mm`
+  - Length: `165mm`
+  - Height: `100mm`
   - Thickness: `7mm`
 - Screen without Bezel
-  - Length: `201mm`
-  - Width: `115mm`
-- Offsets
-  - `2mm` shifted down from center of box
-
+  - Length: `157mm`
+  - Height: `100mm`
+  
 ## LEDs
-
-- `10.922mm` from edge of board for first and last LED
-- `20.32mm` inbetween each LED
 - Hole in board
-  - Width: `3mm`
-  - Height: `2mm`
-  - `15mm` from edge of board
-  - Holes at +- [`91.44mm`, `71.12mm`, `50.8mm`, `30.48mm`, `10.16mm`]
-
+  - Width: `board`
+  - Height: `8mm`
+  - `7mm` from top edge of board
+  
 ## Camera
 
-- PCB Square
-  - Length: `25mm`
-  - Width: `24mm`
+- Outer
+  - Height: `51mm`
+  - Width: `25mm`
 - Inner Camera
-  - Length: `8mm`
-  - Width: `8mm`
-- ![Camera](./diagrams/camera.png)
+  - Ring Diameter: `8mm`
+  - From top: `10mm`
  
 ## Side Ports
  
-- Power Jack `23mm` from bottom of PCB board
-- Audio Jack `110mm` from bottom of PCB board
-
+- Power Jack `25mm` from bottom of PCB board
+  - Power Jack Width (depth from PCB): `12mm`
+  - Power Jack Height: `9mm`
+- Audio Jack `63mm` from bottom of PCB board
+  - Audio Jack Width (depth from PCB): `6mm`
+  - Audio Jack Height: `7mm`
 ## Speakers
 
+- `25mm` from back of PCB
 - Speakers itself
   - Height: `27mm`
   - Width: `21mm`
@@ -65,3 +61,12 @@
   - Height `33mm`
   - Width: `27mm`
   - Depth: `15mm`
+
+# Screw
+
+- hole diameter: `4mm`
+
+# Cable
+
+- When bend HDMI and Touch: `5mm`
+- `73mm` from bottom PCB to touch cable
