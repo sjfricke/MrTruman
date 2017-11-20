@@ -155,10 +155,20 @@ int main ( int argc, char* argv[] ) {
     }
 
     if (gyro_tripped) {
-      broadcastString("7", "0");
-      gyroClearInterrupt();
-      animation_on = TRUE;
-      gyro_tripped = FALSE;
+      int dir = getTiltDirection();
+      if(dir == 1 || dir == -1){
+        // 1 for right, -1 for left
+        sprintf(command, "%d", dir);
+        broadcastString("7", command);
+        gyroClearInterrupt();
+        animation_on = TRUE;
+        gyro_tripped = FALSE;
+      } else{
+        animation_on = FALSE;
+        gyro_tripped = FALSE;
+        gyroClearInterrupt();
+      }
+      
     } 
 
     usleep(50000); // 50ms
