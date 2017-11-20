@@ -3,8 +3,6 @@
 static char* c_lights = "LIGHT";
 static char* c_fire = "FIRE";
 static char* c_picture = "PICTURE";
-static char* c_take = "TAKE";
-static char* c_fan = "FAN";
 static char* c_chitchat = "HOW YOU DOIN";
 
 /*
