@@ -14,6 +14,12 @@ static uint16_t pin;
 void *buffer;
 int buff_size;
 
+extern uint8_t VOLCHANGED;
+extern uint8_t VOLCURRENT;
+uint8_t local_volume;
+
+
+
 static void closeHandles() {
 	snd_pcm_drain(inhandle);
 	snd_pcm_close(inhandle);
@@ -307,13 +313,20 @@ void loopbackSetup() {
 int loopback() {
 	pthread_t tid;
 	int wr=0;
-
+	local_volume = VOLCURRENT;
+	char* volcommand = (char*)malloc(200*sizeof(char));
 	// Now Playing
 	broadcastString("5", "1");
 
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 	// loop the entire time the aux cord is plugged in
 	while (aux_in) {
+		// If the volume has been changed, acknowledge it by changing the volume and clearing the changed flag.
+		if(VOLCHANGED){
+			VOLCHANGED = 0;
+		    sprintf(volcommand, "amixer cset iface=MIXER,name='RX3 Digital Volume' %d", VOLCURRENT);
+			system(volcommand);
+		}
 		snd_pcm_readi(inhandle, buffer, frames);
 		wr = snd_pcm_writei(outhandle, buffer, framesout);	
 		if (wr < 0) {
@@ -326,7 +339,7 @@ int loopback() {
 
 	// No Longer Playing
 	broadcastString("5", "2");
-
+	free(volcommand);
 	//printf("Aux unplugged, see ya next time\n");
 	pthread_join(tid, NULL);
 	audio_plugged_in = FALSE;

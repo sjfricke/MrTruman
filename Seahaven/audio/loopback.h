@@ -16,6 +16,9 @@
 #define BROADCASTCOLORS 1
 #define SCALECOLORS 255
 
+uint8_t VOLCHANGED;
+uint8_t VOLCURRENT;
+
 // used to actually run music
 // make sure to call loopbackSetup() first
 int loopback();
