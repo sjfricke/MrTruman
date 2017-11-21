@@ -9,10 +9,9 @@ int disableGyro(){
 // Returns 1 if it thinks the tilt direction is right,
 // -1 if left, 0 if cant determine
 int getTiltDirection(){
-  int x, z;
-  x = 0;
-  z = 0;
-  for (int i = 0; i < 4; i++){b
+  int x = 0;
+  int z = 0;
+  for (int i = 0; i < 4; i++){
     x += getAccelX();
     z += getAccelZ();
   }
@@ -24,8 +23,9 @@ int getTiltDirection(){
   if (x_avg > 1000 && z_avg < 10000 && z_avg > 0){
     return -1;
   }
-  else if (x_avg < -1000 && z_avg < 10000 && z_avg > 0)
+  else if (x_avg < -1000 && z_avg < 10000 && z_avg > 0){
     return 1;
+  }
   return 0;
 }
 
