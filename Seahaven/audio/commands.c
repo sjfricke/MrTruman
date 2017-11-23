@@ -3,7 +3,8 @@
 static char* c_lights = "LIGHT";
 static char* c_fire = "FIRE";
 static char* c_picture = "PICTURE";
-static char* c_chitchat = "HOW YOU DOIN";
+static char* c_chitchat = "WHATS UP";
+static char* c_jump = "JUMP";
 
 /*
 char* _green = "green";
@@ -77,6 +78,12 @@ int commandDetect(char const* voice_str)
   // Chat bubble
   if (strstr(voice_str, c_chitchat)) {
     broadcastString("8", "0");
+    animation_on = TRUE;
+    return 0;
+  }
+
+  if(strstr(voice_str, c_jump)){
+    broadcastString("9", "0");
     animation_on = TRUE;
     return 0;
   }

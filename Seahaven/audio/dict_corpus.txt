@@ -1,25 +1,32 @@
-spencer
-truman
-turn lights on
-turn lights off
-turn fireplace on
-turn fireplace off
-take a picture
-photo
-selfie
-picture
 hello
+hi
+high
 hey
-take
-capture
-turn
-spencer is a noob
-max is cool
-spencer is not cool
-eric agrees that spencer is not cool
+hay
+mister
+truman
+take a picture
+take a photo
+take a selfie
+hi mister truman
+turn the fire on
+turn fire on
+turn the fire off
+turn fire off
+turn the lights on
+turn lights on
+turn the lights off
+turn lights off
+turn the lights blue
+turn lights blue
+turn the lights green
+turn lights green
+turn the lights red
+turn lights red
+jump
+how are you
+how are you doing
 what is up
-what's up
-hey mister truman
-how are you today mister truman
-what can you do
-help
+whats up
+mister truman jump
+

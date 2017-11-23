@@ -87,6 +87,11 @@ void webDataCallback( int type, char* value) {
     animation_on = FALSE;
     break;
 
+  // Jumping completed.
+  case 7:
+    animation_on = FALSE;
+    break;
+
   default:
     printf("Not a valid type! [%d]\n", type);
     break;
