@@ -2,14 +2,18 @@
 
 ## House
 
-- Length: `280mm`
+- Length: `231mm`
+ - 205mm for PCB, 5mm x 2 for thickness of side walls, 8mm x 2 for room on side
 - Height:
-  - `160mm` edge shallow
-  - `195mm` center tip
+  - `133mm` Square section
+    - 136mm for PCB, -7mm where LED line is, 4mm for half of LED hol
+  - `170 mm` center tip
+    - 37mm from square base
 - Thickness:
   - `5mm` on sides
-  - `10mm` on screen side
-  - `70mm` front to back
+  - `8mm` on screen side
+    - 1mm for screen, 7mm for bezelf
+  - `65mm` front to back for main
 
 ## PCB Board
 
@@ -46,7 +50,7 @@
   - Height: `8mm`
   - `7mm` from top edge of board
 - Each LED
-  - Radius: `5mm`
+  - Diameter: `5mm`
   - Hight: `26mm`
     - Height to botton of bulb: `18mm`
 
@@ -75,11 +79,13 @@
 - `25mm` from back of PCB
 - Speakers itself
   - Height: `27mm`
-  - Width: `21mm`
+  - Width: `20mm`
+  - Depth: `6mm`
 - Speaker Printed Box
-  - Height `33mm`
+  - Thickness: `3mm` (3mm with .5mm error)
+  - Height `34mm`
   - Width: `27mm`
-  - Depth: `15mm`
+  - Depth: `17mm`
 
 # Servo
 
