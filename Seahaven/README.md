@@ -1,5 +1,9 @@
 [How to setup board for Seahaven](./docs/setup.md)
 
+# Important Notes
+
+- **HARD** Assumption screen is 800 x 480
+
 # Seahaven mappings
 
 Each event is given a index number to save from having to send a string. A future enum will be created in the host portion.

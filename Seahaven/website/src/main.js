@@ -1,3 +1,6 @@
+/**************************************************
+*    HARD Assumption screen is 800 x 480          *
+***************************************************/
 $(window).ready(start());
 
 var renderer;
@@ -175,7 +178,7 @@ function setup() {
             name: 'spineboy',
             path: 'res/json/spineboy.json',
             pt: new PIXI.Point(renderer.getW() / 2, renderer.getH()),
-            scale: 0.5
+            scale: pScaleRight
         }
     ];
 
@@ -194,20 +197,26 @@ function loadedTex() {
 // Setup that needs to be done after loading
 function loadedSetup() {
 
+    // only doing spineboy since its used most often
+    player = renderer.getElemByID("spineboy");
+
     // need to set start to know how far to bring back down in future
     speakerStartY = renderer.getElemByID('speaker1').position.y; // speaker2 should be same
 
+    walkTicker.stop();
+    walkTicker.add(walkAnimation);
+    player.state.addListener({ 
+        end: animationEnd
+    })
+
+    run();
 }
 
 function run() {
-
-	
-    // player.interactive = true; // for clicking    
-    // lightSwitch.interactive = true; // for clicking
-
     // Relayers to renderer
     for (var i = 0; i < appData.length; i++) {
         if (appData[i].hide) { continue; }
         renderer.displayLayerByID(appData[i].name);
     }
+   // idleMode();
 }

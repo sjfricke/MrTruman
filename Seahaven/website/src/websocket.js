@@ -9,23 +9,26 @@ function wsOnMessage(event) {
   var message = JSON.parse(event.data);
 
   switch(parseInt(message.type)) {
-    case 0:
-        animateSpineBoy();
+  case 0:
       break;
-    case 5:
-        if (message.value == 0) { 
-          renderer.app.ticker.add(speakersOn);
-          wsTurnSpeakersOff()
-        } else if (message.value == 3) { 
-          renderer.app.ticker.add(speakersOff);
-        }
+  case 1:
+      
       break;
-    case 2:
+  case 2:
       break;
   case 3:
       break;
-    default:
-  	  warn("WebSocket", "No case for data: %0", message);
+  case 4:
+      break;
+  case 5:
+    if (message.value == 0) { 
+      renderer.app.ticker.add(speakersOn);
+    } else if (message.value == 3) { 
+      renderer.app.ticker.add(speakersOff);
+    }
+    break;
+  default:
+	  warn("WebSocket", "No case for data: %0", message);
   }
 }
 
