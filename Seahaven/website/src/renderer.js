@@ -12,7 +12,7 @@ class Renderer {
             this.$container.append(this.app.view);
             this.elems = {};
             this.textures = {};
-            this.app.stage.interactive = true;
+//            this.app.stage.interactive = true;
             this.editorFilter = new PIXI.Filter(null, `
                     precision mediump float;
                     varying vec2 vTextureCoord;

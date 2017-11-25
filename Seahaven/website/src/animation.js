@@ -1,12 +1,35 @@
-var speaker1Ready = false;
-var speaker2Ready = false;
-var speaker1StartY = 0;
-var speaker2StartY = 0;
+const speakerRate = 0.00004;
+var speakerStartY = 500;
 
-var speakerRate = 0.00004;
+// Falling +X at x=15 then x=35
+// Falling -X at x=785 then x=765
 
-var playerMovingForward = false;
-var playerMovingBackward = false;
+/*************************
+*          Idle          *
+*************************/
+
+/*************************
+*         Lights         *
+*************************/
+function toggleLightSwitch() {
+    let lightSwitch = renderer.getElemByID('switch');
+    renderer.editorFilter.uniforms.mode = renderer.editorFilter.uniforms.mode ^ 0x1;
+    if (renderer.editorFilter.uniforms.mode == 0) {
+        lightOnTexture = lightSwitch.texture;
+        lightSwitch.texture = lightOffTexture;
+        wsTurnLightsOff();
+    }
+    else {
+        lightOffTexture = lightSwitch.texture;
+        lightSwitch.texture = lightOnTexture;
+        wsTurnLightsOn();
+    }
+}
+
+
+/*************************
+*       Speakers         *
+*************************/
 
 // renderer.app.ticker.add(speakersOn);
 function speakersOn(delta) {
@@ -67,15 +90,62 @@ function speakersOff() {
     }
 }
 
+
+/*************************
+*          Fire          *
+*************************/
+
 function fireOn() {
+    // at x = 655
     renderer.app.stage.addChild(renderer.getElemByID("fireAnimated"));
     renderer.getElemByID("fireAnimated").gotoAndPlay(0);
 }
 
 function fireOff() {
+    // at x = 650
     renderer.getElemByID("fireAnimated").stop();
     renderer.app.stage.removeChild(renderer.getElemByID("fireAnimated"));
 }
+
+/*************************
+*       Picture          *
+*************************/
+function getNewPhoto() { 
+    renderer.app.stage.removeChild(renderer.getElemByID("picture"));
+    delete renderer.elems["picture"];
+
+    renderer.add({
+            name: 'picture',
+            path: resPath.cameraImage,
+            pt: new PIXI.Point(0.25, 0.56),
+            scale: 1.0
+        }, function() {
+            renderer.app.stage.addChild(renderer.getElemByID("picture"));
+        })
+}
+
+
+
+/*************************
+*      Tilt/Gyro         *
+*************************/
+
+/*************************
+*       Fidget           *
+*************************/
+
+/*************************
+*         Wall           *
+*************************/
+function changeWall() {
+    let wall = renderer.getElemByID("wall" + startingWall);
+
+    currentWall++;
+    if (currentWall > 5) { currentWall = 0 }
+
+    wall.texture = renderer.textures["wall" + currentWall];
+}
+
 
 
 function animateSpineBoy() {
@@ -99,6 +169,8 @@ function walkSpineBoy(delta) {
             playerMovingForward = false;
             player.scale.x = -player.scale.x;
             playerMovingBackward = true;
+            player.state.setAnimation(0, 'lightSwitch', false); // at x == 525
+            player.state.addAnimation(0, 'walk', true, .5);
             toggleLightSwitch();
         }
     }
@@ -113,40 +185,3 @@ function walkSpineBoy(delta) {
     }
 }
 
-function toggleLightSwitch() {
-    let lightSwitch = renderer.getElemByID('switch');
-    renderer.editorFilter.uniforms.mode = renderer.editorFilter.uniforms.mode ^ 0x1;
-    if (renderer.editorFilter.uniforms.mode == 0) {
-        lightOnTexture = lightSwitch.texture;
-        lightSwitch.texture = lightOffTexture;
-        wsTurnLightsOff();
-    }
-    else {
-        lightOffTexture = lightSwitch.texture;
-        lightSwitch.texture = lightOnTexture;
-        wsTurnLightsOn();
-    }
-}
-
-function getNewPhoto() { 
-    renderer.app.stage.removeChild(renderer.getElemByID("picture"));
-    delete renderer.elems["picture"];
-
-    renderer.add({
-            name: 'picture',
-            path: resPath.cameraImage,
-            pt: new PIXI.Point(0.25, 0.56),
-            scale: 1.0
-        }, function() {
-            renderer.app.stage.addChild(renderer.getElemByID("picture"));
-        })
-}
-
-function changeWall() {
-    let wall = renderer.getElemByID("wall" + startingWall);
-
-    currentWall++;
-    if (currentWall > 5) { currentWall = 0 }
-
-    wall.texture = renderer.textures["wall" + currentWall];
-}

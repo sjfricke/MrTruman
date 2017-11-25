@@ -15,11 +15,13 @@ function start() {
 }
 
 function setWebSocket() {
+    // Attempts to just reload webpage if it was not able to get websocket
+    // Will cause loop if not connect, but app is useless anyways without WS
     try {
-	webSocket = new WebSocket('ws://' + location.host);
-	webSocket.onmessage = wsOnMessage;
+	   webSocket = new WebSocket('ws://' + location.host);
+	   webSocket.onmessage = wsOnMessage;
     } catch (e) {
-	location.reload();
+	   location.reload();
     }
 }
 
@@ -107,7 +109,7 @@ function setup() {
             type: 'add',
             name: 'switch',
             path: resPath.lightOff,
-            pt: new PIXI.Point(0.7, 0.8)
+            pt: new PIXI.Point(0.705, 0.854)
         },
         {
             type: 'add',
@@ -186,15 +188,20 @@ function setup() {
 function loadedTex() {
     // onload
     texLoaded++;
-    if (texLoaded >= appData.length) run();
+    if (texLoaded >= appData.length) loadedSetup();
+}
+
+// Setup that needs to be done after loading
+function loadedSetup() {
+
+    // need to set start to know how far to bring back down in future
+    speakerStartY = renderer.getElemByID('speaker1').position.y; // speaker2 should be same
+
 }
 
 function run() {
 
-	// need to set start to know how far to bring back down in future
-	speaker1StartY =  renderer.getElemByID('speaker1').position.y;
-	speaker2StartY = renderer.getElemByID('speaker2').position.y;
-
+	
     // player.interactive = true; // for clicking    
     // lightSwitch.interactive = true; // for clicking
 
