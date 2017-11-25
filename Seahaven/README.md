@@ -46,7 +46,6 @@ Each event has two parts `<type> <value>`
 - `1` - Light switch animation
   - `0` - Turn on lights
   - `1` - Turn off lights
-  - `2` - Change light colors
 - `2` - Fireplace (Fan) animation
   - `0` - Turn on fan
   - `1` - Turn off fan

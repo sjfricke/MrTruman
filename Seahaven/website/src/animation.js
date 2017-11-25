@@ -28,7 +28,8 @@ var s_couchOn       = false;
 var s_fireOn        = false;
 var s_speakersUp    = false;
 var s_speakersOn    = false;
-var s_lightOn       = false;
+var s_lightOn       = false; // default to lights on house off
+var s_lightAnim     = false;
 var s_tiltOn        = false;
 var s_fidgetOn      = false;
 var s_speakOn       = false;
@@ -52,10 +53,12 @@ function animationEnd(entry) {
         walkComplete();
     } else if (entry.animation.name == "couchOff") {
         s_couchOn = false;
-        if (idleMode) { idleMode(); }
-        else if ()
-    } else {
-        //log("animationEnd", "", entry.animation.name);
+        if (s_idleMode) { idleMode(); }
+        // else if ()
+    } else if (entry.animation.name == "lightSwitch") {
+        s_lightAnim = false;
+        s_animationOn = false;
+        idleMode();
     }
 }
 
@@ -89,25 +92,31 @@ function walkAnimation(delta) {
     if (Math.abs(player.position.x - s_walkX) < 5) {
         // This is done here instead of callback of animation since
         // Idle can't start and stop ticker and no callback of ticker seemed to work
-        if (idleMode) {
+        if (s_idleMode) {            
             player.position.x = s_walkX;        
             player.state.clearTrack(0);
             player.state.addAnimation(0, 'stand', false, 0);  
-            if (s_couchOn) {
+            if (s_couchOn) { 
                 walkTicker.stop();
                 couchAnimation(); 
             } else {
                 idleMode();
             }
         } else {
+            // ugly, I know, timer and animation event callback can't synch
             walkTicker.stop();
-        }
+            player.position.x = s_walkX;        
+            player.state.clearTrack(0);
+            player.state.addAnimation(0, 'stand', false, 0); 
+        }           
     }
 }
 
 function walkComplete() {
-    if (s_couchOn) {
-        //couchAnimation();
+    if (s_lightAnim) {
+        player.scale.x = pScaleRight;
+        player.state.addAnimation(0, 'lightSwitch', false, 0);  
+        toggleLightSwitch();
     } else if (s_idleMode) {
         //idleMode();
     }
@@ -139,43 +148,6 @@ function idleMode() {
     }
 }
 
-// function animateSpineBoy() {
-//     if (playerMovingForward == true || playerMovingBackward == true) {
-//         // Currently performing action, so cannot stop
-//         return;
-//     }
-//     playerMovingForward = true;
-//     renderer.getElemByID('spineboy').state.addAnimation(0, 'walk', true, 0);
-//     renderer.app.ticker.add(walkSpineBoy);
-// }
-
-// function walkSpineBoy(delta) {
-
-//     let player = renderer.getElemByID('spineboy');
-//     let lightSwitch = renderer.getElemByID('switch');
-
-//     if (playerMovingForward) {
-//         player.position.x += 2 * delta;
-//         if (Math.abs(player.position.x - lightSwitch.position.x) < 20) {
-//             playerMovingForward = false;
-//             player.scale.x = -player.scale.x;
-//             playerMovingBackward = true;
-//             player.state.setAnimation(0, 'lightSwitch', false); // at x == 525
-//             player.state.addAnimation(0, 'walk', true, .5);
-//             toggleLightSwitch();
-//         }
-//     }
-//     if (playerMovingBackward) {
-//         player.position.x -= 2 * delta;
-//         if (player.position.x < 150) {
-//             playerMovingBackward = false;
-//             player.scale.x = -player.scale.x;
-//             player.state.addAnimation(0, 'walk', false, 0);
-//             renderer.app.ticker.remove(walkSpineBoy);
-//         }
-//     }
-// }
-
 function couchAnimation() {
     player.scale.x = pScaleRight;
     player.state.addAnimation(0, "couchJump", false, 0);
@@ -194,6 +166,14 @@ function couchKill() {
 /*************************
 *         Lights         *
 *************************/
+function lightAnimation() {
+    s_idleMode = false;
+    s_animationOn = true;
+    s_lightAnim = true;
+    if (s_couchOn) { couchKill(); }
+    walk(0,0,525);
+}
+
 function toggleLightSwitch() {
     let lightSwitch = renderer.getElemByID('switch');
     renderer.editorFilter.uniforms.mode = renderer.editorFilter.uniforms.mode ^ 0x1;
