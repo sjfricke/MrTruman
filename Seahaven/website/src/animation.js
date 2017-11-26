@@ -33,7 +33,8 @@ var s_speakersOn    = false;
 var s_speakersAnim  = false;
 var s_lightOn       = false; // default to lights on house off
 var s_lightAnim     = false;
-var s_tiltOn        = false;
+var s_tiltRight     = false;
+var s_tiltWall      = false;
 var s_tiltAnim      = false;
 var s_fidgetOn      = false;
 var s_speakOn       = false;
@@ -42,6 +43,7 @@ var s_pictureTaken  = false;
 var s_pictureAnim   = false;
 
 const walkRate = 2;
+const fallRate = 2;
 const speakerRate = 0.00004;
 var speaker1, speaker2, speakerStartY;
 
@@ -82,6 +84,10 @@ function animationEnd(entry) {
         idleMode();
     } else if (entry.animation.name == "lightSwitch") {
         s_lightAnim = s_animationOn = false;
+        idleMode();
+    } else if (entry.animation.name == "fallEnd") {
+        s_tiltAnim = s_animationOn = false;
+        wsTiltDone();
         idleMode();
     }
 }
@@ -133,7 +139,7 @@ function walkAnimation(delta) {
             player.position.x = s_walkX;        
             player.state.clearTrack(0);
             // certain animation don't want the stand trasmission
-            if (!s_speakersAnim && !s_pictureAnim) {
+            if (!s_speakersAnim && !s_pictureAnim && !s_tiltAnim) {
                 player.state.addAnimation(0, 'stand', false, 0); 
             }
         }           
@@ -150,6 +156,8 @@ function walkComplete() {
         player.state.addAnimation(0, (s_fireOn) ? 'fireOff' : 'fireOn', false, 0);
     } else if (s_pictureAnim) {
         (s_pictureTaken) ? pictureTrigger() : pictureAnimation();
+    } else if (s_tiltAnim) {
+        tiltAnimation();
     } else if (s_speakersAnim) {
         speakerAnimation();
     }
@@ -377,9 +385,57 @@ function pictureChange() {
 /*************************
 *      Tilt/Gyro         *
 *************************/
+function tiltAnimation() {
+    s_tiltAnim = true;
+    s_animationOn = true;
+    s_tiltWall = false;   
 
-// Falling +X at x=15 then x=35
-// Falling -X at x=785 then x=765
+    if (s_couchOn) { couchKill(); }    
+    else if (s_idleMode) {
+        s_idleMode = false;
+        return; // need to finish walk animation to prevent stuck
+    }
+    s_idleMode = false; 
+
+    player.scale.x = s_tiltRight ? pScaleLeft : pScaleRight;
+    player.state.setAnimation(0, "fallStart", false);
+    setTimeout(function(){ renderer.app.ticker.add(s_tiltRight ? tiltFallRight : tiltFallLeft);}, 1000); //easily worst line of code I ever wrote
+}
+
+// TODO
+function tiltChangeDirection() {
+
+}
+
+function tiltFallRight(delta) {
+    if (player.position.x < 720) {
+        player.position.x += fallRate * delta;
+    } else if (!s_tiltWall) {
+        s_tiltWall = true;
+        player.position.x = 720;
+        player.state.setAnimation(0, "fallWall", false);
+    } else {
+
+    }
+}
+
+function tiltFallLeft(delta) {
+    if (player.position.x > 80) {
+        player.position.x -= fallRate * delta;
+    } else if (!s_tiltWall) {
+        s_tiltWall = true;
+        player.position.x = 80;
+        player.state.setAnimation(0, "fallWall", false);
+    } else {
+
+    }
+}
+
+function tiltRecovery() {
+    renderer.app.ticker.remove(s_tiltRight ? tiltFallRight : tiltFallLeft);
+    player.state.setAnimation(0, "fallEnd", false);
+    player.state.addAnimation(0, "stand", false, 0);
+}
 
 /*************************
 *       Fidget           *
