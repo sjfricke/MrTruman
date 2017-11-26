@@ -40,6 +40,7 @@ Each event has two parts `<type> <value>`
   - Value is of rotation in degrees between 0 and 359 where 180 is level
 - `8` - Chatting with Mr T.
   - Value could be random selection/chat to play back if we write some whimsical quips.
+- `9` - Toggle fidget spinner
 
 ## Web-to-Host Calls
 - `0` - Busy with Animation - try again later

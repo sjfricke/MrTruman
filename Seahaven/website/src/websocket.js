@@ -27,6 +27,13 @@ function wsOnMessage(event) {
       }
       break;
   case 4:
+    if (message.value == 0 && !s_pictureUp) { 
+      (s_animationOn) ? wsBusy() : pictureAnimation();
+    } else if (message.value == 1 && s_pictureUp) { 
+      pictureFlash();
+    } else if (message.value == 2) { 
+      pictureTrigger();
+    }
       break;
   case 5:
     if (message.value == 0 && !s_speakersUp) { 
@@ -60,6 +67,12 @@ function wsFireOn() {
 function wsFireOff() {
   webSocket.send("2:1");
 }
+function wsPictureReady() {
+  webSocket.send("3:0");
+}
+function wsPictureDone() {
+  webSocket.send("3:1");
+}
 function wsSpeakersUp() {
   webSocket.send("4:0");
 }
@@ -71,18 +84,14 @@ function wsSpeakersDown() {
 /////////////////////////////////////
 // for testing to callback echo ws //
 /////////////////////////////////////
-function startLightOnAnimation() {
-    webSocket.send('{"type":1,"value":0}');
+function test0() {
+    webSocket.send('{"type":4,"value":0}');
 }
 
-function startLightOffAnimation() {
-    webSocket.send('{"type":1,"value":1}');
+function test1() {
+    webSocket.send('{"type":4,"value":1}');
 }
 
-// function startSpeakerOnAnimation() {
-//     webSocket.send('{"type":1,"value":0}');
-// }
-
-// function startSpeakerOffAnimation() {
-//     webSocket.send('{"type":1,"value":1}');
-// }
+function test2() {
+    webSocket.send('{"type":4,"value":2}');
+}

@@ -32,41 +32,6 @@ fidgetHand
   orig: 35 ,38
   offset: 0,0
   index: -1
-matchbox
-  rotate: false
-  xy: 1 ,210
-  size: 70 ,41
-  orig: 70 ,41
-  offset: 0,0
-  index: -1
-camera
-  rotate: false
-  xy: 1 ,135
-  size: 94 ,73
-  orig: 94 ,73
-  offset: 0,0
-  index: -1
-fidget
-  rotate: false
-  xy: 416 ,33
-  size: 36 ,33
-  orig: 36 ,33
-  offset: 0,0
-  index: -1
-null
-  rotate: false
-  xy: 416 ,68
-  size: 1 ,1
-  orig: 1 ,1
-  offset: 0,0
-  index: -1
-bucket
-  rotate: false
-  xy: 348 ,201
-  size: 46 ,50
-  orig: 46 ,50
-  offset: 0,0
-  index: -1
 left-foot
   rotate: false
   xy: 379 ,1
@@ -149,6 +114,41 @@ eyes
   xy: 431 ,102
   size: 34 ,27
   orig: 34 ,27
+  offset: 0,0
+  index: -1
+matchbox
+  rotate: false
+  xy: 1 ,210
+  size: 70 ,41
+  orig: 70 ,41
+  offset: 0,0
+  index: -1
+camera
+  rotate: false
+  xy: 1 ,135
+  size: 94 ,73
+  orig: 94 ,73
+  offset: 0,0
+  index: -1
+fidget
+  rotate: false
+  xy: 416 ,33
+  size: 36 ,33
+  orig: 36 ,33
+  offset: 0,0
+  index: -1
+null
+  rotate: false
+  xy: 416 ,68
+  size: 1 ,1
+  orig: 1 ,1
+  offset: 0,0
+  index: -1
+bucket
+  rotate: false
+  xy: 348 ,201
+  size: 46 ,50
+  orig: 46 ,50
   offset: 0,0
   index: -1
 right-shoulder

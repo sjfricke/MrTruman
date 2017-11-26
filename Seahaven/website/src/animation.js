@@ -1,5 +1,4 @@
-/*
-    changePicture
+/*    
     couchIdle
     couchJump
     couchOff
@@ -14,6 +13,8 @@
     musicOff
     musicOn
     musicPlay
+    pictureChange
+    pictureHold
     pictureStart
     pictureTake
     speak
@@ -33,11 +34,12 @@ var s_speakersAnim  = false;
 var s_lightOn       = false; // default to lights on house off
 var s_lightAnim     = false;
 var s_tiltOn        = false;
+var s_tiltAnim      = false;
 var s_fidgetOn      = false;
 var s_speakOn       = false;
 var s_pictureUp     = false;
-var s_pictureOn     = false;
-var s_playerRight   = true;
+var s_pictureTaken  = false;
+var s_pictureAnim   = false;
 
 const walkRate = 2;
 const speakerRate = 0.00004;
@@ -51,29 +53,35 @@ const walkTicker = new PIXI.ticker.Ticker();
 
 // No clean way of doing this then just taking animation and give it to section named
 function animationEnd(entry) {
+    // log("TEST","TEST", entry.animation.name);
     if (entry.animation.name == "walk") {
         walkComplete();
     } else if (entry.animation.name == "couchOff") {
         s_couchOn = false;
         if (s_idleMode) { idleMode(); }
-        // else if ()
+    } else if (entry.animation.name == "pictureStart") {
+        s_pictureUp = true;
+        wsPictureReady();
+    } else if (entry.animation.name == "pictureTake") {
+        pictureTrigger();
+    } else if (entry.animation.name == "pictureChange") {
+        s_pictureAnim = s_animationOn = false;
+        pictureChange();
+        wsPictureDone();
+        idleMode();
     } else if (entry.animation.name == "fireOn") {
         fireOn();
-        s_fireAnim = false;
-        s_animationOn = false;
+        s_fireAnim = s_animationOn = false;
         idleMode();
     } else if (entry.animation.name == "fireOff") {
         fireOff();
-        s_fireAnim = false;
-        s_animationOn = false;
+        s_fireAnim = s_animationOn = false;
         idleMode();
     } else if (entry.animation.name == "musicOff") {
-        s_speakersAnim = false;
-        s_animationOn = false;
+        s_speakersAnim = s_animationOn = false;
         idleMode();
     } else if (entry.animation.name == "lightSwitch") {
-        s_lightAnim = false;
-        s_animationOn = false;
+        s_lightAnim = s_animationOn = false;
         idleMode();
     }
 }
@@ -125,7 +133,7 @@ function walkAnimation(delta) {
             player.position.x = s_walkX;        
             player.state.clearTrack(0);
             // certain animation don't want the stand trasmission
-            if (!s_speakersAnim) {
+            if (!s_speakersAnim && !s_pictureAnim) {
                 player.state.addAnimation(0, 'stand', false, 0); 
             }
         }           
@@ -139,17 +147,11 @@ function walkComplete() {
         toggleLightSwitch();
     } else if (s_fireAnim) {
         player.scale.x = pScaleRight;
-        if (s_fireOn) {
-            player.state.addAnimation(0, 'fireOff', false, 0);
-            //fireOff();
-        } else {
-            player.state.addAnimation(0, 'fireOn', false, 0);
-            //fireOn();
-        }
+        player.state.addAnimation(0, (s_fireOn) ? 'fireOff' : 'fireOn', false, 0);
+    } else if (s_pictureAnim) {
+        (s_pictureTaken) ? pictureTrigger() : pictureAnimation();
     } else if (s_speakersAnim) {
         speakerAnimation();
-    } else if (s_idleMode) {
-        //idleMode();
     }
 }
 /*************************
@@ -226,13 +228,13 @@ function toggleLightSwitch() {
 function speakerAnimation() {
     s_speakersAnim = true;    
     s_animationOn = true;   
-    if (s_idleMode) {
+    if (s_couchOn) { couchKill(); }
+    else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
     }
     s_idleMode = false; 
-    if (s_couchOn) { couchKill(); }
-    
+        
     // get out of speakers
     if (player.position.x < 100 ) {
         walk(0,0,150);
@@ -315,7 +317,50 @@ function fireOff() {
 /*************************
 *       Picture          *
 *************************/
-function getNewPhoto() { 
+function pictureAnimation() {
+    s_pictureTaken = false; // need since picture has two post-walk animations
+    s_pictureAnim = true;
+    s_animationOn = true;   
+
+    if (s_couchOn) { couchKill(); }    
+    else if (s_idleMode) {
+        s_idleMode = false;
+        return; // need to finish walk animation to prevent stuck
+    }
+    s_idleMode = false; 
+
+    player.state.addAnimation(0, "pictureStart", false, 0);
+    player.state.addAnimation(0, "pictureHold", false, 0); // purly cause listener won't trigger
+}
+
+function pictureFlash() {
+    // TODO
+}
+
+function pictureTrigger() {
+    s_pictureTaken = true;
+
+    if (s_pictureUp) {        
+        s_pictureUp = false;
+        player.state.setAnimation(0, "pictureTake", false);
+        player.state.addAnimation(0, "stand", false, 0);
+        return;
+    }
+
+    if (player.position.x < 225 || player.position.x > 275) {
+        walk(0,0,250);
+        return;
+    }
+
+    player.scale.x = pScaleLeft;
+    player.state.setAnimation(0, "pictureChange", false);
+    player.state.addAnimation(0, "stand", false, 0);
+}
+
+// TODO
+// BROKEN - Breaks on 2nd pictureChange
+function pictureChange() { 
+
     renderer.app.stage.removeChild(renderer.getElemByID("picture"));
     delete renderer.elems["picture"];
 
@@ -329,14 +374,12 @@ function getNewPhoto() {
         })
 }
 
-
 /*************************
 *      Tilt/Gyro         *
 *************************/
 
 // Falling +X at x=15 then x=35
 // Falling -X at x=785 then x=765
-
 
 /*************************
 *       Fidget           *
