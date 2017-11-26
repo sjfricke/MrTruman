@@ -26,6 +26,7 @@ var s_idleMode      = false;
 var s_walkX         = 400;
 var s_couchOn       = false;
 var s_fireOn        = false;
+var s_fireAnim      = false;
 var s_speakersUp    = false;
 var s_speakersOn    = false;
 var s_speakersAnim  = false;
@@ -56,6 +57,16 @@ function animationEnd(entry) {
         s_couchOn = false;
         if (s_idleMode) { idleMode(); }
         // else if ()
+    } else if (entry.animation.name == "fireOn") {
+        fireOn();
+        s_fireAnim = false;
+        s_animationOn = false;
+        idleMode();
+    } else if (entry.animation.name == "fireOff") {
+        fireOff();
+        s_fireAnim = false;
+        s_animationOn = false;
+        idleMode();
     } else if (entry.animation.name == "musicOff") {
         s_speakersAnim = false;
         s_animationOn = false;
@@ -126,6 +137,15 @@ function walkComplete() {
         player.scale.x = pScaleRight;
         player.state.addAnimation(0, 'lightSwitch', false, 0);  
         toggleLightSwitch();
+    } else if (s_fireAnim) {
+        player.scale.x = pScaleRight;
+        if (s_fireOn) {
+            player.state.addAnimation(0, 'fireOff', false, 0);
+            //fireOff();
+        } else {
+            player.state.addAnimation(0, 'fireOn', false, 0);
+            //fireOn();
+        }
     } else if (s_speakersAnim) {
         speakerAnimation();
     } else if (s_idleMode) {
@@ -270,17 +290,26 @@ function speakersDown(delta) {
 /*************************
 *          Fire          *
 *************************/
+function fireAnimation() {
+    s_idleMode = false;
+    s_animationOn = true;
+    s_fireAnim = true;
+    if (s_couchOn) { couchKill(); }
+    walk(0,0, s_fireOn ? 650 : 655);
+}
 
 function fireOn() {
-    // at x = 655
-    renderer.app.stage.addChild(renderer.getElemByID("fireAnimated"));
-    renderer.getElemByID("fireAnimated").gotoAndPlay(0);
+    renderer.getElemByID("fireAnimated").gotoAndPlay(0);    
+    renderer.getElemByID("fireAnimated").alpha = 1;
+    s_fireOn = true;
+    wsFireOn();
 }
 
 function fireOff() {
-    // at x = 650
     renderer.getElemByID("fireAnimated").stop();
-    renderer.app.stage.removeChild(renderer.getElemByID("fireAnimated"));
+    renderer.getElemByID("fireAnimated").alpha = 0;
+    s_fireOn = false;
+    wsFireOff();
 }
 
 /*************************

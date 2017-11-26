@@ -14,18 +14,23 @@ function wsOnMessage(event) {
       if ((message.value == 0 && !s_lightOn) ||
           (message.value == 1 && s_lightOn)  ||
           (message.value == 2)) {
-        (s_animationOn) ? wsBusy(); : lightAnimation();
+        (s_animationOn) ? wsBusy() : lightAnimation();
       }
       break;
   case 2:
       break;
   case 3:
+      if ((message.value == 0 && !s_fireOn) ||
+          (message.value == 1 && s_fireOn)  ||
+          (message.value == 2)) {
+        (s_animationOn) ? wsBusy() : fireAnimation();
+      }
       break;
   case 4:
       break;
   case 5:
     if (message.value == 0 && !s_speakersUp) { 
-      (s_animationOn) ? wsBusy(); : speakerAnimation();
+      (s_animationOn) ? wsBusy() : speakerAnimation();
     } else if (message.value == 1 && s_speakersUp) { 
       speakersOn();
     } else if (message.value == 2) { 
@@ -41,22 +46,26 @@ function wsOnMessage(event) {
 }
 
 function wsBusy() {
-    webSocket.send("0:0");
+  webSocket.send("0:0");
 }
 function wsTurnLightsOff() {
-    webSocket.send("1:0");
+  webSocket.send("1:0");
 }
 function wsTurnLightsOn() {
-    webSocket.send("1:1");
+  webSocket.send("1:1");
+}
+function wsFireOn() {
+  webSocket.send("2:0");
+}
+function wsFireOff() {
+  webSocket.send("2:1");
 }
 function wsSpeakersUp() {
-    webSocket.send("4:0");
+  webSocket.send("4:0");
 }
 function wsSpeakersDown() {
-    webSocket.send("4:1");
+  webSocket.send("4:1");
 }
-
-
 
 
 /////////////////////////////////////

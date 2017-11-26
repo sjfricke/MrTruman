@@ -143,7 +143,7 @@ function setup() {
             count: 15,
             framePrefix : "fire",
             start: false,
-            hide: true,
+            hideAlpha: true,
             scale: 0.8
         },
         {

@@ -208,6 +208,7 @@ class Renderer {
             count = data.count,
             framePrefix = data.framePrefix,
             hide = data.hide,
+            hideAlpha = data.hideAlpha,
             scale = data.scale || 1,
             start = data.start || true;
 
@@ -248,6 +249,7 @@ class Renderer {
             }
 
             if (hide) { that.elems[id].hideOnLoad = true; }
+            else if (hideAlpha) { that.elems[id].alpha = 0; }
 
             if (scale !== undefined && typeof scale === 'number' && scale > 0) {
                 that.elems[id].scale.x = scale;
