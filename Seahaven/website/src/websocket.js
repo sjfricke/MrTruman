@@ -100,8 +100,9 @@ function wsSpeakersDown() {
 function wsTiltDone() {
   webSocket.send("5:0");
 }
-
-
+function wsVolume(value) {
+  webSocket.send("8:" + value);
+}
 /////////////////////////////////////
 // for testing to callback echo ws //
 /////////////////////////////////////

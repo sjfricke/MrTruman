@@ -60,6 +60,8 @@ Each event has two parts `<type> <value>`
 - `5` - Gyro animation back to ideal mode
 - `6` - Chat Bubble is Done
 - `7` - Ready to record audio
+- `8` - Value of audio
+  - Range is 1 - 100
 
 ## State Machine
 

@@ -8,12 +8,25 @@
     <script src="lib/pixi-spine.js"></script>
 </head>
 <body>
+    <div id="menu">
+        <img src="css/menuIcon.png" id="menuIcon"/>
+        <div id="volume">
+            <div id="volumeBall"></div>
+            <div id="volumeFill"></div>
+            <input type="range" min="1" max="100" value="50" class="slider" id="volumeSlider">
+            <img src="css/volumeIcon.png" id="volumeIcon"/>
+        </div>
+        <div id="reset" class="buttonText">RESET TRUMAN</div>
+        <div id="wall" class="buttonText">CHANGE WALL</div>
+        <div id="skin" class="buttonText">CHANGE TRUMAN</div>
+    </div>
 	<script src="src/testing.js"></script>
     <script src="src/resoursepointer.js"></script>
     <script src="src/logman.js"></script>
     <script src="src/renderer.js"></script>
     <script src="src/animation.js"></script>
     <script src="src/websocket.js"></script>
+    <script src="src/menu.js"></script>
     <script src="src/main.js"></script>
 </body>
 </html>

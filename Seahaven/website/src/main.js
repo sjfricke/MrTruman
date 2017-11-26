@@ -31,6 +31,8 @@ function setWebSocket() {
 function setup() {
     renderer = new Renderer();
 
+    setMenuEvents();
+    
     // pick random texture between 0 and 6
     currentWall = Math.round(Math.random()*5);
     startingWall = currentWall;

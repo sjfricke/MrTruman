@@ -7,3 +7,113 @@ canvas {
     width: 100%;
     height: 100%; 
 }
+
+#menu {
+	width: 200px;
+    height: 166px;
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    z-index: 99;
+    visibility: visible;
+}
+
+#menuIcon{
+	width: 32px;
+    height: 32px;
+    position: absolute;
+    top: -32px;
+    left: -32px;    
+    visibility: hidden;
+}
+
+.buttonText {
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 18px;
+    padding-top: 10px;
+}
+
+#volume {
+	width: 100%;
+    height: 38px;
+    margin-bottom: 3px;
+    background: #448AFF;    
+    visibility: hidden;
+}
+
+#volumeIcon {
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    top: 7px;
+    left: 5px;
+}
+
+#reset {
+	width: 100%;
+    height: 28px;
+    margin-bottom: 3px;
+    background: #448AFF;
+	color: white;	
+    visibility: hidden;
+}
+
+#wall {	
+	width: 100%;
+    height: 28px;
+    margin-bottom: 3px;   
+    background: #448AFF;
+	color: white;
+    visibility: hidden;
+}
+
+#skin {	
+	width: 100%;
+    height: 28px;  
+    background: #448AFF;
+	color: white;
+    visibility: hidden;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 80%;
+    margin-top: 14px;
+    margin-left: 35px;
+    height: 13px;
+    border-radius: 10px; 
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.9;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 11px;
+    height: 111px;
+}
+
+#volumeBall {
+    position: absolute;
+    top: 10px;
+    left: 72px;
+    width: 20px;
+    height: 20px;
+    border-radius: 100px;
+    margin-left: 30px;
+    background: #2962FF;
+    z-index: 10;
+}
+
+#volumeFill {
+    position: absolute;
+    top: 14px;
+    left: 35px;
+    width: 40%;
+    height: 13px;
+    border-radius: 10px;
+    background: #0D47A1;
+    z-index: 8;
+}
