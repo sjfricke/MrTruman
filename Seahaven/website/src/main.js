@@ -200,8 +200,10 @@ function loadedSetup() {
     // only doing spineboy since its used most often
     player = renderer.getElemByID("spineboy");
 
+    speaker1 = renderer.getElemByID('speaker1');
+    speaker2 = renderer.getElemByID('speaker2');
     // need to set start to know how far to bring back down in future
-    speakerStartY = renderer.getElemByID('speaker1').position.y; // speaker2 should be same
+    speakerStartY = speaker1.position.y; // speaker2 should be same
 
     walkTicker.stop();
     walkTicker.add(walkAnimation);

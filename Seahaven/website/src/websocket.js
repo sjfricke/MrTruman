@@ -14,7 +14,7 @@ function wsOnMessage(event) {
       if ((message.value == 0 && !s_lightOn) ||
           (message.value == 1 && s_lightOn)  ||
           (message.value == 2)) {
-        lightAnimation();
+        (s_animationOn) ? wsBusy(); : lightAnimation();
       }
       break;
   case 2:
@@ -24,10 +24,15 @@ function wsOnMessage(event) {
   case 4:
       break;
   case 5:
-    if (message.value == 0) { 
-      renderer.app.ticker.add(speakersOn);
-    } else if (message.value == 3) { 
-      renderer.app.ticker.add(speakersOff);
+    if (message.value == 0 && !s_speakersUp) { 
+      (s_animationOn) ? wsBusy(); : speakerAnimation();
+    } else if (message.value == 1 && s_speakersUp) { 
+      speakersOn();
+    } else if (message.value == 2) { 
+      speakersOff();
+    } else if (message.value == 3 && s_speakersUp) {
+      if (s_speakersOn) { speakersOff(); }
+      speakerAnimation();
     }
     break;
   default:
@@ -35,21 +40,21 @@ function wsOnMessage(event) {
   }
 }
 
+function wsBusy() {
+    webSocket.send("0:0");
+}
 function wsTurnLightsOff() {
     webSocket.send("1:0");
 }
-
 function wsTurnLightsOn() {
     webSocket.send("1:1");
 }
-
-// function wsTurnSpeakersOff() {
-//     webSocket.send("1:0");
-// }
-
-// function wsTurnSpeakersOn() {
-//     webSocket.send("1:1");
-// }
+function wsSpeakersUp() {
+    webSocket.send("4:0");
+}
+function wsSpeakersDown() {
+    webSocket.send("4:1");
+}
 
 
 

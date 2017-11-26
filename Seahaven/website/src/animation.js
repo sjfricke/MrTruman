@@ -28,6 +28,7 @@ var s_couchOn       = false;
 var s_fireOn        = false;
 var s_speakersUp    = false;
 var s_speakersOn    = false;
+var s_speakersAnim  = false;
 var s_lightOn       = false; // default to lights on house off
 var s_lightAnim     = false;
 var s_tiltOn        = false;
@@ -39,7 +40,7 @@ var s_playerRight   = true;
 
 const walkRate = 2;
 const speakerRate = 0.00004;
-var speakerStartY = 500; // set on startup, init int
+var speaker1, speaker2, speakerStartY;
 
 var player;
 const pScaleRight = 0.5;
@@ -55,6 +56,10 @@ function animationEnd(entry) {
         s_couchOn = false;
         if (s_idleMode) { idleMode(); }
         // else if ()
+    } else if (entry.animation.name == "musicOff") {
+        s_speakersAnim = false;
+        s_animationOn = false;
+        idleMode();
     } else if (entry.animation.name == "lightSwitch") {
         s_lightAnim = false;
         s_animationOn = false;
@@ -79,7 +84,8 @@ function walk(direction, distance, toPos) {
         s_walkX = toPos;
     }
 
-    if (player.state.tracks.length == 0 || player.state.tracks[0].animation.name != "walk") {
+    if (player.state.tracks.length == 0 || 
+        ( player.state.tracks[0] == null || player.state.tracks[0].animation.name != "walk")) {
         player.state.setAnimation(0, 'walk', true, 0); 
         walkTicker.start();    
     }
@@ -107,7 +113,10 @@ function walkAnimation(delta) {
             walkTicker.stop();
             player.position.x = s_walkX;        
             player.state.clearTrack(0);
-            player.state.addAnimation(0, 'stand', false, 0); 
+            // certain animation don't want the stand trasmission
+            if (!s_speakersAnim) {
+                player.state.addAnimation(0, 'stand', false, 0); 
+            }
         }           
     }
 }
@@ -117,6 +126,8 @@ function walkComplete() {
         player.scale.x = pScaleRight;
         player.state.addAnimation(0, 'lightSwitch', false, 0);  
         toggleLightSwitch();
+    } else if (s_speakersAnim) {
+        speakerAnimation();
     } else if (s_idleMode) {
         //idleMode();
     }
@@ -189,70 +200,72 @@ function toggleLightSwitch() {
     }
 }
 
-
 /*************************
 *       Speakers         *
 *************************/
-
-// renderer.app.ticker.add(speakersOn);
-function speakersOn(delta) {
-
-	let speaker1 = renderer.getElemByID('speaker1');
-    let speaker2 = renderer.getElemByID('speaker2');
-
-    if (speaker1Ready && speaker2Ready) {
-		speaker1.play();
-		speaker2.play();
-		log("animation", "done with speaker on");
-	        renderer.app.ticker.remove(speakersOn);
-	wsTurnSpeakersOn();
-	}
-
-    if (speaker1.position.y > window.outerHeight) {
-        speaker1.position.y -= speakerRate * speaker1.position.y * speaker1.position.y;
+function speakerAnimation() {
+    s_speakersAnim = true;    
+    s_animationOn = true;   
+    if (s_idleMode) {
+        s_idleMode = false;
+        return; // need to finish walk animation to prevent stuck
+    }
+    s_idleMode = false; 
+    if (s_couchOn) { couchKill(); }
+    
+    // get out of speakers
+    if (player.position.x < 100 ) {
+        walk(0,0,150);
+    } else if (player.position.x > 300 && player.position.x < 420) {
+        walk(0,0,250);
     } else {
-    	speaker1Ready = true;
-    	speaker1.position.y = window.outerHeight;
-    }
-
-    if (speaker2.position.y > window.outerHeight) {
-        speaker2.position.y -= speakerRate * speaker2.position.y * speaker2.position.y;
-    }
-    else { 
-    	speaker2Ready = true;
-    	speaker2.position.y = window.outerHeight ;       
+        if (!s_speakersUp) {
+            speakersOff(); // be safe, no guarntee
+            renderer.app.ticker.add(speakersUp);
+            player.state.setAnimation(0, "musicOn", false);
+            player.state.addAnimation(0, "musicPlay", true, 0);            
+        } else {
+            renderer.app.ticker.add(speakersDown);
+            player.state.addAnimation(0, "musicOff", false, 0);
+            player.state.addAnimation(0, 'stand', false, 0); 
+        }
+        
     }
 }
 
-// renderer.app.ticker.add(speakersOff);
-function speakersOff() {
-	let speaker1 = renderer.getElemByID('speaker1');
-    let speaker2 = renderer.getElemByID('speaker2');
+function speakersUp(delta) {
+    if (speaker1.position.y > window.outerHeight) {
+        speaker1.position.y = speaker2.position.y -= speakerRate * speaker1.position.y * speaker1.position.y;
+    } else {
+        renderer.app.ticker.remove(speakersUp);
+        speaker1.position.y = speaker2.position.y = window.outerHeight;
+        s_speakersUp = true;
+        wsSpeakersUp();
+    }
+}
 
+function speakersOn() {
+    speaker1.play();
+    speaker2.play();
+    s_speakersOn = true;
+}
+
+function speakersOff() {
 	speaker1.gotoAndStop(0);
     speaker2.gotoAndStop(0);
-
-	if (!speaker1Ready && !speaker2Ready) {
-		log("animation", "done with speaker off");
-		renderer.app.ticker.remove(speakersOff);
-	}
-
-    if (speaker1.position.y < speaker1StartY) {
-        speaker1.position.y += speakerRate * speaker1.position.y * speaker1.position.y;
-    } else {
-    	speaker1Ready = false;
-    	speaker1.position.y = speaker1StartY;
-    }
-
-    if (speaker2.position.y < speaker2StartY) {
-        speaker2.position.y += speakerRate * speaker2.position.y * speaker2.position.y;
-    }
-    else { 
-    	speaker2Ready = false;
-    	speaker2.position.y = speaker2StartY;       
-    }
+    s_speakersOn = false;
 }
 
+function speakersDown(delta) {
+    if (speaker1.position.y < speakerStartY) {
+        speaker1.position.y = speaker2.position.y += speakerRate * speaker1.position.y * speaker1.position.y;
+    } else {
+        renderer.app.ticker.remove(speakersDown);
+        speaker1.position.y = speaker2.position.y = speakerStartY;
+        s_speakersUp = false;
+        wsSpeakersDown();
+    }
+}
 
 /*************************
 *          Fire          *

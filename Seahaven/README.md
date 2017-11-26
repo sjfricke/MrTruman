@@ -42,7 +42,7 @@ Each event has two parts `<type> <value>`
   - Value could be random selection/chat to play back if we write some whimsical quips.
 
 ## Web-to-Host Calls
-- `0` - Ready to record audio
+- `0` - Busy with Animation - try again later
 - `1` - Light switch animation
   - `0` - Turn on lights
   - `1` - Turn off lights
@@ -53,10 +53,11 @@ Each event has two parts `<type> <value>`
   - `0` - Ready to take picture (countdown)
   - `1` - Picture on wall
 - `4` - Speaker animation
-  - `0` - Turned on
-  - `1` - Turned off
+  - `0` - Speakers Up and ready
+  - `1` - Speakers Down
 - `5` - Gyro animation back to ideal mode
 - `6` - Chat Bubble is Done
+- `7` - Ready to record audio
 
 ## State Machine
 
