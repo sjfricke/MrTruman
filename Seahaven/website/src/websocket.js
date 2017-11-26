@@ -48,21 +48,23 @@ function wsOnMessage(event) {
     }
     break;
   case 6:
-      break;
+    break;
   case 7:
-      if (s_animationOn && !s_tiltAnim) {
-        wsBusy();
-      } else if (message.value == 180) {
-        tiltRecovery();
-      } else {
-        s_tiltRight = (message.value > 180) ? true : false;
-        tiltAnimation();
-      }
-      break;
+    if (s_animationOn && !s_tiltAnim) {
+      wsBusy();
+    } else if (message.value == 180) {
+      tiltRecovery();
+    } else {
+      s_tiltRight = (message.value > 180) ? true : false;
+      tiltAnimation();
+    }
+    break;
   case 8:
-      break;
+    break;
   case 9:
-      break;
+    if (s_animationOn) { wsBusy(); }
+    else { (s_fidgetAnim) ? fidgetKill() : fidgetAnimation(); }
+    break;
   default:
 	  warn("WebSocket", "No case for data: %0", message);
   }
@@ -104,11 +106,11 @@ function wsTiltDone() {
 // for testing to callback echo ws //
 /////////////////////////////////////
 function test0() {
-    webSocket.send('{"type":7,"value":190}');
+    webSocket.send('{"type":9,"value":190}');
 }
 
 function test1() {
-    webSocket.send('{"type":7,"value":0}');
+    webSocket.send('{"type":9,"value":0}');
 }
 
 function test2() {

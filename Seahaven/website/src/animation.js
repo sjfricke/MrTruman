@@ -3,6 +3,7 @@
     couchJump
     couchOff
     fallEnd
+    fallHold
     fallStart
     fallWall
     fidget
@@ -36,7 +37,7 @@ var s_lightAnim     = false;
 var s_tiltRight     = false;
 var s_tiltWall      = false;
 var s_tiltAnim      = false;
-var s_fidgetOn      = false;
+var s_fidgetAnim    = false;
 var s_speakOn       = false;
 var s_pictureUp     = false;
 var s_pictureTaken  = false;
@@ -60,6 +61,9 @@ function animationEnd(entry) {
         walkComplete();
     } else if (entry.animation.name == "couchOff") {
         s_couchOn = false;
+        if (s_idleMode && !s_fidgetAnim) { idleMode(); }
+    } else if (entry.animation.name == "fidget") {
+        s_fidgetAnim = false;
         if (s_idleMode) { idleMode(); }
     } else if (entry.animation.name == "pictureStart") {
         s_pictureUp = true;
@@ -130,6 +134,9 @@ function walkAnimation(delta) {
             if (s_couchOn) { 
                 walkTicker.stop();
                 couchAnimation(); 
+            } else if (s_fidgetAnim) {
+                walkTicker.stop();
+                fidgetStart(); // fidget only happens out of idle mode 
             } else {
                 idleMode();
             }
@@ -198,7 +205,7 @@ function couchAnimation() {
     player.state.addAnimation(0, "stand", false, 0);
 }
 
-function couchKill() {      
+function couchKill() {
     player.state.clearTrack(0);
     player.state.addAnimation(0, "couchOff", false, 0);
     player.state.addAnimation(0, "stand", false, 0);
@@ -212,6 +219,7 @@ function lightAnimation() {
     s_animationOn = true;
     s_lightAnim = true;
     if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }
     walk(0,0,525);
 }
 
@@ -237,6 +245,7 @@ function speakerAnimation() {
     s_speakersAnim = true;    
     s_animationOn = true;   
     if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -252,7 +261,7 @@ function speakerAnimation() {
         if (!s_speakersUp) {
             speakersOff(); // be safe, no guarntee
             renderer.app.ticker.add(speakersUp);
-            player.state.setAnimation(0, "musicOn", false);
+            player.state.addAnimation(0, "musicOn", false, 0);
             player.state.addAnimation(0, "musicPlay", true, 0);            
         } else {
             renderer.app.ticker.add(speakersDown);
@@ -305,6 +314,7 @@ function fireAnimation() {
     s_animationOn = true;
     s_fireAnim = true;
     if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }
     walk(0,0, s_fireOn ? 650 : 655);
 }
 
@@ -330,7 +340,8 @@ function pictureAnimation() {
     s_pictureAnim = true;
     s_animationOn = true;   
 
-    if (s_couchOn) { couchKill(); }    
+    if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -390,7 +401,8 @@ function tiltAnimation() {
     s_animationOn = true;
     s_tiltWall = false;   
 
-    if (s_couchOn) { couchKill(); }    
+    if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }  
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -398,7 +410,7 @@ function tiltAnimation() {
     s_idleMode = false; 
 
     player.scale.x = s_tiltRight ? pScaleLeft : pScaleRight;
-    player.state.setAnimation(0, "fallStart", false);
+    player.state.addAnimation(0, "fallStart", false, 0);
     setTimeout(function(){ renderer.app.ticker.add(s_tiltRight ? tiltFallRight : tiltFallLeft);}, 1000); //easily worst line of code I ever wrote
 }
 
@@ -440,6 +452,23 @@ function tiltRecovery() {
 /*************************
 *       Fidget           *
 *************************/
+function fidgetAnimation() {
+    s_fidgetAnim = true;
+    if (s_couchOn) { 
+        couchKill(); 
+        fidgetStart();
+    }
+    // else walk animation will catch trigger
+}
+
+function fidgetStart() {
+    player.state.addAnimation(0, "fidget", true, 0);
+}
+
+function fidgetKill() {
+    s_fidgetAnim = false;
+    player.state.addAnimation(0, "stand", false, 0);
+}
 
 /*************************
 *         Wall           *
