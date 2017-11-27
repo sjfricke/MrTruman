@@ -16,6 +16,7 @@
     "speaker": "res/img/speakers.png",
     "speakerAnimated": "res/spritesheet/speaker_animated.json",
     "scene": "res/img/scene.png",
+    "speechBubble": "res/img/speechBubble.png",
     "wall0": "res/img/wall_texture_0.jpg",
     "wall1": "res/img/wall_texture_1.jpg",
     "wall2": "res/img/wall_texture_2.jpg",

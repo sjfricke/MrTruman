@@ -1,3 +1,6 @@
+/**************************************************
+*    HARD Assumption screen is 800 x 480          *
+***************************************************/
 $(window).ready(start());
 
 var renderer;
@@ -28,6 +31,8 @@ function setWebSocket() {
 function setup() {
     renderer = new Renderer();
 
+    setMenuEvents();
+    
     // pick random texture between 0 and 6
     currentWall = Math.round(Math.random()*5);
     startingWall = currentWall;
@@ -140,7 +145,7 @@ function setup() {
             count: 15,
             framePrefix : "fire",
             start: false,
-            hide: true,
+            hideAlpha: true,
             scale: 0.8
         },
         {
@@ -169,14 +174,22 @@ function setup() {
             framePrefix : "speaker1",
             scale: 0.75,
             start : false
-        },	
+        },	        
         {
             type: 'addSpine',
             name: 'spineboy',
             path: 'res/json/spineboy.json',
             pt: new PIXI.Point(renderer.getW() / 2, renderer.getH()),
-            scale: 0.5
-        }
+            scale: pScaleRight
+        },
+        {
+            type: 'add',
+            name: 'speechBubble',
+            path: resPath.speechBubble,
+            pt: new PIXI.Point(0.5, 0.75),
+            anchorX : 0.0,
+            hideAlpha: true
+        },
     ];
 
     // Load all app data async
@@ -194,20 +207,28 @@ function loadedTex() {
 // Setup that needs to be done after loading
 function loadedSetup() {
 
-    // need to set start to know how far to bring back down in future
-    speakerStartY = renderer.getElemByID('speaker1').position.y; // speaker2 should be same
+    // only doing spineboy since its used most often
+    player = renderer.getElemByID("spineboy");
 
+    speaker1 = renderer.getElemByID('speaker1');
+    speaker2 = renderer.getElemByID('speaker2');
+    // need to set start to know how far to bring back down in future
+    speakerStartY = speaker1.position.y; // speaker2 should be same
+
+    walkTicker.stop();
+    walkTicker.add(walkAnimation);
+    player.state.addListener({ 
+        end: animationEnd
+    })
+
+    run();
 }
 
 function run() {
-
-	
-    // player.interactive = true; // for clicking    
-    // lightSwitch.interactive = true; // for clicking
-
     // Relayers to renderer
     for (var i = 0; i < appData.length; i++) {
         if (appData[i].hide) { continue; }
         renderer.displayLayerByID(appData[i].name);
     }
+   // idleMode();
 }

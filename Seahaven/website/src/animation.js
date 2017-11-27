@@ -1,16 +1,228 @@
+/*    
+    couchIdle
+    couchJump
+    couchOff
+    fallEnd
+    fallHold
+    fallStart
+    fallWall
+    fidget
+    fireOff
+    fireOn
+    jump
+    lightSwitch
+    musicOff
+    musicOn
+    musicPlay
+    pictureChange
+    pictureHold
+    pictureStart
+    pictureTake
+    speak
+    walk
+*/
+var s_animationOn   = false;
+var s_request       = false;
+
+var s_idleMode      = false;
+var s_walkX         = 400;
+var s_couchOn       = false;
+var s_fireOn        = false;
+var s_fireAnim      = false;
+var s_speakersUp    = false;
+var s_speakersOn    = false;
+var s_speakersAnim  = false;
+var s_lightOn       = false; // default to lights on house off
+var s_lightAnim     = false;
+var s_tiltRight     = false;
+var s_tiltWall      = false;
+var s_tiltAnim      = false;
+var s_fidgetAnim    = false;
+var s_speakOn       = false;
+var s_pictureUp     = false;
+var s_pictureTaken  = false;
+var s_pictureAnim   = false;
+
+const walkRate = 2;
+const fallRate = 2;
 const speakerRate = 0.00004;
-var speakerStartY = 500;
+var speaker1, speaker2, speakerStartY;
 
-// Falling +X at x=15 then x=35
-// Falling -X at x=785 then x=765
+var player;
+const pScaleRight = 0.5;
+const pScaleLeft = -0.5;
 
+const walkTicker = new PIXI.ticker.Ticker();
+
+// No clean way of doing this then just taking animation and give it to section named
+function animationEnd(entry) {
+    // log("TEST","TEST", entry.animation.name);
+    if (entry.animation.name == "walk") {
+        walkComplete();
+    } else if (entry.animation.name == "couchOff") {
+        s_couchOn = false;
+        if (s_idleMode && !s_fidgetAnim) { idleMode(); }
+    } else if (entry.animation.name == "fidget") {
+        s_fidgetAnim = false;
+        if (s_idleMode) { idleMode(); }
+    } else if (entry.animation.name == "pictureStart") {
+        s_pictureUp = true;
+        wsPictureReady();
+    } else if (entry.animation.name == "pictureTake") {
+        pictureTrigger();
+    } else if (entry.animation.name == "pictureChange") {
+        s_pictureAnim = s_animationOn = false;
+        pictureChange();
+        wsPictureDone();
+        idleMode();
+    } else if (entry.animation.name == "fireOn") {
+        fireOn();
+        s_fireAnim = s_animationOn = false;
+        idleMode();
+    } else if (entry.animation.name == "fireOff") {
+        fireOff();
+        s_fireAnim = s_animationOn = false;
+        idleMode();
+    } else if (entry.animation.name == "musicOff") {
+        s_speakersAnim = s_animationOn = false;
+        idleMode();
+    } else if (entry.animation.name == "lightSwitch") {
+        s_lightAnim = s_animationOn = false;
+        idleMode();
+    } else if (entry.animation.name == "fallEnd") {
+        s_tiltAnim = s_animationOn = false;
+        wsTiltDone();
+        idleMode();
+    }
+}
+
+/*************************
+*          Walk          *
+*************************/
+
+// direction [ -1 == left, 1 == right, 0 == depends on toPos]
+// distance to walk, 0 == ignore
+// toPos is x distance to walk too
+function walk(direction, distance, toPos) {
+
+    if (distance > 0) {
+        player.scale.x = (direction > 0) ?  pScaleRight : pScaleLeft;
+        s_walkX = player.position.x + (distance * (direction > 0 ? 1 : -1));
+    } else {
+        player.scale.x = (player.position.x - toPos < 0) ?  pScaleRight : pScaleLeft;
+        s_walkX = toPos;
+    }
+
+    if (player.state.tracks.length == 0 || 
+        ( player.state.tracks[0] == null || player.state.tracks[0].animation.name != "walk")) {
+        player.state.setAnimation(0, 'walk', true, 0); 
+        walkTicker.start();    
+    }
+}
+
+function walkAnimation(delta) {
+
+    player.position.x += walkRate * delta * (player.scale.x > 0 ? 1 : -1);
+
+    if (Math.abs(player.position.x - s_walkX) < 5) {
+        // This is done here instead of callback of animation since
+        // Idle can't start and stop ticker and no callback of ticker seemed to work
+        if (s_idleMode) {            
+            player.position.x = s_walkX;        
+            player.state.clearTrack(0);
+            player.state.addAnimation(0, 'stand', false, 0);  
+            if (s_couchOn) { 
+                walkTicker.stop();
+                couchAnimation(); 
+            } else if (s_fidgetAnim) {
+                walkTicker.stop();
+                fidgetStart(); // fidget only happens out of idle mode 
+            } else {
+                idleMode();
+            }
+        } else {
+            // ugly, I know, timer and animation event callback can't synch
+            walkTicker.stop();
+            player.position.x = s_walkX;        
+            player.state.clearTrack(0);
+            // certain animation don't want the stand trasmission
+            if (!s_speakersAnim && !s_pictureAnim && !s_tiltAnim) {
+                player.state.addAnimation(0, 'stand', false, 0); 
+            }
+        }           
+    }
+}
+
+function walkComplete() {
+    if (s_lightAnim) {
+        player.scale.x = pScaleRight;
+        player.state.addAnimation(0, 'lightSwitch', false, 0);  
+        toggleLightSwitch();
+    } else if (s_fireAnim) {
+        player.scale.x = pScaleRight;
+        player.state.addAnimation(0, (s_fireOn) ? 'fireOff' : 'fireOn', false, 0);
+    } else if (s_pictureAnim) {
+        (s_pictureTaken) ? pictureTrigger() : pictureAnimation();
+    } else if (s_tiltAnim) {
+        tiltAnimation();
+    } else if (s_speakersAnim) {
+        speakerAnimation();
+    }
+}
 /*************************
 *          Idle          *
 *************************/
+function idleMode() {
+    s_idleMode = true;
+
+    // logic to move around randomly
+    if (player.position.x == 200) {
+        if (Math.random() < 0.6) {
+            s_couchOn = true;
+            walk(0, 0, 175);
+        } else { 
+            walk(1, 200);
+        }
+    }
+    else if (player.position.x == 400) {
+        Math.random() < 0.5 ? walk(1, 200) : walk(-1, 200);
+    }
+    else if (player.position.x == 600) {
+        walk(-1, 200);
+    }
+    else {
+        // get back to middle for idle
+        walk(0, 0, 400);
+    }
+}
+
+function couchAnimation() {
+    player.scale.x = pScaleRight;
+    player.state.addAnimation(0, "couchJump", false, 0);
+    player.state.addAnimation(0, "couchIdle", false, 0);
+    player.state.addAnimation(0, "couchIdle", false, 0);
+    player.state.addAnimation(0, "couchOff", false, 0);
+    player.state.addAnimation(0, "stand", false, 0);
+}
+
+function couchKill() {
+    player.state.clearTrack(0);
+    player.state.addAnimation(0, "couchOff", false, 0);
+    player.state.addAnimation(0, "stand", false, 0);
+}
 
 /*************************
 *         Lights         *
 *************************/
+function lightAnimation() {
+    s_idleMode = false;
+    s_animationOn = true;
+    s_lightAnim = true;
+    if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }
+    walk(0,0,525);
+}
+
 function toggleLightSwitch() {
     let lightSwitch = renderer.getElemByID('switch');
     renderer.editorFilter.uniforms.mode = renderer.editorFilter.uniforms.mode ^ 0x1;
@@ -26,91 +238,148 @@ function toggleLightSwitch() {
     }
 }
 
-
 /*************************
 *       Speakers         *
 *************************/
-
-// renderer.app.ticker.add(speakersOn);
-function speakersOn(delta) {
-
-	let speaker1 = renderer.getElemByID('speaker1');
-    let speaker2 = renderer.getElemByID('speaker2');
-
-    if (speaker1Ready && speaker2Ready) {
-		speaker1.play();
-		speaker2.play();
-		log("animation", "done with speaker on");
-	        renderer.app.ticker.remove(speakersOn);
-	wsTurnSpeakersOn();
-	}
-
-    if (speaker1.position.y > window.outerHeight) {
-        speaker1.position.y -= speakerRate * speaker1.position.y * speaker1.position.y;
+function speakerAnimation() {
+    s_speakersAnim = true;    
+    s_animationOn = true;   
+    if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }
+    else if (s_idleMode) {
+        s_idleMode = false;
+        return; // need to finish walk animation to prevent stuck
+    }
+    s_idleMode = false; 
+        
+    // get out of speakers
+    if (player.position.x < 100 ) {
+        walk(0,0,150);
+    } else if (player.position.x > 300 && player.position.x < 420) {
+        walk(0,0,250);
     } else {
-    	speaker1Ready = true;
-    	speaker1.position.y = window.outerHeight;
-    }
-
-    if (speaker2.position.y > window.outerHeight) {
-        speaker2.position.y -= speakerRate * speaker2.position.y * speaker2.position.y;
-    }
-    else { 
-    	speaker2Ready = true;
-    	speaker2.position.y = window.outerHeight ;       
+        if (!s_speakersUp) {
+            speakersOff(); // be safe, no guarntee
+            renderer.app.ticker.add(speakersUp);
+            player.state.addAnimation(0, "musicOn", false, 0);
+            player.state.addAnimation(0, "musicPlay", true, 0);            
+        } else {
+            renderer.app.ticker.add(speakersDown);
+            player.state.addAnimation(0, "musicOff", false, 0);
+            player.state.addAnimation(0, 'stand', false, 0); 
+        }
+        
     }
 }
 
-// renderer.app.ticker.add(speakersOff);
-function speakersOff() {
-	let speaker1 = renderer.getElemByID('speaker1');
-    let speaker2 = renderer.getElemByID('speaker2');
+function speakersUp(delta) {
+    if (speaker1.position.y > window.outerHeight) {
+        speaker1.position.y = speaker2.position.y -= speakerRate * speaker1.position.y * speaker1.position.y;
+    } else {
+        renderer.app.ticker.remove(speakersUp);
+        speaker1.position.y = speaker2.position.y = window.outerHeight;
+        s_speakersUp = true;
+        wsSpeakersUp();
+    }
+}
 
+function speakersOn() {
+    speaker1.play();
+    speaker2.play();
+    s_speakersOn = true;
+}
+
+function speakersOff() {
 	speaker1.gotoAndStop(0);
     speaker2.gotoAndStop(0);
-
-	if (!speaker1Ready && !speaker2Ready) {
-		log("animation", "done with speaker off");
-		renderer.app.ticker.remove(speakersOff);
-	}
-
-    if (speaker1.position.y < speaker1StartY) {
-        speaker1.position.y += speakerRate * speaker1.position.y * speaker1.position.y;
-    } else {
-    	speaker1Ready = false;
-    	speaker1.position.y = speaker1StartY;
-    }
-
-    if (speaker2.position.y < speaker2StartY) {
-        speaker2.position.y += speakerRate * speaker2.position.y * speaker2.position.y;
-    }
-    else { 
-    	speaker2Ready = false;
-    	speaker2.position.y = speaker2StartY;       
-    }
+    s_speakersOn = false;
 }
 
+function speakersDown(delta) {
+    if (speaker1.position.y < speakerStartY) {
+        speaker1.position.y = speaker2.position.y += speakerRate * speaker1.position.y * speaker1.position.y;
+    } else {
+        renderer.app.ticker.remove(speakersDown);
+        speaker1.position.y = speaker2.position.y = speakerStartY;
+        s_speakersUp = false;
+        wsSpeakersDown();
+    }
+}
 
 /*************************
 *          Fire          *
 *************************/
+function fireAnimation() {
+    s_idleMode = false;
+    s_animationOn = true;
+    s_fireAnim = true;
+    if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }
+    walk(0,0, s_fireOn ? 650 : 655);
+}
 
 function fireOn() {
-    // at x = 655
-    renderer.app.stage.addChild(renderer.getElemByID("fireAnimated"));
-    renderer.getElemByID("fireAnimated").gotoAndPlay(0);
+    renderer.getElemByID("fireAnimated").gotoAndPlay(0);    
+    renderer.getElemByID("fireAnimated").alpha = 1;
+    s_fireOn = true;
+    wsFireOn();
 }
 
 function fireOff() {
-    // at x = 650
     renderer.getElemByID("fireAnimated").stop();
-    renderer.app.stage.removeChild(renderer.getElemByID("fireAnimated"));
+    renderer.getElemByID("fireAnimated").alpha = 0;
+    s_fireOn = false;
+    wsFireOff();
 }
 
 /*************************
 *       Picture          *
 *************************/
-function getNewPhoto() { 
+function pictureAnimation() {
+    s_pictureTaken = false; // need since picture has two post-walk animations
+    s_pictureAnim = true;
+    s_animationOn = true;   
+
+    if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }
+    else if (s_idleMode) {
+        s_idleMode = false;
+        return; // need to finish walk animation to prevent stuck
+    }
+    s_idleMode = false; 
+
+    player.state.addAnimation(0, "pictureStart", false, 0);
+    player.state.addAnimation(0, "pictureHold", false, 0); // purly cause listener won't trigger
+}
+
+function pictureFlash() {
+    // TODO
+}
+
+function pictureTrigger() {
+    s_pictureTaken = true;
+
+    if (s_pictureUp) {        
+        s_pictureUp = false;
+        player.state.setAnimation(0, "pictureTake", false);
+        player.state.addAnimation(0, "stand", false, 0);
+        return;
+    }
+
+    if (player.position.x < 225 || player.position.x > 275) {
+        walk(0,0,250);
+        return;
+    }
+
+    player.scale.x = pScaleLeft;
+    player.state.setAnimation(0, "pictureChange", false);
+    player.state.addAnimation(0, "stand", false, 0);
+}
+
+// TODO
+// BROKEN - Breaks on 2nd pictureChange
+function pictureChange() { 
+
     renderer.app.stage.removeChild(renderer.getElemByID("picture"));
     delete renderer.elems["picture"];
 
@@ -124,15 +393,82 @@ function getNewPhoto() {
         })
 }
 
-
-
 /*************************
 *      Tilt/Gyro         *
 *************************/
+function tiltAnimation() {
+    s_tiltAnim = true;
+    s_animationOn = true;
+    s_tiltWall = false;   
+
+    if (s_couchOn) { couchKill(); }
+    else if (s_fidgetAnim) { fidgetKill(); }  
+    else if (s_idleMode) {
+        s_idleMode = false;
+        return; // need to finish walk animation to prevent stuck
+    }
+    s_idleMode = false; 
+
+    player.scale.x = s_tiltRight ? pScaleLeft : pScaleRight;
+    player.state.addAnimation(0, "fallStart", false, 0);
+    setTimeout(function(){ renderer.app.ticker.add(s_tiltRight ? tiltFallRight : tiltFallLeft);}, 1000); //easily worst line of code I ever wrote
+}
+
+// TODO
+function tiltChangeDirection() {
+
+}
+
+function tiltFallRight(delta) {
+    if (player.position.x < 720) {
+        player.position.x += fallRate * delta;
+    } else if (!s_tiltWall) {
+        s_tiltWall = true;
+        player.position.x = 720;
+        player.state.setAnimation(0, "fallWall", false);
+    } else {
+
+    }
+}
+
+function tiltFallLeft(delta) {
+    if (player.position.x > 80) {
+        player.position.x -= fallRate * delta;
+    } else if (!s_tiltWall) {
+        s_tiltWall = true;
+        player.position.x = 80;
+        player.state.setAnimation(0, "fallWall", false);
+    } else {
+
+    }
+}
+
+function tiltRecovery() {
+    renderer.app.ticker.remove(s_tiltRight ? tiltFallRight : tiltFallLeft);
+    player.state.setAnimation(0, "fallEnd", false);
+    player.state.addAnimation(0, "stand", false, 0);
+}
 
 /*************************
 *       Fidget           *
 *************************/
+function fidgetAnimation() {
+    s_fidgetAnim = true;
+    if (s_couchOn) { 
+        couchKill(); 
+        fidgetStart();
+    }
+    // else walk animation will catch trigger
+}
+
+function fidgetStart() {
+    player.state.addAnimation(0, "fidget", true, 0);
+}
+
+function fidgetKill() {
+    s_fidgetAnim = false;
+    player.state.addAnimation(0, "stand", false, 0);
+}
 
 /*************************
 *         Wall           *
@@ -145,43 +481,3 @@ function changeWall() {
 
     wall.texture = renderer.textures["wall" + currentWall];
 }
-
-
-
-function animateSpineBoy() {
-    if (playerMovingForward == true || playerMovingBackward == true) {
-        // Currently performing action, so cannot stop
-        return;
-    }
-    playerMovingForward = true;
-    renderer.getElemByID('spineboy').state.addAnimation(0, 'walk', true, 0);
-    renderer.app.ticker.add(walkSpineBoy);
-}
-
-function walkSpineBoy(delta) {
-
-    let player = renderer.getElemByID('spineboy');
-    let lightSwitch = renderer.getElemByID('switch');
-
-    if (playerMovingForward) {
-        player.position.x += 2 * delta;
-        if (Math.abs(player.position.x - lightSwitch.position.x) < 20) {
-            playerMovingForward = false;
-            player.scale.x = -player.scale.x;
-            playerMovingBackward = true;
-            player.state.setAnimation(0, 'lightSwitch', false); // at x == 525
-            player.state.addAnimation(0, 'walk', true, .5);
-            toggleLightSwitch();
-        }
-    }
-    if (playerMovingBackward) {
-        player.position.x -= 2 * delta;
-        if (player.position.x < 150) {
-            playerMovingBackward = false;
-            player.scale.x = -player.scale.x;
-            player.state.addAnimation(0, 'walk', false, 0);
-            renderer.app.ticker.remove(walkSpineBoy);
-        }
-    }
-}
-

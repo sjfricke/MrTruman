@@ -105,7 +105,10 @@ class Renderer {
             imgPath = data.path,
             pos = data.pt,
             containerID = data.containerID,
-            scale = data.scale;
+            scale = data.scale,
+            hideAlpha = data.hideAlpha,
+            anchorX = data.anchorX,
+            anchorY = data.anchorY;
 
         if (!this.checkload(id, imgPath, pos)) { return; }
 
@@ -118,10 +121,13 @@ class Renderer {
         var that = this;
         loader.load((loader, res) => {
             that.elems[id] = new PIXI.Sprite(res[id].texture);
-            that.elems[id].anchor.x = 0.5;
-            that.elems[id].anchor.y = 1;
+            that.elems[id].anchor.x = isNaN(anchorX) ? 0.5 : anchorX;
+            that.elems[id].anchor.y = isNaN(anchorY) ? 1.0 : anchorY;
             that.elems[id].position.x = pos.x * window.outerWidth;
             that.elems[id].position.y = pos.y * window.outerHeight;
+
+            if (hideAlpha) { that.elems[id].alpha = 0; }
+
             if (scale !== undefined && typeof scale === 'number' && scale > 0) {
                 that.elems[id].scale.x = scale;
                 that.elems[id].scale.y = scale;
@@ -208,6 +214,7 @@ class Renderer {
             count = data.count,
             framePrefix = data.framePrefix,
             hide = data.hide,
+            hideAlpha = data.hideAlpha,
             scale = data.scale || 1,
             start = data.start || true;
 
@@ -248,6 +255,7 @@ class Renderer {
             }
 
             if (hide) { that.elems[id].hideOnLoad = true; }
+            else if (hideAlpha) { that.elems[id].alpha = 0; }
 
             if (scale !== undefined && typeof scale === 'number' && scale > 0) {
                 that.elems[id].scale.x = scale;

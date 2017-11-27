@@ -1,5 +1,9 @@
 [How to setup board for Seahaven](./docs/setup.md)
 
+# Important Notes
+
+- **HARD** Assumption screen is 800 x 480
+
 # Seahaven mappings
 
 Each event is given a index number to save from having to send a string. A future enum will be created in the host portion.
@@ -34,15 +38,16 @@ Each event has two parts `<type> <value>`
   - Value int of BPM
 - `7` - Gyro animation
   - Value is of rotation in degrees between 0 and 359 where 180 is level
+    - Sending 180 is how Web knows everything is back to level
 - `8` - Chatting with Mr T.
   - Value could be random selection/chat to play back if we write some whimsical quips.
+- `9` - Toggle fidget spinner
 
 ## Web-to-Host Calls
-- `0` - Ready to record audio
+- `0` - Busy with Animation - try again later
 - `1` - Light switch animation
   - `0` - Turn on lights
   - `1` - Turn off lights
-  - `2` - Change light colors
 - `2` - Fireplace (Fan) animation
   - `0` - Turn on fan
   - `1` - Turn off fan
@@ -50,10 +55,13 @@ Each event has two parts `<type> <value>`
   - `0` - Ready to take picture (countdown)
   - `1` - Picture on wall
 - `4` - Speaker animation
-  - `0` - Turned on
-  - `1` - Turned off
+  - `0` - Speakers Up and ready
+  - `1` - Speakers Down
 - `5` - Gyro animation back to ideal mode
 - `6` - Chat Bubble is Done
+- `7` - Ready to record audio
+- `8` - Value of audio
+  - Range is 1 - 100
 
 ## State Machine
 
