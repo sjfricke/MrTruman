@@ -174,14 +174,22 @@ function setup() {
             framePrefix : "speaker1",
             scale: 0.75,
             start : false
-        },	
+        },	        
         {
             type: 'addSpine',
             name: 'spineboy',
             path: 'res/json/spineboy.json',
             pt: new PIXI.Point(renderer.getW() / 2, renderer.getH()),
             scale: pScaleRight
-        }
+        },
+        {
+            type: 'add',
+            name: 'speechBubble',
+            path: resPath.speechBubble,
+            pt: new PIXI.Point(0.5, 0.75),
+            anchorX : 0.0,
+            hideAlpha: true
+        },
     ];
 
     // Load all app data async
