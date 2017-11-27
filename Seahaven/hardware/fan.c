@@ -66,11 +66,13 @@ int fanOn(double duty)
 	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_FAN_OFF_H, high);
 
 	return 0;
+
+	PCA9685_End();
 }
 
 int fanOff()
 {
-
+	PCA9685_Start();
 	// Write all off.
 	I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
 	I2cWriteByte(PCA9685_I2C_BUS, PCA9685_FAN_ON_L, 0x0);
