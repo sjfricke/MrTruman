@@ -15,9 +15,15 @@ void webDataCallback( int type, char* value) {
 
   // LIGHTS Callback  
   case 1:
-    setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-		setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-		setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+    val = atoi(value);
+    if(val == 0){
+    	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+    }
+    else{
+	setLED(PCA9685_ALL_CALL, 0, 0x3FF);
+    }
     animation_on = FALSE;
     break;
 
@@ -107,7 +113,7 @@ void HardwareSetup() {
   voiceDictionarySetup();
 
   initAuxGPIO();
-  loopbackSetup();
+ // loopbackSetup();
 
   // Calls LSM6DS3h_start and Gryo GPIO
   enableGyroTilt();
@@ -117,6 +123,7 @@ void HardwareSetup() {
   // Calls PCA9685_Start and Servo GPIO
   servofanStart();
   initLEDs();
+  setLED(PCA9685_ALL_CALL, 0, 0x3FF);
 }
 
 static uint8_t headphone_status;
