@@ -181,12 +181,12 @@ static int testCamera() {
 
 int main ( int argc, char* argv[] ) {
   printf("test\n");
-  testGyro();
+  //testGyro();
   //testLEDFanServo();
   //testCamera();
-  //initAuxGPIO();
-  //loopbackSetup();
-  //loopback();
+  initAuxGPIO();
+  loopbackSetup();
+  loopback();
   //
   //
   //servoStart();

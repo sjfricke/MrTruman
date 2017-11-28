@@ -6,7 +6,7 @@ function wsOnMessage(event) {
 
    // Message looks like => { "type" : 1, "value" : 0 }
   var message = JSON.parse(event.data);
-//console.dir(message);
+    log("websocket", "Key - Value", message.type, message.value);
   switch(parseInt(message.type)) {
   case 0:
       break;
