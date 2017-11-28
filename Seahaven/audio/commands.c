@@ -32,9 +32,10 @@ int commandDetect(char const* voice_str)
     char* detectRed = strstr(voice_str, "RED");
     char* detectGreen = strstr(voice_str, "GREEN");
     char* detectBlue = strstr(voice_str, "BLUE");
-   
+
+
     if((detectOn != NULL) || (detectOff != NULL)){
-	(detectOn != NULL) ? broadcastString("1", "0") : broadcastString("1", "1");
+	    (detectOn != NULL) ? broadcastString("1", "0") : broadcastString("1", "1");
     } else { // Specified a color or on or off I guess - defaults to telling the house to turn lights blue
       if(detectRed != NULL){
         broadcastString("2", "255,0,0");
@@ -45,7 +46,11 @@ int commandDetect(char const* voice_str)
       }
       
     }
-    animation_on = TRUE;
+
+    if((detectOn != NULL) || (detectOff != NULL) || (detectRed != NULL) || (detectGreen != NULL) || (detectBlue != NULL)){
+      animation_on = TRUE;
+    }
+
     return 0;
   }
 
@@ -61,8 +66,9 @@ int commandDetect(char const* voice_str)
 
     if((detectOn != NULL) || (detectOff != NULL)){
     	(detectOn != NULL) ? broadcastString("3", "0") : broadcastString("3", "1");
+      animation_on = TRUE;
     }
-    animation_on = TRUE;
+    
     return 0;
   }
 
@@ -87,7 +93,6 @@ int commandDetect(char const* voice_str)
     animation_on = TRUE;
     return 0;
   }
-
  
   printf("No command listed found\n");
   return -1;
