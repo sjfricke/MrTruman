@@ -98,6 +98,14 @@ void webDataCallback( int type, char* value) {
     animation_on = FALSE;
     break;
 
+  case 8:
+    val = atoi(value);
+    printf("Case 8:\n\tgot value %d for volume\n", val);
+    sprintf(command, "amixer cset iface=MIXER,name='RX3 Digital Volume' %d", val);
+    //system(command);
+    animation_on = FALSE;
+    break;
+
   default:
     printf("Not a valid type! [%d]\n", type);
     break;
