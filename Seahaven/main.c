@@ -3,8 +3,11 @@
 extern server_t* g_server;
 
 extern uint8_t audio_plugged_in;
+extern uint8_t animation_on;
+extern uint8_t gyro_tripped; 
+
 static char command[256];
-uint8_t animation_on = FALSE;
+
 
 void webDataCallback( int type, char* value) {
   int val;
@@ -163,9 +166,10 @@ int main ( int argc, char* argv[] ) {
   GpioSetDirection(headphone_jack, INPUT_PIN);
   headphone_status = GpioGetValue(headphone_jack);
 
+  // Set global variables
   animation_on = FALSE;
   audio_plugged_in = FALSE;
-  uint8_t gyro_tripped = FALSE;
+  gyro_tripped = FALSE;
   
 
   while(1) {

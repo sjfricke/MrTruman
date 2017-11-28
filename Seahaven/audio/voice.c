@@ -11,9 +11,12 @@ static ad_rec_t *ad;
 static int16_t adbuf[PS_BUF_SIZE];
 static uint32_t buf_count;
 static int32_t k;
+
 char const* voice_str;
 
 extern uint8_t audio_plugged_in;
+extern uint8_t animation_on;
+extern uint8_t gyro_tripped; 
 
 
 void voiceHardwareSetup() {
