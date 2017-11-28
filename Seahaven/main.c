@@ -107,9 +107,10 @@ void webDataCallback( int type, char* value) {
 
   case 8:
     val = atoi(value);
+    val = val/2.2 + 100;
     printf("Case 8:\n\tgot value %d for volume\n", val);
     sprintf(command, "amixer cset iface=MIXER,name='RX3 Digital Volume' %d", val);
-    //system(command);
+    system(command);
     animation_on = FALSE;
     break;
 
