@@ -80,7 +80,7 @@ void webDataCallback( int type, char* value) {
       loopbackTerminate();
     }
     if(val == 1){
-      //servoExtend();
+      servoRetract();
       /*sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'");
       printf("in case 4\n");
       system(command);*/
@@ -172,7 +172,6 @@ int main ( int argc, char* argv[] ) {
   audio_plugged_in = FALSE;
   gyro_tripped = FALSE;
   
-
   while(1) {
 
 
@@ -188,9 +187,9 @@ int main ( int argc, char* argv[] ) {
       sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
       system(command);
 
+      servoExtend();
       broadcastString("5", "0");
-      //servoExtend();
-      servoStop();
+      //servoStop();
       animation_on = TRUE;
     }
 
@@ -199,7 +198,8 @@ int main ( int argc, char* argv[] ) {
       if(dir == 1 || dir == -1){
         // 1 for right, -1 for left
         sprintf(command, "%d", dir);
-        broadcastString("7", command);
+        broadcastString("1", "0");
+        //broadcastString("7", command);
         animation_on = TRUE;
       } else{
         animation_on = FALSE;

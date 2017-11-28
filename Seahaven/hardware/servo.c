@@ -89,8 +89,8 @@ int servoExtend()
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x1);
 
   // Wait two seconds (or however long the it takes to extend)
-  usleep(TWOSECONDS);
-
+  usleep(TWOSECONDS_FWD);
+printf("rotation done");
   // Turn off the outputs.
   I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
@@ -146,18 +146,18 @@ int servoRetract()
   // Off Value = 0x141 *(1,41)
   //
   // -----
-  //     |
+  //     |1
   //      -----------------
   //    1.7               21.7
   //
   I2cSetSlave(PCA9685_I2C_BUS, PCA9685_SERVO_FAN_ADDRESS);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_L, 0x0);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_ON_H, 0x0);
-  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x2D);
-  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
+  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x32);
+  I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x01);
 
   // Wait two seconds (or however long the it takes to extend)
-  usleep(TWOSECONDS);
+  usleep(TWOSECONDS_BCK);
 
   // Turn off the outputs.
   // Can turn into a single write once verified.
