@@ -64,4 +64,5 @@ int16_t getAccelY();
 int16_t getAccelZ();
 int getTiltDirection();
 uint8_t readGyroReg(uint8_t addr);
+double getTemp();
 #endif

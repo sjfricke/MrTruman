@@ -29,6 +29,11 @@ int getTiltDirection(){
   return 0;
 }
 
+double getTemp(){
+  int16_t tempcode = (readGyroReg(0x20) << 8) + (readGyroReg(0x21));
+  return (tempcode/16.0)+25;
+}
+
 uint8_t readGyroReg(uint8_t addr){
   uint8_t data;
   I2cSetSlave(LSM6DS3H_I2C_BUS, GYRO_I2C_ADDRESS);
