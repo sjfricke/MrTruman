@@ -317,7 +317,7 @@ int loopback() {
 	local_volume = VOLCURRENT;
 	char* volcommand = (char*)malloc(200*sizeof(char));
 	// Now Playing
-	broadcastString("5", "1");
+//	broadcastString("5", "1");
 	aux_in = 1;
 	aux_pin = GpioDB410cMapping(23);
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
