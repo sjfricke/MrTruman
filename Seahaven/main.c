@@ -2,7 +2,9 @@
 
 extern server_t* g_server;
 
+extern uint8_t audio_plugged_in;
 static char command[256];
+uint8_t animation_on = FALSE;
 
 void webDataCallback( int type, char* value) {
   int val;
@@ -16,7 +18,7 @@ void webDataCallback( int type, char* value) {
   // LIGHTS Callback  
   case 1:
     val = atoi(value);
-    if(val == 0){
+    if(val == 1){
     	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
 	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
@@ -30,8 +32,8 @@ void webDataCallback( int type, char* value) {
   // FAN Callback    
   case 2:
     val = atoi(value);
-    if(value == 0){
-      fanOn(0.99);
+    if(val == 0){
+      fanOn(0.95);
     }
     else {
       fanOff();
@@ -68,15 +70,20 @@ void webDataCallback( int type, char* value) {
   case 4:
     val = atoi(value);
     if(val == 0){
+      broadcastString("5", "1");
       //printf("\nSPEAKER IS READY IN ANIMAION\n");  
+      loopbackSetup();
       loopback();
-      broadcastString("5", "3");
-      
+      loopbackTerminate();
     }
     if(val == 1){
-      servoExtend();
-      sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'");
-      system(command);
+      //servoExtend();
+      /*sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'");
+      printf("in case 4\n");
+      system(command);*/
+	animation_on = FALSE;
+      voiceHardwareSetup();
+      printf("SETTING ANIMATION_ON FALSE\n");
       animation_on = FALSE;
     }
     break;
@@ -123,6 +130,8 @@ void HardwareSetup() {
   // Calls PCA9685_Start and Servo GPIO
   servofanStart();
   initLEDs();
+  fanOff();
+  servoStop();
   setLED(PCA9685_ALL_CALL, 0, 0x3FF);
 }
 
@@ -146,11 +155,13 @@ int main ( int argc, char* argv[] ) {
   GpioSetDirection(headphone_jack, INPUT_PIN);
   headphone_status = GpioGetValue(headphone_jack);
 
-  uint8_t animation_on = FALSE;
-  uint8_t audio_plugged_in = FALSE;
+  animation_on = FALSE;
+  audio_plugged_in = FALSE;
   uint8_t gyro_tripped = FALSE;
   
+
   while(1) {
+
 
     if(animation_on){ usleep(1000); continue;} // Sleep a millisecond cuz come on, who is it really hurting?
 
@@ -159,14 +170,20 @@ int main ( int argc, char* argv[] ) {
     voiceCommand();    
 
     if (audio_plugged_in) {
-      broadcastString("5", "0");
+	   printf("AUDIOBLOCK\n");
       sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
       system(command);
-      servoExtend();
+       sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
+      system(command);
+
+      broadcastString("5", "0");
+      //servoExtend();
+      servoStop();
       animation_on = TRUE;
     }
 
     if (gyro_tripped) {
+	    printf("GYROBLOCK\n");
       int dir = getTiltDirection();
       if(dir == 1 || dir == -1){
         // 1 for right, -1 for left

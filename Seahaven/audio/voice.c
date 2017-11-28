@@ -1,5 +1,5 @@
 #include "voice.h"
-
+#include "../status.h"
 
 // Single instance of PocketSphinx voice
 // ps variables
@@ -13,6 +13,9 @@ static uint32_t buf_count;
 static int32_t k;
 char const* voice_str;
 
+extern uint8_t audio_plugged_in;
+
+
 void voiceHardwareSetup() {
   char command[256];
 
@@ -21,7 +24,7 @@ void voiceHardwareSetup() {
   system(command);
   sprintf(command, "amixer -c 0 cset iface=MIXER,name='RX3 MIX1 INP1' 'RX1'");
   system(command);
-  sprintf(command, "amixer cset iface=MIXER,name='RX3 Digital Volume' 145");
+  sprintf(command, "amixer cset iface=MIXER,name='RX3 Digital Volume' 136");
   system(command);
 
   // default input to mic over audio jack
@@ -54,6 +57,7 @@ void voiceDictionarySetup() {
 }
 
 int voiceCommand() {
+
   if ((ad = ad_open_dev(PS_ALSA_VOICE_MIC_HW, 16000)) == NULL) {
     fprintf(stderr, "Failed to open audio device\n");
     exit(-1);
@@ -79,8 +83,23 @@ int voiceCommand() {
   //  buf_count = 15;
   for (;;) {
 
-    if(GpioGetValue(headphone_jack) == 1){ audio_plugged_in = TRUE; return 0; }
-    if(gyroInterruptPoll()) {gyro_tripped = TRUE; return 0; }
+    if(GpioGetValue(headphone_jack) == 1){ 
+	printf("STARTED\n");
+      ps_end_utt(ps);
+	ad_close(ad);
+	//voiceCleanUp();
+	printf("MADE IT\n");
+	    audio_plugged_in = TRUE; 
+	    return 0; 
+    }
+    if(gyroInterruptPoll()) {
+
+      ps_end_utt(ps);
+	ad_close(ad);
+	//voiceCleanUp();
+	    gyro_tripped = TRUE; 
+	    return 0; 
+    }
 
     // Start getting data
     if ((k = ad_read(ad, adbuf, PS_BUF_SIZE)) < 0) {

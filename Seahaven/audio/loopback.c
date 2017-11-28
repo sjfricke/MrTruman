@@ -9,15 +9,16 @@
 snd_pcm_t *inhandle;
 snd_pcm_t *outhandle;
 snd_pcm_uframes_t frames, framesout;
-int aux_in = 1;
-static uint16_t pin;
+int aux_in;
+static uint16_t aux_pin;
 void *buffer;
 int buff_size;
 
 extern uint8_t VOLCHANGED;
 extern uint8_t VOLCURRENT;
 uint8_t local_volume;
-
+extern uint8_t audio_plugged_in;
+extern uint8_t animation_on;
 
 
 static void closeHandles() {
@@ -105,12 +106,12 @@ static int change_LED_from_sample(int16_t sample, int scale) {
 		return 1;
 	}
 
-	if(BROADCASTCOLORS){
+/*	if(BROADCASTCOLORS){
 	    char* broadcaststr = (char*)malloc(200*sizeof(char));
 		sprintf(broadcaststr, "%d,%d,%d", r_comp, g_comp, b_comp);
 		broadcastString("2", broadcaststr);
 		free(broadcaststr);
-	}
+	}*/
 
 	return 0;
 }
@@ -130,7 +131,7 @@ void *analyze_buffer(void* buff) {
 	uint8_t count = 1;
 	uint8_t rst = 0;
 
-	while ((aux_in = GpioGetValue(pin)) == 1) {
+	while (aux_in == 1) {
 		// get max ampl in buffer
 		int16_t sample = get_max(buffer);
 		// change LEDs based on the sample and scale
@@ -317,10 +318,11 @@ int loopback() {
 	char* volcommand = (char*)malloc(200*sizeof(char));
 	// Now Playing
 	broadcastString("5", "1");
-
+	aux_in = 1;
+	aux_pin = GpioDB410cMapping(23);
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 	// loop the entire time the aux cord is plugged in
-	while (aux_in) {
+	while ((aux_in = GpioGetValue(aux_pin)) == 1) {
 		// If the volume has been changed, acknowledge it by changing the volume and clearing the changed flag.
 		if(VOLCHANGED){
 			VOLCHANGED = 0;
@@ -338,12 +340,12 @@ int loopback() {
 	}
 
 	// No Longer Playing
-	broadcastString("5", "2");
+	broadcastString("5", "3");
 	free(volcommand);
 	//printf("Aux unplugged, see ya next time\n");
 	pthread_join(tid, NULL);
 	audio_plugged_in = FALSE;
-	animation_on = TRUE;
+//	animation_on = FALSE;
 	return 0;
 
 }
