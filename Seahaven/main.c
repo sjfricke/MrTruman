@@ -183,10 +183,9 @@ int main ( int argc, char* argv[] ) {
     voiceCommand();    
 
     if (audio_plugged_in) {
-	   printf("AUDIOBLOCK\n");
       sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
       system(command);
-       sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
+      sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
       system(command);
 
       broadcastString("5", "0");
@@ -196,21 +195,17 @@ int main ( int argc, char* argv[] ) {
     }
 
     if (gyro_tripped) {
-	    printf("GYROBLOCK\n");
       int dir = getTiltDirection();
       if(dir == 1 || dir == -1){
         // 1 for right, -1 for left
         sprintf(command, "%d", dir);
         broadcastString("7", command);
-        gyroClearInterrupt();
         animation_on = TRUE;
-        gyro_tripped = FALSE;
       } else{
         animation_on = FALSE;
-        gyro_tripped = FALSE;
-        gyroClearInterrupt();
       }
-      
+      gyro_tripped = FALSE;
+      gyroClearInterrupt();
     } 
 
     usleep(50000); // 50ms

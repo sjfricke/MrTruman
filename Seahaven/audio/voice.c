@@ -87,19 +87,14 @@ int voiceCommand() {
   for (;;) {
 
     if(GpioGetValue(headphone_jack) == 1){ 
-	printf("STARTED\n");
       ps_end_utt(ps);
-	ad_close(ad);
-	//voiceCleanUp();
-	printf("MADE IT\n");
+	    ad_close(ad);
 	    audio_plugged_in = TRUE; 
 	    return 0; 
     }
     if(gyroInterruptPoll()) {
-
       ps_end_utt(ps);
-	ad_close(ad);
-	//voiceCleanUp();
+	    ad_close(ad);
 	    gyro_tripped = TRUE; 
 	    return 0; 
     }
