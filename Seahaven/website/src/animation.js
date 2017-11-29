@@ -225,15 +225,17 @@ function lightAnimation() {
 
 function toggleLightSwitch() {
     let lightSwitch = renderer.getElemByID('switch');
-    renderer.editorFilter.uniforms.mode = renderer.editorFilter.uniforms.mode ^ 0x1;
-    if (renderer.editorFilter.uniforms.mode == 0) {
+    renderer.app.stage.filters[0].mode = s_lightOn ? 0 : 1;
+    if (renderer.app.stage.filters[0].mode  == 0) {
         lightOnTexture = lightSwitch.texture;
         lightSwitch.texture = lightOffTexture;
+        s_lightOn = false;
         wsTurnLightsOff();
     }
     else {
         lightOffTexture = lightSwitch.texture;
         lightSwitch.texture = lightOnTexture;
+        s_lightOn = true;
         wsTurnLightsOn();
     }
 }
