@@ -8,34 +8,11 @@ class Renderer {
         }
         else {
             this.$container = parentNode;
-            this.app = new PIXI.Application(window.outerWidth, window.outerHeight, { backgroundColor: 0x1099bb });
+            this.app = new PIXI.Application(window.outerWidth, window.outerHeight, { backgroundColor: 0xffffff });
             this.$container.append(this.app.view);
             this.elems = {};
             this.textures = {};
-//            this.app.stage.interactive = true;
-            this.editorFilter = new PIXI.Filter(null, `
-                    precision mediump float;
-                    varying vec2 vTextureCoord;
-                    uniform sampler2D uSampler;
-                    uniform float mode;
-                    vec3 black = vec3(0.0,0.0,0.0);
-                    void main(void)
-                    {
-                        float x = vTextureCoord.x;
-                        float y = vTextureCoord.y;
-                        vec4 pixel = texture2D(uSampler, vTextureCoord.xy);
-                        if (mode == 1.0) {
-                            gl_FragColor = pixel;
-                        }
-                        else {
-                            // 0 is full black, 1.0 is full on
-	                        vec3 color = mix(black, pixel.xyz, 0.7);
-	                        gl_FragColor = vec4(color, pixel.a);
-                        }
-                    }`
-                );
-            this.editorFilter.uniforms.mode = 0.0;
-            this.app.stage.filters = [this.editorFilter];
+            this.app.stage.filters = [ lightSwitchFilter ];
         }
     }
 
@@ -46,7 +23,7 @@ class Renderer {
             return false;
         }
         else if (typeof path !== 'string') {
-            log('Renderer', 'Could not add because jsonPath (= %O) is not of a string.', jsonPath);
+            log('Renderer', 'Could not add because jsonPath (= %O) is not of a string.', path);
             return false;
         } 
         else if (!(pos instanceof PIXI.Point)) {
@@ -215,6 +192,8 @@ class Renderer {
             framePrefix = data.framePrefix,
             hide = data.hide,
             hideAlpha = data.hideAlpha,
+            loop = data.loop,
+            speed = data.speed || .2,
             scale = data.scale || 1,
             start = data.start || true;
 
@@ -245,8 +224,8 @@ class Renderer {
             that.elems[id].anchor.y = 1;
             that.elems[id].position.x = pos.x * window.outerWidth;
             that.elems[id].position.y = pos.y * window.outerHeight;
-
-            that.elems[id].animationSpeed = 0.17;
+            that.elems[id].loop = loop;
+            that.elems[id].animationSpeed = speed;
 
             if (data.start) {                
                 that.elems[id].gotoAndPlay(0);

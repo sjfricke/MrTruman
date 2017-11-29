@@ -52,11 +52,12 @@ function wsOnMessage(event) {
   case 7:
     if (s_animationOn && !s_tiltAnim) {
       wsBusy();
-    } else if (message.value == 180) {
+    } else if (message.value == 0) {
       tiltRecovery();
-    } else {
-      s_tiltRight = (message.value > 180) ? true : false;
-      tiltAnimation();
+    } else {      
+      s_tiltRight = (message.value < 0) ? true : false;
+      tiltValue = message.value;
+      if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
     }
     break;
   case 8:
@@ -107,13 +108,13 @@ function wsVolume(value) {
 // for testing to callback echo ws //
 /////////////////////////////////////
 function test0() {
-    webSocket.send('{"type":9,"value":190}');
+    webSocket.send('{"type":4,"value":0}');
 }
 
 function test1() {
-    webSocket.send('{"type":9,"value":0}');
+    webSocket.send('{"type":4,"value":1}');
 }
 
 function test2() {
-    webSocket.send('{"type":7,"value":180}');
+    webSocket.send('{"type":4,"value":2}');
 }

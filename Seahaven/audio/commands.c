@@ -3,6 +3,8 @@
 static char* c_lights = "LIGHT";
 static char* c_fire = "FIRE";
 static char* c_picture = "PICTURE";
+static char* c_selfie = "SELFIE";
+static char* c_photo = "PHOTO";
 static char* c_chitchat = "WHATS UP";
 static char* c_jump = "JUMP";
 
@@ -75,7 +77,7 @@ int commandDetect(char const* voice_str)
   /*
     Taking pictures animation
   */
-  if (strstr(voice_str, c_picture)) {
+  if (strstr(voice_str, c_picture) || strstr(voice_str, c_selfie) || strstr(voice_str, c_photo)) {
     broadcastString("4", "0");
     animation_on = TRUE;
     return 0;

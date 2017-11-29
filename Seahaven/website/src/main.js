@@ -33,8 +33,8 @@ function setup() {
 
     setMenuEvents();
     
-    // pick random texture between 0 and 6
-    currentWall = Math.round(Math.random()*5);
+    // pick random texture between 0 and 4
+    currentWall = Math.round(Math.random()*4);
     startingWall = currentWall;
 
     (new PIXI.loaders.Loader()).add('lightOn', resPath.lightOn).
@@ -82,14 +82,6 @@ function setup() {
             hide: (4 == currentWall) ? false : true
         },
         {
-            type: 'addTexture',
-            name: 'wall5',
-            path: resPath.wall5,
-            pt: new PIXI.Point(0, 0),
-            tile: (5 == currentWall) ? true : false,
-            hide: (5 == currentWall) ? false : true
-        },
-        {
             type: 'addTile',
             name: 'baseboard',
             path: resPath.baseboard,
@@ -100,14 +92,14 @@ function setup() {
             type: 'add',
             name: 'scene',
             path: resPath.scene,
-            pt: new PIXI.Point(0.65, 0.62),
+            pt: new PIXI.Point(0.65, 0.58),
             scale: 1.1
         },
         {
             type: 'add',
             name: 'window',
             path: resPath.window,
-            pt: new PIXI.Point(0.65, 0.62),
+            pt: new PIXI.Point(0.65, 0.58),
             scale: 1.1
         },
         {
@@ -120,14 +112,16 @@ function setup() {
             type: 'add',
             name: 'picture',
             path: resPath.picture,
-            pt: new PIXI.Point(0.25, 0.56),
+            pt: new PIXI.Point(0.25, 0.26),            
+            anchorY: -.61,
             scale: 1.0
         },
         {
             type: 'add',
             name: 'frame',
             path: resPath.frame,
-            pt: new PIXI.Point(0.25, 0.6),
+            pt: new PIXI.Point(0.25, 0.26),
+            anchorY: 0,
             scale: 1.0
         },        
         {
@@ -143,7 +137,8 @@ function setup() {
             path: resPath.fireAnimated,
             pt: new PIXI.Point(0.878, 0.943),
             count: 15,
-            framePrefix : "fire",
+            framePrefix : "fire",            
+            loop: true,  
             start: false,
             hideAlpha: true,
             scale: 0.8
@@ -161,6 +156,7 @@ function setup() {
             path: resPath.speakerAnimated,
             pt: new PIXI.Point(0.45, 1.5),
             count: 6,
+            loop: true,  
             framePrefix : "speaker1",
             scale: 0.75,
             start : false
@@ -171,6 +167,7 @@ function setup() {
             path: resPath.speakerAnimated,
             pt: new PIXI.Point(0.05, 1.5),
             count: 6,
+            loop: true,            
             framePrefix : "speaker1",
             scale: 0.75,
             start : false
@@ -190,6 +187,19 @@ function setup() {
             anchorX : 0.0,
             hideAlpha: true
         },
+        {           
+            type: 'addSpritesheet',
+            name: 'flashAnimated',
+            path: resPath.flashAnimated,
+            pt: new PIXI.Point(0.5, 0.87),
+            count: 8,
+            framePrefix : "flash",
+            start: false,
+            loop: false,
+            speed: .5,
+            hideAlpha: true,
+            scale: 2
+        },
     ];
 
     // Load all app data async
@@ -207,8 +217,11 @@ function loadedTex() {
 // Setup that needs to be done after loading
 function loadedSetup() {
 
-    // only doing spineboy since its used most often
     player = renderer.getElemByID("spineboy");
+    
+    couch = renderer.getElemByID("couch");
+    picture = renderer.getElemByID("picture");
+    frame = renderer.getElemByID("frame");
 
     speaker1 = renderer.getElemByID('speaker1');
     speaker2 = renderer.getElemByID('speaker2');
@@ -230,5 +243,5 @@ function run() {
         if (appData[i].hide) { continue; }
         renderer.displayLayerByID(appData[i].name);
     }
-   // idleMode();
+    idleMode();
 }

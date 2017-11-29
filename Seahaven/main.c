@@ -92,6 +92,7 @@ void webDataCallback( int type, char* value) {
   // GREEK Callback  
   case 5:
     gyroClearInterrupt();
+    broadcastString("7", "0");
     // Need to really check the direction and send it back. TODO
     animation_on = FALSE;
     break;
@@ -193,10 +194,12 @@ int main ( int argc, char* argv[] ) {
 
     if (gyro_tripped) {
       int dir = getTiltDirection();
-      if(dir == 1 || dir == -1){
-        // 1 for right, -1 for left
-        sprintf(command, "%d", dir);
-        broadcastString("7", command);
+      // 1 for right, -1 for left
+      if(dir == 1){
+        broadcastString("7", "-0.707");
+        animation_on = TRUE;
+      } else if (dir == -1) {
+        broadcastString("7", "0.707");
         animation_on = TRUE;
       } else{
         animation_on = FALSE;

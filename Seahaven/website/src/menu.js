@@ -6,9 +6,10 @@ const m_vBall = document.getElementById("volumeBall");
 const m_vFill = document.getElementById("volumeFill");
 const m_reset = document.getElementById("reset");
 const m_wall = document.getElementById("wall");
-const m_skin = document.getElementById("skin");
+const m_filter = document.getElementById("filter");
 var s_menuOpen = false;
 var m_xMin, m_xMax, m_yMin, m_yMax;
+var filterStatus = 0;
 
 function setMenuEvents() {
 	document.addEventListener("touchstart", menuHandler);		
@@ -16,8 +17,8 @@ function setMenuEvents() {
     m_reset.addEventListener("touchend", resetEnd);
     m_wall.addEventListener("touchstart", buttonStart);
     m_wall.addEventListener("touchend", wallEnd);
-    m_skin.addEventListener("touchstart", buttonStart);
-    m_skin.addEventListener("touchend", skinEnd);
+    m_filter.addEventListener("touchstart", buttonStart);
+    m_filter.addEventListener("touchend", filterEnd);
     m_vSlider.addEventListener("input", adjustVSlider);
     m_vSlider.addEventListener("change", adjustVolume);
 }
@@ -40,7 +41,7 @@ function menuOpen(event) {
 	m_volume.style.visibility = "visible";
 	setTimeout(function(){m_reset.style.visibility = "visible";},20);
 	setTimeout(function(){m_wall.style.visibility = "visible";},40);
-	setTimeout(function(){m_skin.style.visibility = "visible";},60);
+	setTimeout(function(){m_filter.style.visibility = "visible";},60);
 
 	s_menuOpen = true;
 }
@@ -57,7 +58,7 @@ function menuClose(event, hardReset) {
 	m_volume.style.visibility = "hidden";
 	m_reset.style.visibility = "hidden";
 	m_wall.style.visibility = "hidden";
-	m_skin.style.visibility = "hidden";
+	m_filter.style.visibility = "hidden";
 	s_menuOpen = false;
 }
 
@@ -82,8 +83,19 @@ function wallEnd(event) {
 	changeWall();
 }
 
-function skinEnd(event) {
-	buttonEnd(m_skin);
+function filterEnd(event) {
+	buttonEnd(m_filter);
+	filterStatus++;
+	if (filterStatus > 2) {filterStatus = 0;}
+
+	if (filterStatus == 0) {
+		renderer.app.stage.filters = [ lightSwitchFilter ];
+		renderer.app.stage.filters[0].mode = s_lightOn ? 1 : 0;
+	} else if (filterStatus == 1) {
+		renderer.app.stage.filters = [ embossFilter ];
+	} else {
+		renderer.app.stage.filters = [ asciiFilter ]; 
+	}
 }
 
 function adjustVSlider(event) {

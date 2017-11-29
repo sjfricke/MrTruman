@@ -5,6 +5,7 @@
     "desk": "res/img/desk.png",
     "fireAnimated": "res/spritesheet/fire_animated.json",
     "firePlace": "res/img/fire_place.png",
+    "flashAnimated" : "res/spritesheet/flash_animated.json",
     "frame": "res/img/frame.png",
     "houseBackground": "res/img/house_background.png",
     "kitchen": "res/img/kitchen.png",

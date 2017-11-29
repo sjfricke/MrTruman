@@ -8,12 +8,17 @@ truman
 take a picture
 take a photo
 take a selfie
+take
+picture
+photo
+selfie
 hi mister truman
 turn the fire on
 turn fire on
 turn the fire off
 turn fire off
 turn the lights on
+fire
 turn lights on
 turn the lights off
 turn lights off
@@ -23,10 +28,20 @@ turn the lights green
 turn lights green
 turn the lights red
 turn lights red
-jump
+turn
+lights
+red
+blue
+green
+on
+off
+fidget spinner
+fidget
+spinner
+where is my fidget spinner
 how are you
 how are you doing
 what is up
 whats up
-mister truman jump
+take out your fidget spinner
 
