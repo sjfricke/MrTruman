@@ -168,7 +168,7 @@ class EmbossFilter extends PIXI.Filter {
 
 
 class GlowFilter extends PIXI.Filter {
-    constructor(distance = 10, outerStrength = 4, innerStrength = 0, color = 0xffffff, quality = 0.1) {
+    constructor(distance = 10, outerStrength = 4, innerStrength = 0, color = 0xffffff, quality = 0.2) {
         super(defaultVertexShader, flashFS
             .replace(/%QUALITY_DIST%/gi, '' + (1 / quality / distance).toFixed(7))
             .replace(/%DIST%/gi, '' + distance.toFixed(7)));

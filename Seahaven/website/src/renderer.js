@@ -23,7 +23,7 @@ class Renderer {
             return false;
         }
         else if (typeof path !== 'string') {
-            log('Renderer', 'Could not add because jsonPath (= %O) is not of a string.', jsonPath);
+            log('Renderer', 'Could not add because jsonPath (= %O) is not of a string.', path);
             return false;
         } 
         else if (!(pos instanceof PIXI.Point)) {
@@ -192,6 +192,8 @@ class Renderer {
             framePrefix = data.framePrefix,
             hide = data.hide,
             hideAlpha = data.hideAlpha,
+            loop = data.loop,
+            speed = data.speed || .2,
             scale = data.scale || 1,
             start = data.start || true;
 
@@ -222,8 +224,8 @@ class Renderer {
             that.elems[id].anchor.y = 1;
             that.elems[id].position.x = pos.x * window.outerWidth;
             that.elems[id].position.y = pos.y * window.outerHeight;
-
-            that.elems[id].animationSpeed = 0.17;
+            that.elems[id].loop = loop;
+            that.elems[id].animationSpeed = speed;
 
             if (data.start) {                
                 that.elems[id].gotoAndPlay(0);

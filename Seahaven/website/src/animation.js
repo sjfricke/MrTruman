@@ -355,7 +355,11 @@ function pictureAnimation() {
 }
 
 function pictureFlash() {
-    // TODO
+    let flash = renderer.getElemByID("flashAnimated");
+    flash.position.x = player.position.x + ((player.scale.x > 0) ? 31 : -31);
+    flash.alpha = 1;
+    flash.gotoAndPlay(0);
+
 }
 
 function pictureTrigger() {
@@ -363,6 +367,7 @@ function pictureTrigger() {
 
     if (s_pictureUp) {        
         s_pictureUp = false;
+        renderer.getElemByID("flashAnimated").alpha = 0;
         player.state.setAnimation(0, "pictureTake", false);
         player.state.addAnimation(0, "stand", false, 0);
         return;
@@ -378,21 +383,12 @@ function pictureTrigger() {
     player.state.addAnimation(0, "stand", false, 0);
 }
 
-// TODO
-// BROKEN - Breaks on 2nd pictureChange
 function pictureChange() { 
 
-    renderer.app.stage.removeChild(renderer.getElemByID("picture"));
-    delete renderer.elems["picture"];
-
-    renderer.add({
-            name: 'picture',
-            path: resPath.cameraImage,
-            pt: new PIXI.Point(0.25, 0.56),
-            scale: 1.0
-        }, function() {
-            renderer.app.stage.addChild(renderer.getElemByID("picture"));
-        })
+    (new PIXI.loaders.Loader()).add('newPicture', resPath.cameraImage).
+        load(function (loader, res) { 
+            renderer.getElemByID("picture").texture = res.newPicture.texture;;
+        });
 }
 
 /*************************

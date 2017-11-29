@@ -143,7 +143,8 @@ function setup() {
             path: resPath.fireAnimated,
             pt: new PIXI.Point(0.878, 0.943),
             count: 15,
-            framePrefix : "fire",
+            framePrefix : "fire",            
+            loop: true,  
             start: false,
             hideAlpha: true,
             scale: 0.8
@@ -161,6 +162,7 @@ function setup() {
             path: resPath.speakerAnimated,
             pt: new PIXI.Point(0.45, 1.5),
             count: 6,
+            loop: true,  
             framePrefix : "speaker1",
             scale: 0.75,
             start : false
@@ -171,6 +173,7 @@ function setup() {
             path: resPath.speakerAnimated,
             pt: new PIXI.Point(0.05, 1.5),
             count: 6,
+            loop: true,            
             framePrefix : "speaker1",
             scale: 0.75,
             start : false
@@ -189,6 +192,19 @@ function setup() {
             pt: new PIXI.Point(0.5, 0.75),
             anchorX : 0.0,
             hideAlpha: true
+        },
+        {           
+            type: 'addSpritesheet',
+            name: 'flashAnimated',
+            path: resPath.flashAnimated,
+            pt: new PIXI.Point(0.5, 0.87),
+            count: 8,
+            framePrefix : "flash",
+            start: false,
+            loop: false,
+            speed: .5,
+            hideAlpha: true,
+            scale: 2
         },
     ];
 
@@ -230,5 +246,5 @@ function run() {
         if (appData[i].hide) { continue; }
         renderer.displayLayerByID(appData[i].name);
     }
-   // idleMode();
+    idleMode();
 }

@@ -107,13 +107,13 @@ function wsVolume(value) {
 // for testing to callback echo ws //
 /////////////////////////////////////
 function test0() {
-    webSocket.send('{"type":9,"value":190}');
+    webSocket.send('{"type":4,"value":0}');
 }
 
 function test1() {
-    webSocket.send('{"type":9,"value":0}');
+    webSocket.send('{"type":4,"value":1}');
 }
 
 function test2() {
-    webSocket.send('{"type":7,"value":180}');
+    webSocket.send('{"type":4,"value":2}');
 }
