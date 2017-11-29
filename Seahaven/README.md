@@ -37,8 +37,11 @@ Each event has two parts `<type> <value>`
 - `6` - Music BPM
   - Value int of BPM
 - `7` - Gyro animation
-  - Value is of rotation in degrees between 0 and 359 where 180 is level
-    - Sending 180 is how Web knows everything is back to level
+  - Value is of rotation in degrees between -Pi/2 and Pi/2 where 0 is level
+    - **NOTE**: You need the leading zero so `0.707`, NOT `.707`
+    - -Pi/2 is tilt right
+    -  Pi/2 is tilt left
+    - Sending 0 is how Web knows everything is back to level
 - `8` - Chatting with Mr T.
   - Value could be random selection/chat to play back if we write some whimsical quips.
 - `9` - Toggle fidget spinner

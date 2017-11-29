@@ -44,13 +44,18 @@ var s_pictureTaken  = false;
 var s_pictureAnim   = false;
 
 const walkRate = 2;
-const fallRate = 2;
+const fallRatePlayer = 3;
+const fallRateCouch = 1.5;
+const fallRatePic =  0.05;
 const speakerRate = 0.00004;
-var speaker1, speaker2, speakerStartY;
 
 var player;
 const pScaleRight = 0.5;
 const pScaleLeft = -0.5;
+
+var speaker1, speaker2, speakerStartY;
+var couch;
+var tiltValue = 0;
 
 const walkTicker = new PIXI.ticker.Ticker();
 
@@ -387,7 +392,7 @@ function pictureChange() {
 
     (new PIXI.loaders.Loader()).add('newPicture', resPath.cameraImage).
         load(function (loader, res) { 
-            renderer.getElemByID("picture").texture = res.newPicture.texture;;
+            picture.texture = res.newPicture.texture;;
         });
 }
 
@@ -406,45 +411,74 @@ function tiltAnimation() {
         return; // need to finish walk animation to prevent stuck
     }
     s_idleMode = false; 
-
     player.scale.x = s_tiltRight ? pScaleLeft : pScaleRight;
     player.state.addAnimation(0, "fallStart", false, 0);
-    setTimeout(function(){ renderer.app.ticker.add(s_tiltRight ? tiltFallRight : tiltFallLeft);}, 1000); //easily worst line of code I ever wrote
+    setTimeout(function(){ renderer.app.ticker.add(tiltFall);}, 300);
 }
 
-// TODO
-function tiltChangeDirection() {
+// rather have a single boolean check per frame then a change direction fucntion
+// beause that still needs a boolean check to know if there was a change... this works below well
+function tiltFall(delta) {
 
-}
+    if (s_tiltRight) {
+        player.scale.x = pScaleLeft;
+        if (player.position.x < 720) {
+            player.position.x += fallRatePlayer * delta;
+        } else if (!s_tiltWall) {
+            s_tiltWall = true;
+            player.position.x = 720;
+            player.state.setAnimation(0, "fallWall", false);
+        } else {
 
-function tiltFallRight(delta) {
-    if (player.position.x < 720) {
-        player.position.x += fallRate * delta;
-    } else if (!s_tiltWall) {
-        s_tiltWall = true;
-        player.position.x = 720;
-        player.state.setAnimation(0, "fallWall", false);
+        }
+
+        if (couch.position.x < 687) {
+            couch.position.x += fallRateCouch * delta;
+        } else {
+            couch.position.x = 687;
+        }
+
+        if (picture.rotation > tiltValue) {
+            picture.rotation = frame.rotation -= fallRatePic * delta;
+        } else {
+            picture.rotation = frame.rotation = tiltValue;
+        }
+
     } else {
+        player.scale.x = pScaleRight;
+        if (player.position.x > 80) {
+            player.position.x -= fallRatePlayer * delta;
+        } else if (!s_tiltWall) {
+            s_tiltWall = true;
+            player.position.x = 80;
+            player.state.setAnimation(0, "fallWall", false);
+        } else {
 
-    }
-}
+        }
 
-function tiltFallLeft(delta) {
-    if (player.position.x > 80) {
-        player.position.x -= fallRate * delta;
-    } else if (!s_tiltWall) {
-        s_tiltWall = true;
-        player.position.x = 80;
-        player.state.setAnimation(0, "fallWall", false);
-    } else {
+        if (couch.position.x > 114) {
+            couch.position.x -= fallRateCouch * delta;
+        } else {
+            couch.position.x = 114;
+        }
 
+        if (picture.rotation < tiltValue) {
+            picture.rotation = frame.rotation += fallRatePic * delta;
+        } else {
+            picture.rotation = frame.rotation = tiltValue;
+        }
     }
 }
 
 function tiltRecovery() {
-    renderer.app.ticker.remove(s_tiltRight ? tiltFallRight : tiltFallLeft);
+    //renderer.app.ticker.remove(s_tiltRight ? tiltFallRight : tiltFallLeft);
+    renderer.app.ticker.remove(tiltFall);
     player.state.setAnimation(0, "fallEnd", false);
     player.state.addAnimation(0, "stand", false, 0);
+
+    couch.position.x = 200;
+
+    picture.rotation = frame.rotation = 0;
 }
 
 /*************************
@@ -469,13 +503,17 @@ function fidgetKill() {
 }
 
 /*************************
+*          Talk          *
+*************************/
+
+/*************************
 *         Wall           *
 *************************/
 function changeWall() {
     let wall = renderer.getElemByID("wall" + startingWall);
 
     currentWall++;
-    if (currentWall > 5) { currentWall = 0 }
+    if (currentWall > 4) { currentWall = 0 }
 
     wall.texture = renderer.textures["wall" + currentWall];
 }

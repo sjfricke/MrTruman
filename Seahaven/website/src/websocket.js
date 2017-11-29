@@ -52,11 +52,12 @@ function wsOnMessage(event) {
   case 7:
     if (s_animationOn && !s_tiltAnim) {
       wsBusy();
-    } else if (message.value == 180) {
+    } else if (message.value == 0) {
       tiltRecovery();
-    } else {
-      s_tiltRight = (message.value > 180) ? true : false;
-      tiltAnimation();
+    } else {      
+      s_tiltRight = (message.value < 0) ? true : false;
+      tiltValue = message.value;
+      if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
     }
     break;
   case 8:
