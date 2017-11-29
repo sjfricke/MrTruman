@@ -84,9 +84,7 @@ void webDataCallback( int type, char* value) {
       /*sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'");
       printf("in case 4\n");
       system(command);*/
-	animation_on = FALSE;
       voiceHardwareSetup();
-      printf("SETTING ANIMATION_ON FALSE\n");
       animation_on = FALSE;
     }
     break;
@@ -198,8 +196,7 @@ int main ( int argc, char* argv[] ) {
       if(dir == 1 || dir == -1){
         // 1 for right, -1 for left
         sprintf(command, "%d", dir);
-        broadcastString("1", "0");
-        //broadcastString("7", command);
+        broadcastString("7", command);
         animation_on = TRUE;
       } else{
         animation_on = FALSE;
