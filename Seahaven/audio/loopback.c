@@ -14,8 +14,8 @@ static uint16_t aux_pin;
 void *buffer;
 int buff_size;
 
-extern uint8_t VOLCHANGED;
-extern uint8_t VOLCURRENT;
+//extern uint8_t VOLCHANGED;
+//extern uint8_t VOLCURRENT;
 uint8_t local_volume;
 extern uint8_t audio_plugged_in;
 extern uint8_t animation_on;
@@ -324,11 +324,11 @@ int loopback() {
 	// loop the entire time the aux cord is plugged in
 	while ((aux_in = GpioGetValue(aux_pin)) == 1) {
 		// If the volume has been changed, acknowledge it by changing the volume and clearing the changed flag.
-		if(VOLCHANGED){
+		/*if(VOLCHANGED){
 			VOLCHANGED = 0;
 		    sprintf(volcommand, "amixer cset iface=MIXER,name='RX3 Digital Volume' %d", VOLCURRENT);
 			system(volcommand);
-		}
+		}*/
 		snd_pcm_readi(inhandle, buffer, frames);
 		wr = snd_pcm_writei(outhandle, buffer, framesout);	
 		if (wr < 0) {

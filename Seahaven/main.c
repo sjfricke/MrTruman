@@ -73,17 +73,10 @@ void webDataCallback( int type, char* value) {
   case 4:
     val = atoi(value);
     if(val == 0){
-      broadcastString("5", "1");
-      //printf("\nSPEAKER IS READY IN ANIMAION\n");  
-      loopbackSetup();
-      loopback();
-      loopbackTerminate();
+      speaker_animation_ready = TRUE;
     }
     if(val == 1){
       servoRetract();
-      /*sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'");
-      printf("in case 4\n");
-      system(command);*/
       voiceHardwareSetup();
       animation_on = FALSE;
     }
@@ -170,8 +163,11 @@ int main ( int argc, char* argv[] ) {
   animation_on = FALSE;
   audio_plugged_in = FALSE;
   gyro_tripped = FALSE;
+  speaker_animation_ready = FALSE;
   
   while(1) {
+
+
 
 
     if(animation_on){ usleep(1000); continue;} // Sleep a millisecond cuz come on, who is it really hurting?
@@ -185,11 +181,22 @@ int main ( int argc, char* argv[] ) {
       system(command);
       sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
       system(command);
-
-      servoExtend();
-      broadcastString("5", "0");
-      //servoStop();
       animation_on = TRUE;
+      speaker_animation_ready = FALSE;
+
+      broadcastString("5", "0");
+      servoExtend();
+
+      while(!speaker_animation_ready);
+      
+
+      broadcastString("5", "1");
+      //printf("\nSPEAKER IS READY IN ANIMAION\n");  
+      loopbackSetup();
+      loopback();
+      loopbackTerminate();
+      
+      
     }
 
     if (gyro_tripped) {
