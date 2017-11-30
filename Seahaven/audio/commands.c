@@ -38,7 +38,7 @@ int commandDetect(char const* voice_str)
 
     if((detectOn != NULL) || (detectOff != NULL)){
 	    (detectOn != NULL) ? broadcastString("1", "0") : broadcastString("1", "1");
-    } else { // Specified a color or on or off I guess - defaults to telling the house to turn lights blue
+    }/* else { // Specified a color or on or off I guess - defaults to telling the house to turn lights blue
       if(detectRed != NULL){
         broadcastString("2", "255,0,0");
       } else if (detectGreen != NULL){
@@ -47,9 +47,10 @@ int commandDetect(char const* voice_str)
         broadcastString("2", "0,0,255");
       }
       
-    }
+    }*/
 
-    if((detectOn != NULL) || (detectOff != NULL) || (detectRed != NULL) || (detectGreen != NULL) || (detectBlue != NULL)){
+ //   if((detectOn != NULL) || (detectOff != NULL) || (detectRed != NULL) || (detectGreen != NULL) || (detectBlue != NULL)){
+    if((detectOn != NULL) || (detectOff != NULL) ){
       animation_on = TRUE;
     }
 
@@ -77,7 +78,7 @@ int commandDetect(char const* voice_str)
   /*
     Taking pictures animation
   */
-  if (strstr(voice_str, c_picture) || strstr(voice_str, c_selfie) || strstr(voice_str, c_photo)) {
+  if (strstr(voice_str, c_picture) || strstr(voice_str, c_photo)) {
     broadcastString("4", "0");
     animation_on = TRUE;
     return 0;

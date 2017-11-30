@@ -75,7 +75,7 @@ function buttonEnd(element) {
 
 function resetEnd(event) {
 	buttonEnd(m_reset);	
-	// location.reload();
+	location.reload();
 }
 
 function wallEnd(event) {

@@ -184,6 +184,7 @@ int main ( int argc, char* argv[] ) {
   //testGyro();
   //testLEDFanServo();
   //testCamera();
+  initLEDs();
   initAuxGPIO();
   loopbackSetup();
   loopback();

@@ -126,7 +126,7 @@ function walk(direction, distance, toPos) {
 }
 
 function walkAnimation(delta) {
-
+    //    log("delta","",delta);
     player.position.x += walkRate * delta * (player.scale.x > 0 ? 1 : -1);
 
     if (Math.abs(player.position.x - s_walkX) < 5) {
@@ -182,6 +182,7 @@ function idleMode() {
 
     // logic to move around randomly
     if (player.position.x == 200) {
+	log("t","200");
         if (Math.random() < 0.6) {
             s_couchOn = true;
             walk(0, 0, 175);
@@ -190,12 +191,15 @@ function idleMode() {
         }
     }
     else if (player.position.x == 400) {
+	log("t","400");
         Math.random() < 0.5 ? walk(1, 200) : walk(-1, 200);
     }
     else if (player.position.x == 600) {
+	log("t","600");
         walk(-1, 200);
     }
     else {
+	log("t","000");
         // get back to middle for idle
         walk(0, 0, 400);
     }

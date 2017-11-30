@@ -53,17 +53,19 @@ void webDataCallback( int type, char* value) {
         broadcastString("4","1");
         // Turn on (flash)
         setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-	    	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-	    	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
         // Take picture
-        sprintf(command, "ffmpeg -f video4linux2 -s 640x480 -i /dev/video0 -ss 0:0:2 -frames 1 ./trumanpicture.jpg");
+        sprintf(command, "ffmpeg -f video4linux2 -s 128x96 -i /dev/video0 -ss 0:0:0 -frames 1 ./website/res/img/camera_image.jpg -y");
         system(command);
         // Turn off
         setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-	    	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-	    	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+
+	broadcastString("4","2");
+	
       } else {
-        broadcastString("4","2");
         animation_on = FALSE;
       }
     
