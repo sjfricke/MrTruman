@@ -114,7 +114,26 @@ We need to make sure PulseAudio is off because we are using ALSA
 - Launch Chrome to full screen
 	- `xinit /usr/bin/chromium --kiosk http://localhost:6419 --no-sandbox`
 - Setup bash script on startup 
+  - Edit `/etc/rc.local`
+  - ```
+  startMrTruman() {
+    # Change to false  if you want to remove this from booting
+    startOnBoot=true
+    
+    if [ $startOnBoot = true ]
+    then
+	cd /root/MrTruman/Seahaven
+	./Seahaven&
+	xinit /usr/bin/chromium http://localhost:6419 --no-sandbox
+    fi
+  }
 
+  sleep 5 && startMrTruman &
+
+  ```
+  - change `startOnBoot=false` to prevent auto booting
+  - do `sleep 5` so we give time to let it fully boot
+  
 ## Rebuilding and booting Linux
 
 This was needed to get the **ov5647** camera sensor to work on the dragonboard since it is not by default
