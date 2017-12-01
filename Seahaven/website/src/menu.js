@@ -7,12 +7,14 @@ const m_vFill = document.getElementById("volumeFill");
 const m_reset = document.getElementById("reset");
 const m_wall = document.getElementById("wall");
 const m_filter = document.getElementById("filter");
+const m_xMax_show = 550;
+const m_yMax_show = 270;
 var s_menuOpen = false;
 var m_xMin, m_xMax, m_yMin, m_yMax;
 var filterStatus = 0;
 
 function setMenuEvents() {
-	document.addEventListener("touchstart", menuHandler);		
+    document.addEventListener("touchstart", menuHandler);		
     m_reset.addEventListener("touchstart", buttonStart);
     m_reset.addEventListener("touchend", resetEnd);
     m_wall.addEventListener("touchstart", buttonStart);
@@ -29,9 +31,9 @@ function menuHandler(event) {
 
 function menuOpen(event) {
 
-	m_xMin = (event.touches[0].pageX < 570) ? event.touches[0].pageX : 570;
+	m_xMin = (event.touches[0].pageX < m_xMax_show) ? event.touches[0].pageX : m_xMax_show;
 	m_xMax = m_xMin + 216;
-	m_yMin = (event.touches[0].pageY < 300) ? event.touches[0].pageY : 300;
+    m_yMin = (event.touches[0].pageY < m_yMax_show) ? event.touches[0].pageY : m_yMax_show;
 	m_yMax = m_yMin + 166;
 
 	menu.style.left = (m_xMin + 16) + "px";
@@ -75,8 +77,9 @@ function buttonEnd(element) {
 
 function resetEnd(event) {
 	buttonEnd(m_reset);	
-	location.reload();
+        location.reload();
 }
+
 
 function wallEnd(event) {
 	buttonEnd(m_wall);
@@ -99,10 +102,11 @@ function filterEnd(event) {
 }
 
 function adjustVSlider(event) {
+        wsVolume(event.srcElement.value);
 	m_vBall.style.left = (event.srcElement.value * 1.48) + "px";
 	m_vFill.style.width = (event.srcElement.value * 0.8) + "%";
 }
 
-function adjustVolume(event) {	
-	wsVolume(event.srcElement.value);
+function adjustVolume(event) {
+    
 }

@@ -49,21 +49,36 @@ void webDataCallback( int type, char* value) {
   case 3:
       val = atoi(value);
       if(val == 0){
-        // Alert animation
+
+	// ffmpeg takes a small delay to take picture
+	// This is a dirty way of matching timing for flash of camera
+	if (fork()==0){
+	  // Take picture
+	  sprintf(command, "ffmpeg -f video4linux2 -s 160x120 -i /dev/video0 -vf vflip -frames 1 ./website/res/img/camera_image.jpg -y -loglevel quiet");
+	  system(command);
+
+	  broadcastString("4","2");
+	  kill(getpid(), SIGKILL);
+	}
+	
+	usleep(600000);
+
+	// Alert animation
         broadcastString("4","1");
+
+	usleep(400000);
+	
         // Turn on (flash)
         setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
 	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-        // Take picture
-        sprintf(command, "ffmpeg -f video4linux2 -s 128x96 -i /dev/video0 -ss 0:0:0 -frames 1 ./website/res/img/camera_image.jpg -y");
-        system(command);
-        // Turn off
+
+	usleep(150000);
+	
+	// Turn off
         setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
 	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
 	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
-
-	broadcastString("4","2");
 	
       } else {
         animation_on = FALSE;
