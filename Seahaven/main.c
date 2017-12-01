@@ -193,12 +193,10 @@ int main ( int argc, char* argv[] ) {
       
 
       broadcastString("5", "1");
-      //printf("\nSPEAKER IS READY IN ANIMAION\n");  
+      printf("\nSPEAKER IS READY IN ANIMAION\n");  
       loopbackSetup();
       loopback();
       loopbackTerminate();
-      
-      
     }
 
     if (gyro_tripped) {

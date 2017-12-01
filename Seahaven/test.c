@@ -189,7 +189,9 @@ int main ( int argc, char* argv[] ) {
   loopbackSetup();
   loopback();
   //
-  //
-  //servoStart();
-  //servoExtend();
+  /*
+  servofanStart();
+  servoExtend();
+  sleep(1);
+  servoRetract();*/
 }
