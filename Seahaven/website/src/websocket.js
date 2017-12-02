@@ -6,18 +6,14 @@ function wsOnMessage(event) {
 
    // Message looks like => { "type" : 1, "value" : 0 }
   var message = JSON.parse(event.data);
-    log("websocket", "Key - Value", message.type, message.value);
+  log("websocket", "Key - Value", message.type, message.value);
   switch(parseInt(message.type)) {
-  case 0:
-      break;
   case 1:
       if ((message.value == 0 && !s_lightOn) ||
           (message.value == 1 && s_lightOn)  ||
           (message.value == 2)) {
         (s_animationOn) ? wsBusy() : lightAnimation();
       }
-      break;
-  case 2:
       break;
   case 3:
       if ((message.value == 0 && !s_fireOn) ||
@@ -31,7 +27,8 @@ function wsOnMessage(event) {
       (s_animationOn) ? wsBusy() : pictureAnimation();
     } else if (message.value == 1 && s_pictureUp) { 
       pictureFlash();
-    } else if (message.value == 2) { 
+    } else if (message.value >= 2) { 
+      s_pictureIndex = message.value;
       pictureTrigger();
     }
       break;
@@ -46,8 +43,6 @@ function wsOnMessage(event) {
       if (s_speakersOn) { speakersOff(); }
       speakerAnimation();
     }
-    break;
-  case 6:
     break;
   case 7:
     if (s_animationOn && !s_tiltAnim) {
@@ -104,6 +99,7 @@ function wsTiltDone() {
 function wsVolume(value) {
   webSocket.send("8:" + value);
 }
+
 /////////////////////////////////////
 // for testing to callback echo ws //
 /////////////////////////////////////

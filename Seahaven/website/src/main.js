@@ -70,7 +70,7 @@ function setup() {
             path: resPath.picture,
             pt: new PIXI.Point(0.25, 0.26),            
             anchorY: -.61,
-            scale: 1.0
+            scale: .8
         },
         {
             type: 'add',

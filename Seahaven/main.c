@@ -54,10 +54,16 @@ void webDataCallback( int type, char* value) {
 	// This is a dirty way of matching timing for flash of camera
 	if (fork()==0){
 	  // Take picture
-	  sprintf(command, "ffmpeg -f video4linux2 -s 160x120 -i /dev/video0 -vf vflip -frames 1 ./website/res/img/camera_image.jpg -y -loglevel quiet");
+	  sprintf(command, "ffmpeg -f video4linux2 -s 160x120 -i /dev/video0 -vf vflip -frames 1 ./website/res/img/camera_image%d.jpg -y -loglevel quiet", photo_index);
 	  system(command);
 
-	  broadcastString("4","2");
+	  broadcastInt("4", photo_index++);
+
+    // clean up photos after first one
+    if (photo_index > 3) {
+      sprintf(command, "rm ./website/res/img/camera_image%d.jpg -f", photo_index - 1);
+      system(command);
+    }
 	  kill(getpid(), SIGKILL);
 	}
 	

@@ -42,6 +42,7 @@ var s_speakOn       = false;
 var s_pictureUp     = false;
 var s_pictureTaken  = false;
 var s_pictureAnim   = false;
+var s_pictureIndex  = 2;
 
 const walkRate = 2;
 const fallRatePlayer = 3;
@@ -390,8 +391,8 @@ function pictureTrigger() {
 
 function pictureChange() { 
 
-    (new PIXI.loaders.Loader()).add('newPicture', resPath.cameraImage).
-        load(function (loader, res) { 
+    (new PIXI.loaders.Loader()).add('newPicture', resPath.cameraImage + s_pictureIndex + ".jpg").
+        load(function (loader, res) {
             picture.texture = res.newPicture.texture;
         });
 }

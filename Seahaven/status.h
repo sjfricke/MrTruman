@@ -6,3 +6,4 @@ uint8_t animation_on;
 uint8_t audio_plugged_in;
 uint8_t gyro_tripped;
 uint8_t speaker_animation_ready;
+uint16_t photo_index = 2;

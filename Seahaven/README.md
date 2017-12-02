@@ -11,9 +11,7 @@ Each event is given a index number to save from having to send a string. A futur
 Each event has two parts `<type> <value>`
 
 ## Host-to-Web Calls
-- `0` - General state of animation
-  - `0` - Go to ideal mode
-  - `1` - Get ready to ask question
+- `0`
 - `1` - Light switch animation
   - `0` - Turn on
   - `1` - Turn off
@@ -34,8 +32,7 @@ Each event has two parts `<type> <value>`
   - `1` - Music playing
   - `2` - Music stopped
   - `3` - Put away speakers
-- `6` - Music BPM
-  - Value int of BPM
+- `6`
 - `7` - Gyro animation
   - Value is of rotation in degrees between -Pi/2 and Pi/2 where 0 is level
     - **NOTE**: You need the leading zero so `0.707`, NOT `.707`
