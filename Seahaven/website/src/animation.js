@@ -230,8 +230,8 @@ function lightAnimation() {
 
 function toggleLightSwitch() {
     let lightSwitch = renderer.getElemByID('switch');
-    renderer.app.stage.filters[0].mode = s_lightOn ? 0 : 1;
-    if (renderer.app.stage.filters[0].mode  == 0) {
+    renderer.getElemByID("wall").alpha = s_lightOn ? .65 : 1;
+    if (s_lightOn) {
         lightOnTexture = lightSwitch.texture;
         lightSwitch.texture = lightOffTexture;
         s_lightOn = false;
@@ -510,10 +510,10 @@ function fidgetKill() {
 *         Wall           *
 *************************/
 function changeWall() {
-    let wall = renderer.getElemByID("wall" + startingWall);
+    let wall = renderer.getElemByID("wall");
 
     currentWall++;
     if (currentWall > 4) { currentWall = 0 }
 
-    wall.texture = renderer.textures["wall" + currentWall];
+    wall.texture = wallTextures[currentWall];
 }

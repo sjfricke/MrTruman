@@ -12,7 +12,8 @@ class Renderer {
             this.$container.append(this.app.view);
             this.elems = {};
             this.textures = {};
-            this.app.stage.filters = [ lightSwitchFilter ];
+            this.app.stage.filters = [];
+            this.app.renderer.clearBeforeRender = false;
         }
     }
 
@@ -123,8 +124,7 @@ class Renderer {
         let id = data.name,
             imgPath = data.path,
             pos = data.pt,
-            containerID = data.containerID,
-            tile = data.tile;
+            containerID = data.containerID;
         
         if (!this.checkload(id, imgPath, pos)) { return; }
 
@@ -133,16 +133,12 @@ class Renderer {
         var that = this;
         loader.load((loader, res) => {
             that.textures[id] = res[id].texture;
+            that.elems[id] = new PIXI.extras.TilingSprite(
+                res[id].texture,
+                data.width || that.app.renderer.width,
+                data.height || that.app.renderer.height);
 
-            if (tile) {
-                 that.elems[id] = new PIXI.extras.TilingSprite(
-                    res[id].texture,
-                    data.width || that.app.renderer.width,
-                    data.height || that.app.renderer.height
-                );
-
-                that.elems[id].position.y = pos.y * window.outerHeight
-            }
+            that.elems[id].position.y = pos.y * window.outerHeight
 
             if (typeof onload === 'function') {
                 onload(id, that.elems[id]);

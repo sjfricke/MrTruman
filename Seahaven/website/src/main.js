@@ -5,7 +5,7 @@ $(window).ready(start());
 
 var renderer;
 var texLoaded = 0;
-var currentWall, startingWall;
+var currentWall = 0;
 var appData;
 
 // textures
@@ -33,73 +33,29 @@ function setup() {
 
     setMenuEvents();
     
-    // pick random texture between 0 and 4
-    currentWall = Math.round(Math.random()*4);
-    startingWall = currentWall;
-
     (new PIXI.loaders.Loader()).add('lightOn', resPath.lightOn).
         load(function (loader, res) { lightOnTexture = res.lightOn.texture; });
+    (new PIXI.loaders.Loader()).add('wall1', resPath.wall1).
+        load(function (loader, res) { wallTextures[1] = res.wall1.texture; });
+    (new PIXI.loaders.Loader()).add('wall2', resPath.wall2).
+        load(function (loader, res) { wallTextures[2] = res.wall2.texture; });
+    (new PIXI.loaders.Loader()).add('wall3', resPath.wall3).
+        load(function (loader, res) { wallTextures[3] = res.wall3.texture; });
+    (new PIXI.loaders.Loader()).add('wall4', resPath.wall4).
+        load(function (loader, res) { wallTextures[4] = res.wall4.texture; });
 
     appData = [
         {
             type: 'addTexture',
-            name: 'wall0',
+            name: 'wall',
             path: resPath.wall0,
-            pt: new PIXI.Point(0, 0),
-            tile: (0 == currentWall) ? true : false,
-            hide: (0 == currentWall) ? false : true
-        },
-        {
-            type: 'addTexture',
-            name: 'wall1',
-            path: resPath.wall1,
-            pt: new PIXI.Point(0, 0),
-            tile: (1 == currentWall) ? true : false,
-            hide: (1 == currentWall) ? false : true
-        },
-        {
-            type: 'addTexture',
-            name: 'wall2',
-            path: resPath.wall2,
-            pt: new PIXI.Point(0, 0),
-            tile: (2 == currentWall) ? true : false,
-            hide: (2 == currentWall) ? false : true
-        },
-        {
-            type: 'addTexture',
-            name: 'wall3',
-            path: resPath.wall3,
-            pt: new PIXI.Point(0, 0),
-            tile: (3 == currentWall) ? true : false,
-            hide: (3 == currentWall) ? false : true
-        },
-        {
-            type: 'addTexture',
-            name: 'wall4',
-            path: resPath.wall4,
-            pt: new PIXI.Point(0, 0),
-            tile: (4 == currentWall) ? true : false,
-            hide: (4 == currentWall) ? false : true
-        },
-        {
-            type: 'addTile',
-            name: 'baseboard',
-            path: resPath.baseboard,
-            pt: new PIXI.Point(0, .948),
-            height: 25
-        },
-        {
-            type: 'add',
-            name: 'scene',
-            path: resPath.scene,
-            pt: new PIXI.Point(0.65, 0.58),
-            scale: 1.1
-        },
+            pt: new PIXI.Point(0, 0)
+        }, 
         {
             type: 'add',
             name: 'window',
             path: resPath.window,
-            pt: new PIXI.Point(0.65, 0.58),
+            pt: new PIXI.Point(0.64, 0.62),
             scale: 1.1
         },
         {
@@ -233,6 +189,9 @@ function loadedSetup() {
     player.state.addListener({ 
         end: animationEnd
     })
+
+    wallTextures[0] = renderer.getElemByID("wall").texture;
+    renderer.getElemByID("wall").alpha = .65;
 
     run();
 }

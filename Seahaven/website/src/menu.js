@@ -7,8 +7,8 @@ const m_vFill = document.getElementById("volumeFill");
 const m_reset = document.getElementById("reset");
 const m_wall = document.getElementById("wall");
 const m_filter = document.getElementById("filter");
-const m_xMax_show = 550;
-const m_yMax_show = 270;
+const m_xMax_show = 580;
+const m_yMax_show = 300;
 var s_menuOpen = false;
 var m_xMin, m_xMax, m_yMin, m_yMax;
 var filterStatus = 0;
@@ -92,12 +92,13 @@ function filterEnd(event) {
 	if (filterStatus > 2) {filterStatus = 0;}
 
 	if (filterStatus == 0) {
-		renderer.app.stage.filters = [ lightSwitchFilter ];
-		renderer.app.stage.filters[0].mode = s_lightOn ? 1 : 0;
+		renderer.app.stage.filters = [];		
+		renderer.app.renderer.clearBeforeRender = false; // set true from ascii
 	} else if (filterStatus == 1) {
 		renderer.app.stage.filters = [ embossFilter ];
 	} else {
 		renderer.app.stage.filters = [ asciiFilter ]; 
+		renderer.app.renderer.clearBeforeRender = true;
 	}
 }
 
