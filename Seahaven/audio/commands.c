@@ -5,7 +5,7 @@ static char* c_fire = "FIRE";
 static char* c_picture = "PICTURE";
 static char* c_selfie = "SELFIE";
 static char* c_photo = "PHOTO";
-static char* c_chitchat = "WHATS UP";
+static char* c_chitchat = "WHAT";
 static char* c_jump = "JUMP";
 
 /*
@@ -34,7 +34,12 @@ int commandDetect(char const* voice_str)
     char* detectRed = strstr(voice_str, "RED");
     char* detectGreen = strstr(voice_str, "GREEN");
     char* detectBlue = strstr(voice_str, "BLUE");
+    char* detectTurn = strstr(voice_str, "TURN");
 
+
+    if(detectTurn == NULL){
+        return 0;
+    }
 
     if((detectOn != NULL) || (detectOff != NULL)){
 	    (detectOn != NULL) ? broadcastString("1", "0") : broadcastString("1", "1");
@@ -85,13 +90,13 @@ int commandDetect(char const* voice_str)
   }
 
   // Chat bubble
-  if (strstr(voice_str, c_chitchat)) {
-    broadcastString("8", "0");
+  if ((strstr(voice_str, "WHAT") != NULL && (strstr(voice_str, "UP") != NULL)) {
+    broadcastString("8", "Hello! My name<br>is <b>Mr. Truman!</b>");
     animation_on = TRUE;
     return 0;
   }
 
-  if(strstr(voice_str, c_jump)){
+  if((strstr(voice_str, "FIDGET") != NULL) && (strstr(voice_str, "SPINNER") != NULL)){
     broadcastString("9", "0");
     animation_on = TRUE;
     return 0;

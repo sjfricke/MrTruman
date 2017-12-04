@@ -9,7 +9,7 @@ int turnOffLEDPWM(uint8_t rgb)
     return 0;
 }
 
-int setLED(uint8_t rgb, double duty, uint16_t mask)
+int setLED(uint8_t rgb, double duty, uint16_t mask )
 {
 
     // Bounds checking
