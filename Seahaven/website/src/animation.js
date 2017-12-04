@@ -277,6 +277,7 @@ function speakerAnimation() {
     } else if (player.position.x > 300 && player.position.x < 420) {
         walk(0,0,250);
     } else {
+	wsSpeakersReady();
         if (!s_speakersUp) {
             speakersOff(); // be safe, no guarntee
             document.getElementById("temp").style.visibility = "hidden";

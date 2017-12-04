@@ -15,6 +15,8 @@ function wsOnMessage(event) {
           (message.value == 1 && s_lightOn)  ||
           (message.value == 2)) {
         (s_animationOn) ? wsBusy() : lightAnimation();
+      } else {
+	  (s_lightOn) ? wsTurnLightsOn() :  wsTurnLightsOff();
       }
       break;
   case 3:
@@ -22,6 +24,8 @@ function wsOnMessage(event) {
           (message.value == 1 && s_fireOn)  ||
           (message.value == 2)) {
         (s_animationOn) ? wsBusy() : fireAnimation();
+      } else {
+	  (s_fireOn) ? wsFireOn() :  wsFireOff();
       }
       break;
   case 4:
@@ -110,6 +114,9 @@ function wsSpeakersUp() {
 }
 function wsSpeakersDown() {
   webSocket.send("4:1");
+}
+function wsSpeakersReady() {
+    webSocket.send("4:2");
 }
 function wsTiltDone() {
   webSocket.send("5:0");

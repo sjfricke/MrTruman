@@ -16,6 +16,7 @@ void webDataCallback( int type, char* value) {
   // LIGHTS Callback  
   case 1:
     val = atoi(value);
+    usleep(100000); // 100ms
     if(val == 1){
     	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
@@ -99,13 +100,15 @@ void webDataCallback( int type, char* value) {
   // SPEAKER/SERVO Callback  
   case 4:
     val = atoi(value);
-    if(val == 0){
+    if (val == 0) {
       speaker_animation_ready = TRUE;
     }
-    if(val == 1){
+    else if (val == 1) {
       servoRetract();
       voiceHardwareSetup();
       animation_on = FALSE;
+    } else if (val == 2) {
+      servoExtend();
     }
     break;
 
@@ -222,7 +225,6 @@ int main ( int argc, char* argv[] ) {
       speaker_animation_ready = FALSE;
 
       broadcastString("5", "0");
-      servoExtend();
 
       while(!speaker_animation_ready);
       
