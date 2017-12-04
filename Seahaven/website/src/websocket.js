@@ -58,6 +58,11 @@ function wsOnMessage(event) {
       s_tiltRight = (message.value < 0) ? true : false;
       tiltValue = message.value;
       if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
+      else if (s_tiltRightLast != s_tiltRight) { 
+          s_tiltWall = false;
+          player.state.setAnimation(0, "fallHold", false);
+      }
+      s_tiltRightLast = s_tiltRight;
     }
     break;
   case 8:

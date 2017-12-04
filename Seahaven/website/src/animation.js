@@ -35,6 +35,7 @@ var s_speakersAnim  = false;
 var s_lightOn       = false; // default to lights on house off
 var s_lightAnim     = false;
 var s_tiltRight     = false;
+var s_tiltRightLast = false;
 var s_tiltWall      = false;
 var s_tiltAnim      = false;
 var s_fidgetAnim    = false;

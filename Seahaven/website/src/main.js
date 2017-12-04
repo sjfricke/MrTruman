@@ -85,7 +85,7 @@ function setup() {
             name: 'fireAnimated',
             path: resPath.fireAnimated,
             pt: new PIXI.Point(0.914375, 0.943),
-            count: 15,
+            count: 14,
             framePrefix : "fire",            
             loop: true,  
             start: false,
