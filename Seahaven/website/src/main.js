@@ -128,14 +128,6 @@ function setup() {
             pt: new PIXI.Point(renderer.getW() / 2, renderer.getH()),
             scale: pScaleRight
         },
-        {
-            type: 'add',
-            name: 'speechBubble',
-            path: resPath.speechBubble,
-            pt: new PIXI.Point(0.5, 0.75),
-            anchorX : 0.0,
-            hideAlpha: true
-        },
         {           
             type: 'addSpritesheet',
             name: 'flashAnimated',
@@ -195,5 +187,7 @@ function run() {
         if (appData[i].hide) { continue; }
         renderer.displayLayerByID(appData[i].name);
     }
+
+    player.position.x = 400; // make sure it starts in 400
     idleMode();
 }

@@ -66,6 +66,12 @@ function wsOnMessage(event) {
     }
     break;
   case 8:
+    if (s_animationOn || s_talkAnim) { wsBusy(); }
+    else {
+      document.getElementById("speechText").style.top = (message.value.indexOf("<br>") >= 0) ? "275px" : "287px";
+      document.getElementById("speechText").innerHTML = message.value;
+      talkAnimation();
+    }
     break;
   case 9:
     if (s_animationOn) { wsBusy(); }

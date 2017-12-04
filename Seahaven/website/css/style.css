@@ -13,9 +13,33 @@ canvas {
     top: 352px;
     left: 32px;
     z-index: 2;
-    font-size: 14px;
     color: white;
+    font-size: 14px;
     font-family: monospace;
+}
+
+#speech {
+    visibility: hidden;
+}
+
+#speechImg {    
+    position: absolute;
+    top: 260px;
+    left: 400px;
+    z-index: 3;
+}
+
+#speechText {
+    position: absolute;
+    z-index: 4;
+    top: 275px;
+    width: 187px;
+    left: 406px;
+    text-align: center;
+    color: black;
+    font-size: 18px;
+    font-family: sans-serif;
+    line-height: 25px;
 }
 
 #menu {

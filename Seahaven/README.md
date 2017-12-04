@@ -41,7 +41,12 @@ Each event has two parts `<type> <value>`
     -  Pi/2 is tilt left
     - Sending 0 is how Web knows everything is back to level
 - `8` - Chatting with Mr T.
-  - Value could be random selection/chat to play back if we write some whimsical quips.
+  - Send string of what he should say.
+  - **NOTES**
+    - Only 2 lines max
+    - Each line is 16 character max
+    - use `<br>` to seperate line
+      - Example: `How are you<br>on this day`
 - `9` - Toggle fidget spinner
 
 ## Web-to-Host Calls

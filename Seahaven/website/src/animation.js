@@ -39,7 +39,7 @@ var s_tiltRightLast = false;
 var s_tiltWall      = false;
 var s_tiltAnim      = false;
 var s_fidgetAnim    = false;
-var s_speakOn       = false;
+var s_talkAnim      = false;
 var s_pictureUp     = false;
 var s_pictureTaken  = false;
 var s_pictureAnim   = false;
@@ -68,10 +68,14 @@ function animationEnd(entry) {
         walkComplete();
     } else if (entry.animation.name == "couchOff") {
         s_couchOn = false;
+        if (s_idleMode && !s_fidgetAnim && !s_talkAnim) { idleMode(); }
+    } else if (entry.animation.name == "speak") {
+        document.getElementById("speech").style.visibility = "hidden";
+        s_talkAnim = false;
         if (s_idleMode && !s_fidgetAnim) { idleMode(); }
     } else if (entry.animation.name == "fidget") {
         s_fidgetAnim = false;
-        if (s_idleMode) { idleMode(); }
+        if (s_idleMode && !s_talkAnim) { idleMode(); }
     } else if (entry.animation.name == "pictureStart") {
         s_pictureUp = true;
         wsPictureReady();
@@ -144,7 +148,11 @@ function walkAnimation(delta) {
             } else if (s_fidgetAnim) {
                 walkTicker.stop();
                 fidgetStart(); // fidget only happens out of idle mode 
-            } else {
+            } else if (s_talkAnim) {
+                walkTicker.stop();
+                talkStart(); // fidget only happens out of idle mode 
+            }
+            else {
                 idleMode();
             }
         } else {
@@ -227,6 +235,7 @@ function lightAnimation() {
     s_lightAnim = true;
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }
+    else if (s_talkAnim) { talkKill(); }
     walk(0,0,525);
 }
 
@@ -255,6 +264,7 @@ function speakerAnimation() {
     s_animationOn = true;   
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }
+    else if (s_talkAnim) { talkKill(); }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -324,6 +334,7 @@ function fireAnimation() {
     s_fireAnim = true;
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }
+    else if (s_talkAnim) { talkKill(); }
     walk(0,0, 680);
 }
 
@@ -351,6 +362,7 @@ function pictureAnimation() {
 
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }
+    else if (s_talkAnim) { talkKill(); }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -408,6 +420,7 @@ function tiltAnimation() {
 
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }  
+    else if (s_talkAnim) { talkKill(); }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -489,7 +502,10 @@ function tiltRecovery() {
 function fidgetAnimation() {
     s_fidgetAnim = true;
     if (s_couchOn) { 
-        couchKill(); 
+        couchKill();
+        fidgetStart();
+    } else if (s_talkAnim) { 
+        talkKill();
         fidgetStart();
     }
     // else walk animation will catch trigger
@@ -500,13 +516,41 @@ function fidgetStart() {
 }
 
 function fidgetKill() {
-    s_fidgetAnim = false;
     player.state.addAnimation(0, "stand", false, 0);
 }
 
 /*************************
 *          Talk          *
 *************************/
+function talkAnimation() {
+    s_talkAnim = true;
+
+    if (s_couchOn) { 
+        couchKill();
+        talkStart();
+    } else if (s_fidgetAnim) { 
+        fidgetKill();
+        talkStart();
+    }
+    // else walk animation will catch trigger
+}
+
+function talkStart() {
+    player.scale.x = (player.position.x < 400) ?  pScaleRight : pScaleLeft;
+
+    player.state.addAnimation(0, "speak", true, 0);
+
+    document.getElementById("speechImg").style.transform = "scaleX("+ ((player.scale.x > 0) ? 1 : -1) + ")";
+    document.getElementById("speechImg").style.left = ((player.position.x) + ((player.scale.x > 0) ? 0 : -200)) + "px"
+    document.getElementById("speechText").style.left = ((player.position.x) + ((player.scale.x > 0) ? 6 : -194)) + "px"
+    document.getElementById("speech").style.visibility = "visible";
+
+    setTimeout(function(){ if (s_talkAnim) {talkKill();} }, 3000);
+}
+
+function talkKill() {
+    player.state.addAnimation(0, "stand", false, 0);
+}
 
 /*************************
 *         Wall           *
