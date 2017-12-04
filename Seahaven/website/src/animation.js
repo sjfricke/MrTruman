@@ -279,6 +279,7 @@ function speakerAnimation() {
     } else {
         if (!s_speakersUp) {
             speakersOff(); // be safe, no guarntee
+            document.getElementById("temp").style.visibility = "hidden";
             renderer.app.ticker.add(speakersUp);
             player.state.addAnimation(0, "musicOn", false, 0);
             player.state.addAnimation(0, "musicPlay", true, 0);            
@@ -320,7 +321,8 @@ function speakersDown(delta) {
     } else {
         renderer.app.ticker.remove(speakersDown);
         speaker1.position.y = speaker2.position.y = speakerStartY;
-        s_speakersUp = false;
+        s_speakersUp = false;        
+        document.getElementById("temp").style.visibility = "visible";
         wsSpeakersDown();
     }
 }

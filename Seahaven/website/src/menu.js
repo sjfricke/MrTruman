@@ -30,7 +30,6 @@ function menuHandler(event) {
 }
 
 function menuOpen(event) {
-
 	m_xMin = (event.touches[0].pageX < m_xMax_show) ? event.touches[0].pageX : m_xMax_show;
 	m_xMax = m_xMin + 216;
     m_yMin = (event.touches[0].pageY < m_yMax_show) ? event.touches[0].pageY : m_yMax_show;
@@ -103,11 +102,17 @@ function filterEnd(event) {
 }
 
 function adjustVSlider(event) {
-        wsVolume(event.srcElement.value);
+    wsVolume(event.srcElement.value);
 	m_vBall.style.left = (event.srcElement.value * 1.48) + "px";
 	m_vFill.style.width = (event.srcElement.value * 0.8) + "%";
 }
 
 function adjustVolume(event) {
     
+}
+
+window.addEventListener("touchstart", menuDebug, false);
+
+function menuDebug(event) {
+	log("menu", "", event.touches[0].pageX, event.touches[0].pageY, event.touches[0].target);
 }
