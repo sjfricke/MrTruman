@@ -206,84 +206,88 @@ int main ( int argc, char* argv[] ) {
   if (rc) {
     printf("ERROR: Can't create temperature thread");
   }
-  
-  while(1) {
 
-    // Sleep a millisecond cuz come on, who is it really hurting?
-    if(animation_on){ usleep(1000); continue;}
-
-    // We check for the audio plug and gyro in voiceCommand and immediately return from it upon
-    // either event, so that voiceCommand(); won't end up blocking.
-    voiceCommand();    
-
-    if (audio_plugged_in) {
-      sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
+  if (fork()==0) {
+      sprintf(command, "xinit /usr/bin/chromium http://localhost:6419 --no-sandbox --kiosk");
       system(command);
-      sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
-      system(command);
-      animation_on = TRUE;
-      speaker_animation_ready = FALSE;
+  } else {
+    while(1) {
 
-      broadcastString("5", "0");
+      // Sleep a millisecond cuz come on, who is it really hurting?
+      if(animation_on){ usleep(1000); continue;}
 
-      while(!speaker_animation_ready);
+      // We check for the audio plug and gyro in voiceCommand and immediately return from it upon
+      // either event, so that voiceCommand(); won't end up blocking.
+      voiceCommand();    
+
+      if (audio_plugged_in) {
+	sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
+	system(command);
+	sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
+	system(command);
+	animation_on = TRUE;
+	speaker_animation_ready = FALSE;
+
+	broadcastString("5", "0");
+
+	while(!speaker_animation_ready);
       
 
-      broadcastString("5", "1");
-      printf("\nSPEAKER IS READY IN ANIMAION\n");  
-      loopbackSetup();
-      loopback();
-      loopbackTerminate();
-      // Turn off lights or back to on state
-      if (lights_on == TRUE) {
-	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-      } else {
-	setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
-	setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
-	setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
-      }
-
-    }
-
-    if (gyro_tripped) {
-      // blocks until gyro is set back to no tilt for 3 secs straight
-      int dir;
-      animation_on = TRUE;
-
-      while (gyro_tripped == TRUE) {
-	// time to wait between tilt detect
-	// this will also prevent any noice from having animtion go, will have 3 sec delay though
-	usleep(50000); // 50ms
-
-	dir = getTiltDirection(); // 1 for right, -1 for left
-	if (dir == 1) {
-	  broadcastString("7", "-0.707");
-	} else if (dir == -1) {
-	  broadcastString("7", "0.707");
+	broadcastString("5", "1");
+	printf("\nSPEAKER IS READY IN ANIMAION\n");  
+	loopbackSetup();
+	loopback();
+	loopbackTerminate();
+	// Turn off lights or back to on state
+	if (lights_on == TRUE) {
+	  setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+	  setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	  setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
 	} else {
-	  usleep(1000000); // 1sec of 3
-	  if (0 != getTiltDirection()) { continue; }
-
-	  usleep(1000000); // 2sec of 3
-	  if (0 != getTiltDirection()) { continue; }
-
-	  usleep(1000000); // 3sec of 3
-	  if (0 != getTiltDirection()) { continue; }
-
-	  // Truman to get back to his feet
-	  gyro_tripped = FALSE;
-	  gyroClearInterrupt();
-	  broadcastString("7", "0");
+	  setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
+	  setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
+	  setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
 	}
+
       }
-    } 
 
-    usleep(10000); // 10ms
+      if (gyro_tripped) {
+	// blocks until gyro is set back to no tilt for 3 secs straight
+	int dir;
+	animation_on = TRUE;
+
+	while (gyro_tripped == TRUE) {
+	  // time to wait between tilt detect
+	  // this will also prevent any noice from having animtion go, will have 3 sec delay though
+	  usleep(50000); // 50ms
+
+	  dir = getTiltDirection(); // 1 for right, -1 for left
+	  if (dir == 1) {
+	    broadcastString("7", "-0.707");
+	  } else if (dir == -1) {
+	    broadcastString("7", "0.707");
+	  } else {
+	    usleep(1000000); // 1sec of 3
+	    if (0 != getTiltDirection()) { continue; }
+
+	    usleep(1000000); // 2sec of 3
+	    if (0 != getTiltDirection()) { continue; }
+
+	    usleep(1000000); // 3sec of 3
+	    if (0 != getTiltDirection()) { continue; }
+
+	    // Truman to get back to his feet
+	    gyro_tripped = FALSE;
+	    gyroClearInterrupt();
+	    broadcastString("7", "0");
+	  }
+	}
+      } 
+
+      usleep(10000); // 10ms
     
+    }
   }
-
   // hardwareTests();
   printf("main\n");
 }
