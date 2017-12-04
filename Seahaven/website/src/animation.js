@@ -48,7 +48,7 @@ var s_pictureIndex  = 2;
 const walkRate = 2;
 const fallRatePlayer = 3;
 const fallRateCouch = 1.5;
-const fallRatePic =  0.05;
+const fallRatePic =  0.02;
 const speakerRate = 0.00004;
 
 var player;
@@ -455,10 +455,10 @@ function tiltFall(delta) {
             couch.position.x = 687;
         }
 
-        if (picture.rotation > tiltValue) {
+        if (picture.rotation > -0.707) {
             picture.rotation = frame.rotation -= fallRatePic * delta;
         } else {
-            picture.rotation = frame.rotation = tiltValue;
+            picture.rotation = frame.rotation = -0.707;
         }
 
     } else {
@@ -479,10 +479,10 @@ function tiltFall(delta) {
             couch.position.x = 114;
         }
 
-        if (picture.rotation < tiltValue) {
+        if (picture.rotation < 0.707) {
             picture.rotation = frame.rotation += fallRatePic * delta;
         } else {
-            picture.rotation = frame.rotation = tiltValue;
+            picture.rotation = frame.rotation = 0.707;
         }
     }
 }
