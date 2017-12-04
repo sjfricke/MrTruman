@@ -22,6 +22,10 @@ int commandDetect(char const* voice_str)
 
   printf("DEBUG - Said: %s\n", voice_str);
 
+  if(strstr(voice_str, "TRUMAN") == NULL){
+    return 0;
+  }
+
   /* 
     Light switch animation
     0 - Turn on
@@ -79,5 +83,6 @@ int commandDetect(char const* voice_str)
   }
  
   printf("No command listed found\n");
+  broadcastString("8", "???");
   return -1;
 }
