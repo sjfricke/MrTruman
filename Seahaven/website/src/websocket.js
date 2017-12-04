@@ -1,6 +1,8 @@
 // global WebSocket pointer
 var webSocket;
 
+const nestTemp = document.getElementById("temp");
+
 // decides what do when message arrives
 function wsOnMessage(event) {
 
@@ -43,6 +45,9 @@ function wsOnMessage(event) {
       if (s_speakersOn) { speakersOff(); }
       speakerAnimation();
     }
+    break;
+  case 6:
+    nestTemp.innerText = message.value;
     break;
   case 7:
     if (s_animationOn && !s_tiltAnim) {

@@ -323,7 +323,7 @@ function fireAnimation() {
     s_fireAnim = true;
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }
-    walk(0,0, s_fireOn ? 650 : 655);
+    walk(0,0, 680);
 }
 
 function fireOn() {

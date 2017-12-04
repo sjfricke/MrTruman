@@ -32,7 +32,8 @@ Each event has two parts `<type> <value>`
   - `1` - Music playing
   - `2` - Music stopped
   - `3` - Put away speakers
-- `6`
+- `6` - Temperature Reading
+  - Send temperature as 2 digit int
 - `7` - Gyro animation
   - Value is of rotation in degrees between -Pi/2 and Pi/2 where 0 is level
     - **NOTE**: You need the leading zero so `0.707`, NOT `.707`

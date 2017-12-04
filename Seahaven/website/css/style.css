@@ -8,6 +8,16 @@ canvas {
     height: 100%; 
 }
 
+#temp {
+    position: absolute;
+    top: 352px;
+    left: 32px;
+    z-index: 2;
+    font-size: 14px;
+    color: white;
+    font-family: monospace;
+}
+
 #menu {
 	width: 200px;
     height: 166px;

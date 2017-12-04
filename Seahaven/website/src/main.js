@@ -55,8 +55,8 @@ function setup() {
             type: 'add',
             name: 'window',
             path: resPath.window,
-            pt: new PIXI.Point(0.64, 0.62),
-            scale: 1.1
+            pt: new PIXI.Point(0.638125, 0.6083333333333333),
+            scale: 1.0
         },
         {
             type: 'add',
@@ -80,18 +80,11 @@ function setup() {
             anchorY: 0,
             scale: 1.0
         },        
-        {
-            type: 'add',
-            name: 'firePlace',
-            path: resPath.firePlace,
-            pt: new PIXI.Point(0.88, 1),
-            scale: 1.0
-        },
         {           
             type: 'addSpritesheet',
             name: 'fireAnimated',
             path: resPath.fireAnimated,
-            pt: new PIXI.Point(0.878, 0.943),
+            pt: new PIXI.Point(0.914375, 0.943),
             count: 15,
             framePrefix : "fire",            
             loop: true,  
