@@ -8,5 +8,6 @@ uint8_t audio_plugged_in;
 uint8_t gyro_tripped;
 uint8_t speaker_animation_ready;
 uint8_t headphone_status;
+uint8_t lights_on;
 
 uint16_t photo_index;

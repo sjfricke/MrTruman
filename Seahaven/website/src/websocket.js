@@ -51,7 +51,7 @@ function wsOnMessage(event) {
     break;
   case 7:
     if (s_animationOn && !s_tiltAnim) {
-      wsBusy();
+	(message.value == 0) ? wsTiltDone() : wsBusy(); // prevent noice from host side
     } else if (message.value == 0) {
       tiltRecovery();
     } else {      

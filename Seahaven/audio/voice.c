@@ -1,5 +1,4 @@
 #include "voice.h"
-#include "../status.h"
 
 // Single instance of PocketSphinx voice
 // ps variables
@@ -14,9 +13,9 @@ static int32_t k;
 
 char const* voice_str;
 
-extern uint8_t audio_plugged_in;
-extern uint8_t animation_on;
-extern uint8_t gyro_tripped; 
+uint8_t audio_plugged_in;
+uint8_t animation_on;
+uint8_t gyro_tripped; 
 
 
 void voiceHardwareSetup() {

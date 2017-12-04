@@ -17,8 +17,8 @@ int buff_size;
 //extern uint8_t VOLCHANGED;
 //extern uint8_t VOLCURRENT;
 uint8_t local_volume;
-extern uint8_t audio_plugged_in;
-extern uint8_t animation_on;
+uint8_t audio_plugged_in;
+uint8_t animation_on;
 
 
 static void closeHandles() {

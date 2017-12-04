@@ -10,7 +10,7 @@ void webDataCallback( int type, char* value) {
 
   // PLACEHOLDER Callback 
   case 0:
-    // NOTHING YO
+    // Returns case 0 of animation is busy
     break;
 
   // LIGHTS Callback  
@@ -20,9 +20,11 @@ void webDataCallback( int type, char* value) {
     	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
 	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+	lights_on = TRUE;
     }
     else{
 	setLED(PCA9685_ALL_CALL, 0, 0x3FF);
+	lights_on = FALSE;
     }
     animation_on = FALSE;
     break;
@@ -71,15 +73,21 @@ void webDataCallback( int type, char* value) {
 	
         // Turn on (flash)
         setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, .99, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, .99, 0x3ff);
 
 	usleep(150000);
 	
-	// Turn off
-        setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+	// Turn off flash or back to on state
+	if (lights_on == TRUE) {
+	  setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+	  setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	  setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+	} else {
+	  setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
+	  setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
+	  setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
+	}
 	
       } else {
 	photo_index++; // cant do in fork or it does not get updated in this process
@@ -103,18 +111,15 @@ void webDataCallback( int type, char* value) {
 
   // GREEK Callback  
   case 5:
-    gyroClearInterrupt();
-    broadcastString("7", "0");
-    // Need to really check the direction and send it back. TODO
     animation_on = FALSE;
     break;
     
-  // Chat interaction over.
+ //unused
   case 6:
     animation_on = FALSE;
     break;
 
-  // Jumping completed.
+  //unused
   case 7:
     animation_on = FALSE;
     break;
@@ -190,6 +195,7 @@ int main ( int argc, char* argv[] ) {
   audio_plugged_in = FALSE;
   gyro_tripped = FALSE;
   speaker_animation_ready = FALSE;
+  lights_on = false;
   photo_index = 2; // 0 and 1 are reserved
 
   // Kick off temperature thread
@@ -229,22 +235,39 @@ int main ( int argc, char* argv[] ) {
     }
 
     if (gyro_tripped) {
-      int dir = getTiltDirection();
-      // 1 for right, -1 for left
-      if(dir == 1){
-        broadcastString("7", "-0.707");
-        animation_on = TRUE;
-      } else if (dir == -1) {
-        broadcastString("7", "0.707");
-        animation_on = TRUE;
-      } else{
-        animation_on = FALSE;
+      // blocks until gyro is set back to no tilt for 3 secs straight
+      int dir;
+      animation_on = TRUE;
+
+      while (gyro_tripped == TRUE) {
+	// time to wait between tilt detect
+	// this will also prevent any noice from having animtion go, will have 3 sec delay though
+	usleep(50000); // 50ms
+
+	dir = getTiltDirection(); // 1 for right, -1 for left
+	if (dir == 1) {
+	  broadcastString("7", "-0.707");
+	} else if (dir == -1) {
+	  broadcastString("7", "0.707");
+	} else {
+	  usleep(1000000); // 1sec of 3
+	  if (0 != getTiltDirection()) { continue; }
+
+	  usleep(1000000); // 2sec of 3
+	  if (0 != getTiltDirection()) { continue; }
+
+	  usleep(1000000); // 3sec of 3
+	  if (0 != getTiltDirection()) { continue; }
+
+	  // Truman to get back to his feet
+	  gyro_tripped = FALSE;
+	  gyroClearInterrupt();
+	  broadcastString("7", "0");
+	}
       }
-      gyro_tripped = FALSE;
-      gyroClearInterrupt();
     } 
 
-    usleep(50000); // 50ms
+    usleep(10000); // 10ms
     
   }
 
