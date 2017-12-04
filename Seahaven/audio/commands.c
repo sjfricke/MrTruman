@@ -32,7 +32,7 @@ int commandDetect(char const* voice_str)
     1 - Turn off
     2 - Toggle Lights 
   */ 
-  if ((strstr(voice_str, c_lights) != NULL) && (strstr(voice_str, "TURN") != NULL) {
+  if ((strstr(voice_str, c_lights) != NULL) && (strstr(voice_str, "TURN") != NULL)) {
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
  

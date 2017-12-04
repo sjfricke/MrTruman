@@ -207,10 +207,7 @@ int main ( int argc, char* argv[] ) {
     printf("ERROR: Can't create temperature thread");
   }
 
-  if (fork()==0) {
-      sprintf(command, "xinit /usr/bin/chromium http://localhost:6419 --no-sandbox --kiosk");
-      system(command);
-  } else {
+
     while(1) {
 
       // Sleep a millisecond cuz come on, who is it really hurting?
@@ -287,7 +284,7 @@ int main ( int argc, char* argv[] ) {
       usleep(10000); // 10ms
     
     }
-  }
+    //  }
   // hardwareTests();
   printf("main\n");
 }
