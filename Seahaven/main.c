@@ -104,11 +104,11 @@ void webDataCallback( int type, char* value) {
       speaker_animation_ready = TRUE;
     }
     else if (val == 1) {
-      servoRetract();
+      
       voiceHardwareSetup();
       animation_on = FALSE;
     } else if (val == 2) {
-      servoExtend();
+      
     }
     break;
 
@@ -228,6 +228,8 @@ int main ( int argc, char* argv[] ) {
 	broadcastString("5", "0");
 
 	while(!speaker_animation_ready);
+
+  servoExtend();
       
 
 	broadcastString("5", "1");
@@ -245,6 +247,8 @@ int main ( int argc, char* argv[] ) {
 	  setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
 	  setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
 	}
+
+  servoRetract();
 
       }
 
