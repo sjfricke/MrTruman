@@ -1,6 +1,9 @@
 Seahaven
 TestSeahaven
 
+# camera photos
+website/res/img/camera_image*.*jpg
+
 # Node test server
 node_modules
 

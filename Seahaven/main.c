@@ -2,12 +2,7 @@
 
 extern server_t* g_server;
 
-extern uint8_t audio_plugged_in;
-extern uint8_t animation_on;
-extern uint8_t gyro_tripped; 
-
 static char command[256];
-
 
 void webDataCallback( int type, char* value) {
   int val;
@@ -57,13 +52,13 @@ void webDataCallback( int type, char* value) {
 	  sprintf(command, "ffmpeg -f video4linux2 -s 160x120 -i /dev/video0 -vf vflip -frames 1 ./website/res/img/camera_image%d.jpg -y -loglevel quiet", photo_index);
 	  system(command);
 
-	  broadcastInt("4", photo_index++);
+	  broadcastInt("4", photo_index);
 
-    // clean up photos after first one
-    if (photo_index > 3) {
-      sprintf(command, "rm ./website/res/img/camera_image%d.jpg -f", photo_index - 1);
-      system(command);
-    }
+	  // clean up photos after first one
+	  if (photo_index > 3) {
+	    sprintf(command, "rm ./website/res/img/camera_image%d.jpg -f", photo_index - 1);
+	    system(command);
+	  }
 	  kill(getpid(), SIGKILL);
 	}
 	
@@ -87,6 +82,7 @@ void webDataCallback( int type, char* value) {
 	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
 	
       } else {
+	photo_index++; // cant do in fork or it does not get updated in this process
         animation_on = FALSE;
       }
     
@@ -138,6 +134,15 @@ void webDataCallback( int type, char* value) {
   }
 }
 
+void* pollTemperature(void* x) {
+  double currentTemp;
+  while(1) {
+    currentTemp = getTemp();
+    broadcastInt("6", (int)currentTemp);
+    usleep(2000000); // 2 sec
+  }
+}
+
 // Sets up a whole bunch of hardware peripherals 
 // ensures that the truman experience will be buttery smooth
 void HardwareSetup() {
@@ -162,8 +167,6 @@ void HardwareSetup() {
   setLED(PCA9685_ALL_CALL, 0, 0x3FF);
 }
 
-static uint8_t headphone_status;
-
 int main ( int argc, char* argv[] ) {
 
   uint16_t headphone_jack;
@@ -187,13 +190,18 @@ int main ( int argc, char* argv[] ) {
   audio_plugged_in = FALSE;
   gyro_tripped = FALSE;
   speaker_animation_ready = FALSE;
+  photo_index = 2; // 0 and 1 are reserved
+
+  // Kick off temperature thread
+  int rc = pthread_create(&tempThread, NULL, pollTemperature, NULL);
+  if (rc) {
+    printf("ERROR: Can't create temperature thread");
+  }
   
   while(1) {
 
-
-
-
-    if(animation_on){ usleep(1000); continue;} // Sleep a millisecond cuz come on, who is it really hurting?
+    // Sleep a millisecond cuz come on, who is it really hurting?
+    if(animation_on){ usleep(1000); continue;}
 
     // We check for the audio plug and gyro in voiceCommand and immediately return from it upon
     // either event, so that voiceCommand(); won't end up blocking.

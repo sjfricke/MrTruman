@@ -13,6 +13,11 @@
 // Everything is assuming the README under the Seahaven folder
 void webDataCallback( int type, char* value );
 
+// side loop to constantly get temperature
+// Should be ran on seperate thread
+pthread_t tempThread;
+void* pollTemperature( void* x );
+
 // This is a void argument hardware setup
 // This is for setting up things like componenets but will not give references
 // This means you will need to still get a mapping of the GPIO pin for the main function

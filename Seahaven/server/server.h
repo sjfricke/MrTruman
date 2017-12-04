@@ -24,6 +24,8 @@ void broadcastNumber(char* type, double value);
 // overload method to broadcast string
 void broadcastString(char* type, char* value);
 
+void broadcastInt(char* type, int value);
+
 //////////////////////////////////////
 /////////  Internal Helpers //////////
 //////////////////////////////////////
