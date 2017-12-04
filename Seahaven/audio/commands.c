@@ -28,7 +28,7 @@ int commandDetect(char const* voice_str)
     1 - Turn off
     2 - Toggle Lights 
   */ 
-  if (strstr(voice_str, c_lights) && strstr(voice_str, "TURN")) {
+  if ((strstr(voice_str, c_lights) != NULL) && (strstr(voice_str, "TURN") != NULL) {
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
  
@@ -46,7 +46,7 @@ int commandDetect(char const* voice_str)
     1 - Turn off
     2 - Toggle Fire
   */
-  if (strstr(voice_str, c_fire)) {
+  if (strstr(voice_str, c_fire) != NULL) {
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
 
@@ -61,7 +61,7 @@ int commandDetect(char const* voice_str)
   /*
     Taking pictures animation
   */
-  if (strstr(voice_str, c_picture) || strstr(voice_str, c_photo)) {
+  if ((strstr(voice_str, c_picture) != NULL) || (strstr(voice_str, c_photo) != NULL)) {
     broadcastString("4", "0");
     animation_on = TRUE;
     return 0;
