@@ -198,7 +198,7 @@ int main ( int argc, char* argv[] ) {
   audio_plugged_in = FALSE;
   gyro_tripped = FALSE;
   speaker_animation_ready = FALSE;
-  lights_on = false;
+  lights_on = FALSE;
   photo_index = 2; // 0 and 1 are reserved
 
   // Kick off temperature thread
