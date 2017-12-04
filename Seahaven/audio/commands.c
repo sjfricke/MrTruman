@@ -28,34 +28,12 @@ int commandDetect(char const* voice_str)
     1 - Turn off
     2 - Toggle Lights 
   */ 
-  if (strstr(voice_str, c_lights)) {
+  if (strstr(voice_str, c_lights) && strstr(voice_str, "TURN")) {
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
-    char* detectRed = strstr(voice_str, "RED");
-    char* detectGreen = strstr(voice_str, "GREEN");
-    char* detectBlue = strstr(voice_str, "BLUE");
-    char* detectTurn = strstr(voice_str, "TURN");
-
-
-    if(detectTurn == NULL){
-        return 0;
-    }
-
+ 
     if((detectOn != NULL) || (detectOff != NULL)){
-	    (detectOn != NULL) ? broadcastString("1", "0") : broadcastString("1", "1");
-    }/* else { // Specified a color or on or off I guess - defaults to telling the house to turn lights blue
-      if(detectRed != NULL){
-        broadcastString("2", "255,0,0");
-      } else if (detectGreen != NULL){
-        broadcastString("2", "0,255,0");
-      } else{
-        broadcastString("2", "0,0,255");
-      }
-      
-    }*/
-
- //   if((detectOn != NULL) || (detectOff != NULL) || (detectRed != NULL) || (detectGreen != NULL) || (detectBlue != NULL)){
-    if((detectOn != NULL) || (detectOff != NULL) ){
+      (detectOn != NULL) ? broadcastString("1", "0") : broadcastString("1", "1");
       animation_on = TRUE;
     }
 
@@ -90,15 +68,13 @@ int commandDetect(char const* voice_str)
   }
 
   // Chat bubble
-  if ((strstr(voice_str, "WHAT") != NULL && (strstr(voice_str, "UP") != NULL)) {
+  if ((strstr(voice_str, "WHAT") != NULL) && (strstr(voice_str, "UP") != NULL)) {
     broadcastString("8", "Hello! My name<br>is <b>Mr. Truman!</b>");
-    animation_on = TRUE;
     return 0;
   }
 
   if((strstr(voice_str, "FIDGET") != NULL) && (strstr(voice_str, "SPINNER") != NULL)){
     broadcastString("9", "0");
-    animation_on = TRUE;
     return 0;
   }
  

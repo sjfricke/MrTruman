@@ -76,11 +76,13 @@ function wsOnMessage(event) {
   case 9:
     if (s_animationOn) { wsBusy(); }
     else { (s_fidgetAnim) ? fidgetKill() : fidgetAnimation(); }
-    break;
+      break;
+
   default:
 	  warn("WebSocket", "No case for data: %0", message);
   }
 }
+
 
 function wsBusy() {
   webSocket.send("0:0");

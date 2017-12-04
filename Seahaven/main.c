@@ -232,6 +232,17 @@ int main ( int argc, char* argv[] ) {
       loopbackSetup();
       loopback();
       loopbackTerminate();
+      // Turn off lights or back to on state
+      if (lights_on == TRUE) {
+	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+      } else {
+	setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
+      }
+
     }
 
     if (gyro_tripped) {
