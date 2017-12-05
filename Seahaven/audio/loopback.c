@@ -53,6 +53,7 @@ static int change_LED_from_sample(int16_t sample, int scale) {
 	int g_comp = 0;
 	int b_comp = 0;
 
+
 	if (sample >= scale && sample < 2*scale) {
 		setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 		setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
@@ -103,8 +104,19 @@ static int change_LED_from_sample(int16_t sample, int scale) {
 		g_comp = .99*SCALECOLORS;
 		b_comp = .5*SCALECOLORS;
 	} else {
+		// Speaker pulsation should stop but speakers should stay up
+		if(audio_threshold != FALSE){
+			broadcastString("5","2");
+		}
+		audio_threshold = FALSE;
 		return 1;
 	}
+
+	// Speaker pulsation should resume and speakers should stay up
+	if(audio_threshold != TRUE){
+		broadcastString("5","1");
+	}
+	audio_threshold = TRUE;	
 
 /*	if(BROADCASTCOLORS){
 	    char* broadcaststr = (char*)malloc(200*sizeof(char));
