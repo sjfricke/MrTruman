@@ -85,8 +85,12 @@ int commandDetect(char const* voice_str)
 
   if((strstr(voice_str, "ARE") != NULL) && (strstr(voice_str, "YOU") != NULL) && (strstr(voice_str, "HOT") != NULL)){
     broadcastString("8", "<b>NEVER</b> hot...");
-    sprintf(command, "aplay –c 0 -D plughw:0,1 ./audio/mansnothot_2.wav");
-	  system(command);
+ //   if(fork() == 0){
+      sprintf(command, "aplay -D plughw:0,1 ./audio/mansnothot_2.wav");
+      system(command);
+  //    kill(getpid(), SIGKILL);
+//    }
+
     return 0;
   }
  
