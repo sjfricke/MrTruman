@@ -89,8 +89,6 @@ int commandDetect(char const* voice_str)
     broadcastString("8", "<b>NEVER</b> hot...");
     sprintf(command, "aplay -D plughw:0,1 ./audio/mansnothot_2.wav");
     system(command);
-  }
-
     return 0;
   }
  
