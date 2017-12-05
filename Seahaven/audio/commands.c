@@ -75,6 +75,8 @@ int commandDetect(char const* voice_str)
   // Chat bubble
   if ((strstr(voice_str, "WHAT") != NULL) && (strstr(voice_str, "UP") != NULL)) {
     broadcastString("8", "Hello! My name<br>is <b>Mr. Truman!</b>");
+    sprintf(command, "aplay -D plughw:0,1 ./audio/truman_chat.wav");
+    system(command);
     return 0;
   }
 
@@ -85,16 +87,16 @@ int commandDetect(char const* voice_str)
 
   if((strstr(voice_str, "ARE") != NULL) && (strstr(voice_str, "YOU") != NULL) && (strstr(voice_str, "HOT") != NULL)){
     broadcastString("8", "<b>NEVER</b> hot...");
- //   if(fork() == 0){
-      sprintf(command, "aplay -D plughw:0,1 ./audio/mansnothot_2.wav");
-      system(command);
-  //    kill(getpid(), SIGKILL);
-//    }
+    sprintf(command, "aplay -D plughw:0,1 ./audio/mansnothot_2.wav");
+    system(command);
+  }
 
     return 0;
   }
  
   printf("No command listed found\n");
   broadcastString("8", "???");
+  sprintf(command, "aplay -D plughw:0,1 ./audio/truman_misunderstand.wav");
+  system(command);
   return -1;
 }
