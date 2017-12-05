@@ -24,8 +24,10 @@ void webDataCallback( int type, char* value) {
 	lights_on = TRUE;
     }
     else{
-	setLED(PCA9685_ALL_CALL, 0, 0x3FF);
 	lights_on = FALSE;
+    	setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
     }
     animation_on = FALSE;
     break;
