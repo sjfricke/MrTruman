@@ -8,6 +8,7 @@ static char* c_photo = "PHOTO";
 static char* c_chitchat = "WHAT";
 static char* c_jump = "JUMP";
 
+static char command[256];
 /*
 char* _green = "green";
 char* _blue = "blue";
@@ -79,6 +80,13 @@ int commandDetect(char const* voice_str)
 
   if((strstr(voice_str, "FIDGET") != NULL) && (strstr(voice_str, "SPINNER") != NULL)){
     broadcastString("9", "0");
+    return 0;
+  }
+
+  if((strstr(voice_str, "ARE") != NULL) && (strstr(voice_str, "YOU") != NULL) && (strstr(voice_str, "HOT") != NULL)){
+    broadcastString("8", "<b>NEVER</b> hot...");
+    sprintf(command, "aplay –c 0 -D plughw:0,1 ./audio/mansnothot_2.wav");
+	  system(command);
     return 0;
   }
  
