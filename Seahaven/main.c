@@ -106,7 +106,6 @@ void webDataCallback( int type, char* value) {
       speaker_animation_ready = TRUE;
     }
     else if (val == 1) {
-      
       voiceHardwareSetup();
       animation_on = FALSE;
     } else if (val == 2) {
@@ -202,6 +201,7 @@ int main ( int argc, char* argv[] ) {
   speaker_animation_ready = FALSE;
   lights_on = FALSE;
   photo_index = 2; // 0 and 1 are reserved
+  audio_threshold = FALSE;
 
   // Kick off temperature thread
   int rc = pthread_create(&tempThread, NULL, pollTemperature, NULL);
