@@ -33,7 +33,16 @@ int commandDetect(char const* voice_str)
     1 - Turn off
     2 - Toggle Lights 
   */ 
-  if ((strstr(voice_str, c_lights) != NULL) && (strstr(voice_str, "TURN") != NULL)) {
+  if ((strstr(voice_str, c_lights) != NULL)) {
+
+    // Play the notification sounds
+      if (fork()==0) {
+	    // Take picture
+	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_notification.wav");
+	    system(command);
+	    kill(getpid(), SIGKILL);
+    	}
+
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
  
@@ -52,6 +61,15 @@ int commandDetect(char const* voice_str)
     2 - Toggle Fire
   */
   if (strstr(voice_str, c_fire) != NULL) {
+
+    // Play the notification sounds
+      if (fork()==0) {
+	    // Take picture
+	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_notification.wav");
+	    system(command);
+	    kill(getpid(), SIGKILL);
+    	}
+
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
 
@@ -67,6 +85,15 @@ int commandDetect(char const* voice_str)
     Taking pictures animation
   */
   if ((strstr(voice_str, c_picture) != NULL) || (strstr(voice_str, c_photo) != NULL)) {
+
+      // Play the notification sounds
+      if (fork()==0) {
+	    // Take picture
+	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_notification.wav");
+	    system(command);
+	    kill(getpid(), SIGKILL);
+    	}
+
     broadcastString("4", "0");
     animation_on = TRUE;
     return 0;

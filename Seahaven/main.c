@@ -33,7 +33,7 @@ void webDataCallback( int type, char* value) {
 	    lights_on = TRUE;
     } else {
 
-      // Play the lights on sounds
+      // Play the lights off sounds
       if (fork()==0) {
 	    // Take picture
 	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_off.wav");
@@ -53,9 +53,23 @@ void webDataCallback( int type, char* value) {
   case 2:
     val = atoi(value);
     if(val == 0){
+      // Play the fire on sound
+      if (fork()==0) {
+	    // Take picture
+	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_fire_on.wav");
+	    system(command);
+	    kill(getpid(), SIGKILL);
+    	}
       fanOn(0.95);
     }
     else {
+      // Play the fire off sound
+      if (fork()==0) {
+	    // Take picture
+	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_fire_off.wav");
+	    system(command);
+	    kill(getpid(), SIGKILL);
+    	}
       fanOff();
     }
     animation_on = FALSE;
@@ -95,6 +109,14 @@ void webDataCallback( int type, char* value) {
         setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 	setLED(PCA9685_BLUE_ADDRESS, .99, 0x3ff);
 	setLED(PCA9685_GREEN_ADDRESS, .99, 0x3ff);
+
+    // Play the camera shutter sounds
+      if (fork()==0) {
+	    // Take picture
+	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_camera.wav");
+	    system(command);
+	    kill(getpid(), SIGKILL);
+    	}
 
 	usleep(150000);
 	
