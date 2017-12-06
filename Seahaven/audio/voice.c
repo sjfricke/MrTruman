@@ -32,7 +32,7 @@ void voiceHardwareSetup() {
   // default input to mic over audio jack
   sprintf(command, "amixer -c 0 cset iface=MIXER,name='DEC1 MUX' 'ADC2'");
   system(command);
-  sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 2");
+  sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 4");
   system(command);
   // INP3 is for mic on board, INP2 is for auxilliary line in.
   sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'");
