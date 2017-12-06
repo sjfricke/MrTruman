@@ -7,10 +7,11 @@ const m_vFill = document.getElementById("volumeFill");
 const m_wall = document.getElementById("wall");
 const m_filter = document.getElementById("filter");
 const m_xMax_show = 580;
-const m_yMax_show = 300;
+const m_yMax_show = 355;
 var s_menuOpen = false;
 var m_xMin, m_xMax, m_yMin, m_yMax;
 var filterStatus = 0;
+var invaildSlider = false;
 
 function setMenuEvents() {
     document.addEventListener("touchstart", menuHandler);		
@@ -18,8 +19,9 @@ function setMenuEvents() {
     m_wall.addEventListener("touchend", wallEnd);
     m_filter.addEventListener("touchstart", buttonStart);
     m_filter.addEventListener("touchend", filterEnd);
+    m_vSlider.addEventListener("touchstart", checkValidSlider);
+    m_vSlider.addEventListener("touchend", uncheckValidSlider);
     m_vSlider.addEventListener("input", adjustVSlider);
-    m_vSlider.addEventListener("change", adjustVolume);
 }
 
 function menuHandler(event) {
@@ -28,12 +30,12 @@ function menuHandler(event) {
 
 function menuOpen(event) {
 	m_xMin = (event.touches[0].pageX < m_xMax_show) ? event.touches[0].pageX : m_xMax_show;
-	m_xMax = m_xMin + 216;
+	m_xMax = m_xMin + 222;
     m_yMin = (event.touches[0].pageY < m_yMax_show) ? event.touches[0].pageY : m_yMax_show;
-	m_yMax = m_yMin + 166;
+	m_yMax = m_yMin + 120;
 
-	menu.style.left = (m_xMin + 16) + "px";
-	menu.style.top = (m_yMin + 16) + "px";
+	menu.style.left = (m_xMin + 24) + "px";
+	menu.style.top = (m_yMin - 16) + "px";
 
 	m_icon.style.visibility = "visible";
 	m_volume.style.visibility = "visible";
@@ -46,8 +48,8 @@ function menuOpen(event) {
 function menuClose(event, hardReset) {
 
 	if (!hardReset &&
-		(event.touches[0].pageX > m_xMin && event.touches[0].pageX < m_xMax) && 
-	    (event.touches[0].pageY > m_yMin && event.touches[0].pageY < m_yMax)) {
+		(event.touches[0].pageX > m_xMin + 20 && event.touches[0].pageX < m_xMax + 10) && 
+	    (event.touches[0].pageY > m_yMin - 30 && event.touches[0].pageY < m_yMax)) {
 		return;
 	} 
 
@@ -59,13 +61,23 @@ function menuClose(event, hardReset) {
 }
 
 function buttonStart(event) {
-	event.srcElement.style.background = "#82B1FF";
-	event.srcElement.style.color = "black";
+	if (invaildSlider) {
+		m_wall.style.background = "#82B1FF";
+		m_wall.style.color = "black";
+	} else {
+		event.srcElement.style.background = "#82B1FF";
+		event.srcElement.style.color = "black";
+	}
 }
 
 function buttonEnd(element) {
-	element.style.background = "#448AFF";
-	element.style.color = "white";
+	if (invaildSlider) {
+		m_wall.style.background = "#448AFF";
+		m_wall.style.color = "white";
+	} else {
+		element.style.background = "#448AFF";
+		element.style.color = "white";
+	}	
 	menuClose(0, true);
 }
 
@@ -90,18 +102,28 @@ function filterEnd(event) {
 	}
 }
 
+function checkValidSlider(event) {
+	if (event.touches[0].pageY > m_yMin + 28) {
+		invaildSlider = true;
+		buttonStart();
+	}
+}
+function uncheckValidSlider(event) {
+	if (invaildSlider) {
+		wallEnd();
+	}
+	invaildSlider = false;
+}
 function adjustVSlider(event) {
+	if (invaildSlider) { return; }
     wsVolume(event.srcElement.value);
 	m_vBall.style.left = (event.srcElement.value * 1.48) + "px";
 	m_vFill.style.width = (event.srcElement.value * 0.8) + "%";
-}
-
-function adjustVolume(event) {
-    
 }
 
 window.addEventListener("touchstart", menuDebug, false);
 
 function menuDebug(event) {
 	log("menu", "", event.touches[0].pageX, event.touches[0].pageY, event.touches[0].target);
+	log("menu", "", event);
 }
