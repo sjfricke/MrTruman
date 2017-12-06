@@ -53,27 +53,29 @@ void webDataCallback( int type, char* value) {
   case 2:
     val = atoi(value);
     if(val == 0){
+      fanOn(0.95);
+      animation_on = FALSE;
+    }
+    else if (val == 1){      
+      fanOff();
+      animation_on = FALSE;
+    } else if (val == 2) {
       // Play the fire on sound
       if (fork()==0) {
-	    // Take picture
-	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_fire_on.wav");
-	    system(command);
-	    kill(getpid(), SIGKILL);
-    	}
-      fanOn(0.95);
-    }
-    else {
+        usleep(500000); // 500ms
+        sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_fire_on.wav");
+        system(command);
+        kill(getpid(), SIGKILL);
+      }
+    } else if (val == 3) {
       // Play the fire off sound
       if (fork()==0) {
-	    // Take picture
-	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_fire_off.wav");
-	    system(command);
-	    kill(getpid(), SIGKILL);
+        usleep(500000); // 500ms
+  	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_fire_off.wav");
+  	    system(command);
+  	    kill(getpid(), SIGKILL);
     	}
-      fanOff();
     }
-    animation_on = FALSE;
-
     break;
 
   // CAMERA Callback
@@ -154,7 +156,28 @@ void webDataCallback( int type, char* value) {
 
   // GREEK Callback  
   case 5:
-    animation_on = FALSE;
+    val = atoi(value);
+    if (val == 0) {
+      // back to normal      
+      animation_on = FALSE;
+    }
+    else if (val == 1) {
+      // truman hit wall
+      if (fork()==0) {
+      // Take picture
+      sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_thud_truman.wav");
+      system(command);
+      kill(getpid(), SIGKILL);
+      }
+    } else if (val == 2) {
+      // couch hit wall
+      if (fork()==0) {
+      // Take picture
+      sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_thud_couch.wav");
+      system(command);
+      kill(getpid(), SIGKILL);
+      }
+    }
     break;
     
  //unused

@@ -23,6 +23,8 @@ int commandDetect(char const* voice_str)
 
   printf("DEBUG - Said: %s\n", voice_str);
 
+  // to prevent unwanted playing of commands
+  // "Truman" is key word to activate anything
   if(strstr(voice_str, "TRUMAN") == NULL){
     return 0;
   }

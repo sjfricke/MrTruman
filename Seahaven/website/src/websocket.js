@@ -63,7 +63,7 @@ function wsOnMessage(event) {
       tiltValue = message.value;
       if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
       else if (s_tiltRightLast != s_tiltRight) { 
-          s_tiltWall = false;
+          s_tiltWall = s_tiltWallCouch = false;
           player.state.setAnimation(0, "fallHold", false);
       }
       s_tiltRightLast = s_tiltRight;
@@ -103,6 +103,12 @@ function wsFireOn() {
 function wsFireOff() {
   webSocket.send("2:1");
 }
+function wsFireOnSound() {
+  webSocket.send("2:2");
+}
+function wsFireOffSound() {
+  webSocket.send("2:3");
+}
 function wsPictureReady() {
   webSocket.send("3:0");
 }
@@ -120,6 +126,12 @@ function wsSpeakersReady() {
 }
 function wsTiltDone() {
   webSocket.send("5:0");
+}
+function wsTiltTrumanWall() {
+  webSocket.send("5:1");
+}
+function wsTiltCouchWall() {
+  webSocket.send("5:2");
 }
 function wsVolume(value) {
   webSocket.send("8:" + value);

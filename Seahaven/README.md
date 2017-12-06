@@ -57,15 +57,20 @@ Each event has two parts `<type> <value>`
 - `2` - Fireplace (Fan) animation
   - `0` - Turn on fan
   - `1` - Turn off fan
+  - `2` - Starting fire on animation
+  - `3` - Starting fire off animation
 - `3` - Camera animation
   - `0` - Ready to take picture (countdown)
   - `1` - Picture on wall
 - `4` - Speaker animation
   - `0` - Speakers Up and ready
   - `1` - Speakers Down
-- `5` - Gyro animation back to ideal mode
-- `6` - Chat Bubble is Done
-- `7` - Ready to record audio
+- `5` - Gyro tilt info
+  - `0` - animation back to ideal mode
+  - `1` - truman hit wall
+  - `2` - couch hit wall
+- `6`
+- `7`
 - `8` - Value of audio
   - Range is 1 - 100
 

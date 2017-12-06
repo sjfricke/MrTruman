@@ -37,6 +37,7 @@ var s_lightAnim     = false;
 var s_tiltRight     = false;
 var s_tiltRightLast = false;
 var s_tiltWall      = false;
+var s_tiltWallCouch = false;
 var s_tiltAnim      = false;
 var s_fidgetAnim    = false;
 var s_talkAnim      = false;
@@ -176,6 +177,7 @@ function walkComplete() {
     } else if (s_fireAnim) {
         player.scale.x = pScaleRight;
         player.state.addAnimation(0, (s_fireOn) ? 'fireOff' : 'fireOn', false, 0);
+        (s_fireOn) ? wsFireOffSound() : wsFireOnSound();
     } else if (s_pictureAnim) {
         (s_pictureTaken) ? pictureTrigger() : pictureAnimation();
     } else if (s_tiltAnim) {
@@ -419,7 +421,7 @@ function pictureChange() {
 function tiltAnimation() {
     s_tiltAnim = true;
     s_animationOn = true;
-    s_tiltWall = false;   
+    s_tiltWall = s_tiltWallCouch = false;   
 
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }  
@@ -439,23 +441,27 @@ function tiltAnimation() {
 function tiltFall(delta) {
 
     if (s_tiltRight) {
+        // Truman
         player.scale.x = pScaleLeft;
         if (player.position.x < 720) {
             player.position.x += fallRatePlayer * delta;
         } else if (!s_tiltWall) {
+            wsTiltTrumanWall();
             s_tiltWall = true;
             player.position.x = 720;
             player.state.setAnimation(0, "fallWall", false);
-        } else {
-
         }
 
+        // Couch
         if (couch.position.x < 687) {
             couch.position.x += fallRateCouch * delta;
-        } else {
+        } else if (!s_tiltWallCouch) {
+            wsTiltCouchWall();
+            s_tiltWallCouch = true;
             couch.position.x = 687;
         }
 
+        // Picture Frame
         if (picture.rotation > -0.707) {
             picture.rotation = frame.rotation -= fallRatePic * delta;
         } else {
@@ -463,23 +469,27 @@ function tiltFall(delta) {
         }
 
     } else {
+        // Truman
         player.scale.x = pScaleRight;
         if (player.position.x > 80) {
             player.position.x -= fallRatePlayer * delta;
         } else if (!s_tiltWall) {
+            wsTiltTrumanWall();
             s_tiltWall = true;
             player.position.x = 80;
             player.state.setAnimation(0, "fallWall", false);
-        } else {
-
         }
 
+        // Couch
         if (couch.position.x > 114) {
             couch.position.x -= fallRateCouch * delta;
-        } else {
+        } else if (!s_tiltWallCouch) {
+            wsTiltCouchWall();
+            s_tiltWallCouch = true;
             couch.position.x = 114;
         }
 
+        // Picture Frame
         if (picture.rotation < 0.707) {
             picture.rotation = frame.rotation += fallRatePic * delta;
         } else {
