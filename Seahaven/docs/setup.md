@@ -112,7 +112,9 @@ We need to make sure PulseAudio is off because we are using ALSA
 		- TO 
 			- `ExecStart=-/sbin/agetty --noclear -a root %I $TERM`
 - Launch Chrome to full screen
-	- `xinit /usr/bin/chromium --kiosk http://localhost:6419 --no-sandbox`
+  	- `set -i 's/"exited_cleanly": false/"exited_cleanly": true/' /root/.config/chromium/Default/Preferences`
+	- `xinit /usr/bin/chromium http://localhost:6419 --kiosk --no-sandbox --disable-popup-blocking --disable-infobars --disable-session-crashed-bubble --disable-tab-switcher
+`
 - Setup bash script on startup 
   - Edit `/etc/rc.local`
   - ```
