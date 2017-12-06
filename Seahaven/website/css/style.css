@@ -8,6 +8,8 @@ canvas {
     height: 100%; 
 }
 
+selector { cursor: none; }
+
 #temp {
     position: absolute;
     top: 435px;
