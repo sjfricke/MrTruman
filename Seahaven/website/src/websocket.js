@@ -51,7 +51,7 @@ function wsOnMessage(event) {
     }
     break;
   case 6:
-    nestTemp.innerText = message.value;
+    nestTemp.innerHTML = message.value + "&#176;";
     break;
   case 7:
     if (s_animationOn && !s_tiltAnim) {

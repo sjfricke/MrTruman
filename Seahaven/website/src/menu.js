@@ -4,7 +4,6 @@ const m_volume = document.getElementById("volume");
 const m_vSlider = document.getElementById("volumeSlider");
 const m_vBall = document.getElementById("volumeBall");
 const m_vFill = document.getElementById("volumeFill");
-const m_reset = document.getElementById("reset");
 const m_wall = document.getElementById("wall");
 const m_filter = document.getElementById("filter");
 const m_xMax_show = 580;
@@ -15,8 +14,6 @@ var filterStatus = 0;
 
 function setMenuEvents() {
     document.addEventListener("touchstart", menuHandler);		
-    m_reset.addEventListener("touchstart", buttonStart);
-    m_reset.addEventListener("touchend", resetEnd);
     m_wall.addEventListener("touchstart", buttonStart);
     m_wall.addEventListener("touchend", wallEnd);
     m_filter.addEventListener("touchstart", buttonStart);
@@ -40,8 +37,7 @@ function menuOpen(event) {
 
 	m_icon.style.visibility = "visible";
 	m_volume.style.visibility = "visible";
-	setTimeout(function(){m_reset.style.visibility = "visible";},20);
-	setTimeout(function(){m_wall.style.visibility = "visible";},40);
+	setTimeout(function(){m_wall.style.visibility = "visible";},30);
 	setTimeout(function(){m_filter.style.visibility = "visible";},60);
 
 	s_menuOpen = true;
@@ -57,7 +53,6 @@ function menuClose(event, hardReset) {
 
 	m_icon.style.visibility = "hidden";
 	m_volume.style.visibility = "hidden";
-	m_reset.style.visibility = "hidden";
 	m_wall.style.visibility = "hidden";
 	m_filter.style.visibility = "hidden";
 	s_menuOpen = false;
@@ -73,12 +68,6 @@ function buttonEnd(element) {
 	element.style.color = "white";
 	menuClose(0, true);
 }
-
-function resetEnd(event) {
-	buttonEnd(m_reset);	
-        location.reload();
-}
-
 
 function wallEnd(event) {
 	buttonEnd(m_wall);
