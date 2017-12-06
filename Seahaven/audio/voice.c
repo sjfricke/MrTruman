@@ -123,7 +123,7 @@ int voiceCommand() {
 	ad_close(ad);
 	return commandDetect(voice_str);
       } else {
-	printf("LOG: VoicE_str was null");
+	printf("LOG: Voice_str was null");
 	ad_close(ad);
 	return -1;
       }

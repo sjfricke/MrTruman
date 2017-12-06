@@ -18,16 +18,33 @@ void webDataCallback( int type, char* value) {
     val = atoi(value);
     usleep(100000); // 100ms
     if(val == 1){
+
+      // Play the lights on sounds
+      if (fork()==0) {
+	    // Take picture
+	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_on.wav");
+	    system(command);
+	    kill(getpid(), SIGKILL);
+    	}
+
     	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-	lights_on = TRUE;
-    }
-    else{
-	lights_on = FALSE;
+	    setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	    setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+	    lights_on = TRUE;
+    } else {
+
+      // Play the lights on sounds
+      if (fork()==0) {
+	    // Take picture
+	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_off.wav");
+	    system(command);
+	    kill(getpid(), SIGKILL);
+    	}
+
     	setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-	setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-	setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+	    setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+	    setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+      lights_on = FALSE;
     }
     animation_on = FALSE;
     break;
@@ -70,7 +87,7 @@ void webDataCallback( int type, char* value) {
 	usleep(600000);
 
 	// Alert animation
-        broadcastString("4","1");
+  broadcastString("4","1");
 
 	usleep(400000);
 	
