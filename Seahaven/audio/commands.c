@@ -62,7 +62,7 @@ int commandDetect(char const* voice_str)
     1 - Turn off
     2 - Toggle Fire
   */
-  if (strstr(voice_str, c_fire) != NULL) {
+  else if (strstr(voice_str, c_fire) != NULL) {
 
     // Play the notification sounds
       if (fork()==0) {
@@ -86,7 +86,7 @@ int commandDetect(char const* voice_str)
   /*
     Taking pictures animation
   */
-  if ((strstr(voice_str, c_picture) != NULL) || (strstr(voice_str, c_photo) != NULL)) {
+  else if ((strstr(voice_str, c_picture) != NULL) || (strstr(voice_str, c_photo) != NULL)) {
 
       // Play the notification sounds
       if (fork()==0) {
@@ -102,25 +102,30 @@ int commandDetect(char const* voice_str)
   }
 
   // Chat bubble
-  if ((strstr(voice_str, "WHAT") != NULL) && (strstr(voice_str, "UP") != NULL)) {
+  else if ((strstr(voice_str, "WHAT") != NULL) && (strstr(voice_str, "UP") != NULL)) {
     broadcastString("8", "Hello! My name<br>is <b>Mr. Truman!</b>");
     sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_chat.wav");
     system(command);
     return 0;
   }
 
-  if((strstr(voice_str, "FIDGET") != NULL) && (strstr(voice_str, "SPINNER") != NULL)){
+  else if((strstr(voice_str, "FIDGET") != NULL) && (strstr(voice_str, "SPINNER") != NULL)){
     broadcastString("9", "0");
     return 0;
   }
 
-  if((strstr(voice_str, "ARE") != NULL) && (strstr(voice_str, "YOU") != NULL) && (strstr(voice_str, "HOT") != NULL)){
-    broadcastString("8", "<b>NEVER</b> hot...");
-    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_not_hot.wav");
+  else if((strstr(voice_str, "DO") != NULL) && (strstr(voice_str, "MATH") != NULL)){
+    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_quick_maths.wav");
     system(command);
     return 0;
   }
- 
+
+  else if(strstr(voice_str, "RAP") != NULL){
+    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_skraa.wav");
+    system(command);
+    return 0;
+  }
+
   printf("No command listed found\n");
   broadcastString("8", "???");
   sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_misunderstand.wav");
