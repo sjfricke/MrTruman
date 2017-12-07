@@ -32,7 +32,9 @@ int getTiltDirection(){
 // Read the temperature from the gyroscope
 double getTemp(){
   int16_t tempcode = (readGyroReg(0x20)) + (readGyroReg(0x21) << 8);
-  return (tempcode/16.0)+25;
+  double celcius = (tempcode/16.0)+25;
+  double fahrenheit = celcius*(9.0/5.0) + 32;
+  return fahrenheit;
 }
 
 uint8_t readGyroReg(uint8_t addr){
