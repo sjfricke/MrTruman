@@ -69,6 +69,7 @@ function wsOnMessage(event) {
       oppTiltCnt = 0;
       prevTiltDir = null;
       nestTemp.innerHTML = "88&#176;";
+      gameScoreEl.innerHTML = "";
     } else {      
       s_tiltRight = (message.value < 0) ? true : false;
       // see if we are tilting in opp dir
@@ -81,8 +82,6 @@ function wsOnMessage(event) {
       // see if we should start game or update
       if (oppTiltCnt > 1 || nestTemp.innerHTML.includes("&nbsp;")) {
         nestTemp.innerHTML = "&nbsp;" + oppTiltCnt;
-      } else {
-        gameScoreEl.innerHTML = "";
       }
       tiltValue = message.value;
       if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
