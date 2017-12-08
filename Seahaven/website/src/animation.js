@@ -496,6 +496,18 @@ function tiltFall(delta) {
             picture.rotation = frame.rotation = 0.707;
         }
     }
+    // punish player for lots of tilts
+    gameScore += Math.abs(startX - player.position.x)/(100*oppTiltCnt);
+    // should we reset game?
+    if (s_tiltWall == true || s_tiltWallCouch == true) {
+        oppTiltCnt = 0;
+        gameScore = 0.000;
+    }
+    // check if we should increase score
+    if (nestTemp.innerHTML.includes("&nbsp;")) {
+        nestTemp.innerHTML = "&nbsp"+ oppTiltCnt;
+        gameScoreEl.innerHTML = gameScore.toFixed(3);
+    }
 }
 
 function tiltRecovery() {

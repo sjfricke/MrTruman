@@ -21,6 +21,16 @@ selector { cursor: none; }
     font-family: monospace;
 }
 
+#gameScore {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    z-index: 2;
+    color: greenyellow;
+    font-size: 16px;
+    font-family: monospace;
+}
+
 #speech {
     visibility: hidden;
 }

@@ -1,7 +1,12 @@
 // global WebSocket pointer
 var webSocket;
+var prevTiltDir = null;
+var oppTiltCnt = 0;
+var startX = 400;
+var gameScore = 0.000;
 
 const nestTemp = document.getElementById("temp");
+const gameScoreEl = document.getElementById("gameScore");
 
 // decides what do when message arrives
 function wsOnMessage(event) {
@@ -51,15 +56,34 @@ function wsOnMessage(event) {
     }
     break;
   case 6:
-    nestTemp.innerHTML = message.value + "&#176;";
+    if (!s_tiltAnim) {
+      nestTemp.innerHTML = message.value + "&#176;";
+    }
     break;
   case 7:
     if (s_animationOn && !s_tiltAnim) {
 	(message.value == 0) ? wsTiltDone() : wsBusy(); // prevent noice from host side
     } else if (message.value == 0) {
       tiltRecovery();
+      // reset game nest_temp goes back to 88 degrees
+      oppTiltCnt = 0;
+      prevTiltDir = null;
+      nestTemp.innerHTML = "88&#176;";
     } else {      
       s_tiltRight = (message.value < 0) ? true : false;
+      // see if we are tilting in opp dir
+      if (prevTiltDir != s_tiltRight) {
+          oppTiltCnt++;
+          startX = player.position.x;
+      }
+      prevTiltDir = s_tiltRight;
+
+      // see if we should start game or update
+      if (oppTiltCnt > 1 || nestTemp.innerHTML.includes("&nbsp;")) {
+        nestTemp.innerHTML = "&nbsp;" + oppTiltCnt;
+      } else {
+        gameScoreEl.innerHTML = "";
+      }
       tiltValue = message.value;
       if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
       else if (s_tiltRightLast != s_tiltRight) { 
@@ -141,13 +165,13 @@ function wsVolume(value) {
 // for testing to callback echo ws //
 /////////////////////////////////////
 function test0() {
-    webSocket.send('{"type":4,"value":0}');
+    webSocket.send('{"type":7,"value":0.707}');
 }
 
 function test1() {
-    webSocket.send('{"type":4,"value":1}');
+    webSocket.send('{"type":7,"value":-0.707}');
 }
 
 function test2() {
-    webSocket.send('{"type":4,"value":2}');
+    webSocket.send('{"type":7,"value":0.0}');
 }
