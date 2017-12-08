@@ -1,5 +1,6 @@
 #include "sound_clip.h"
 #include "loopback.h"
+#include <stdlib.h>
 
 static void soundClipLoad(const char* file, void** sc_buff, uint32_t* scb_buff) {
   FILE* fp;
@@ -10,13 +11,13 @@ static void soundClipLoad(const char* file, void** sc_buff, uint32_t* scb_buff) 
   fseek(fp, 0, SEEK_END);
   f_len = ftell(fp);
   fseek(fp, 0, SEEK_SET);
-  *sc_buff = malloc(f_len + (pcm_buff_size - (f_len % pcm_buff_size)));
+  *sc_buff = calloc(f_len + (pcm_buff_size - (f_len % pcm_buff_size)), sizeof(char));
   if (sc_buff == NULL) {
     printf("ERROR: malloc %s\n", file);
     fclose(fp);
     return;
   }
-  *scb_buff = (f_len + (pcm_buff_size - (f_len % pcm_buff_size))) / pcm_buff_size;
+  *scb_buff = 1+(f_len + (pcm_buff_size - (f_len % pcm_buff_size))) / pcm_buff_size;
   printf("[%d] [%d] [%d] [%d]\n", f_len, pcm_buff_size,(pcm_buff_size - (f_len % pcm_buff_size)), *scb_buff); 
   fread(*sc_buff, f_len, 1, fp);
 
@@ -29,6 +30,7 @@ void soundClipPlay(void* sc_file, uint32_t buffers) {
   
   for(uint32_t i = 0; i < buffers; i++) {
   
+    memset(pcm_buffer, 0, pcm_buff_size);
     memcpy(pcm_buffer, sc_file + (pcm_buff_size * i), pcm_buff_size);
 
     if ((wr = snd_pcm_writei(outhandle, pcm_buffer, framesout)) == -EPIPE) {
@@ -39,7 +41,6 @@ void soundClipPlay(void* sc_file, uint32_t buffers) {
     }
   }
 
-  memset(pcm_buffer, 0, pcm_buff_size);
   
   snd_pcm_drop(outhandle);
   snd_pcm_close(outhandle);
