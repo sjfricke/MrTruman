@@ -8,7 +8,7 @@
 static uint32_t pcm;
 static uint32_t tmp;
 static uint32_t rate = 44100; // hard assumption
-static uint8_t channels = 2; // stero
+static uint8_t channels = 1; // stero
 static snd_pcm_t *pcm_handle;
 static snd_pcm_hw_params_t *params;
 static snd_pcm_uframes_t frames;
@@ -107,17 +107,14 @@ static void soundClipPCMSetup() {
   /* Allocate buffer to hold single period */
   snd_pcm_hw_params_get_period_size(params, &frames, 0);
 
-  buff_size = frames * channels * 2 /* 2 -> sample size */;
-  buff = (char *) malloc(buff_size);
-  if (buff == NULL){printf("ERROR: malloc buff\n");}
   snd_pcm_hw_params_get_period_time(params, &tmp, NULL);
     
   return;
 }
 
 static void soundClipPlay(void* sc_file, uint32_t buffers) {
-  
-  for(uint32_t i = 0; i < buffers; i++) {
+   soundClipPCMSetup();
+  for(uint32_t i = 0; i < buffers-1; i++) {
   
     memcpy(buff, sc_file + (buff_size * i), buff_size);
 
@@ -128,12 +125,14 @@ static void soundClipPlay(void* sc_file, uint32_t buffers) {
       printf("ERROR. Can't write to PCM device. %s\n", snd_strerror(pcm));
     }
   }
+
+  snd_pcm_drain(pcm_handle);
+  snd_pcm_close(pcm_handle);
+  
   return;
 }
 
 void soundClipCleanup() {
-  snd_pcm_drain(pcm_handle);
-  snd_pcm_close(pcm_handle);
   free(buff);
 
   free(sc_camera);
@@ -153,7 +152,11 @@ void soundClipCleanup() {
 
 int main(int argc, char **argv) {
   soundClipPCMSetup();
-  
+
+  buff_size = frames * channels * 2 /* 2 -> sample size */;
+  buff = (char *) malloc(buff_size);
+  if (buff == NULL){printf("ERROR: malloc buff\n");}
+
   // Read in files
   soundClipLoad("audio/sounds/truman_camera.wav",       &sc_camera, &scb_camera);
   soundClipLoad("audio/sounds/truman_chat.wav",         &sc_chat, &scb_chat);
@@ -171,9 +174,9 @@ int main(int argc, char **argv) {
   
   // play files
   usleep(1000);
-  //  soundClipPlay(sc_thud_couch, scb_thud_couch);
-  //usleep(10000);
-  soundClipPlay(sc_camera, scb_camera);
+  soundClipPlay(sc_notification, scb_notification);
+  usleep(500000);
+  soundClipPlay(sc_lights_off, scb_lights_off);
   usleep(100000);
   soundClipCleanup();
   return 0;

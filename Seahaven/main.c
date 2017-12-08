@@ -19,11 +19,12 @@ void webDataCallback( int type, char* value) {
     usleep(100000); // 100ms
     if(val == 1){
 
+       soundClipPlay(sc_lights_on, scb_lights_on);
       // Play the lights on sounds
 //      if (fork()==0) {
 	    // Take picture
-	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_on.wav");
-	    system(command);
+      //	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_on.wav");
+      //    system(command);
 //	    kill(getpid(), SIGKILL);
 //    	}
 
@@ -34,10 +35,11 @@ void webDataCallback( int type, char* value) {
     } else {
 
       // Play the lights off sounds
+      soundClipPlay(sc_lights_off, scb_lights_off);
 //      if (fork()==0) {
 	    // Take picture
-	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_off.wav");
-	    system(command);
+      //    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_off.wav");
+      //    system(command);
 //	    kill(getpid(), SIGKILL);
 //    	}
 

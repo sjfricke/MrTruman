@@ -39,7 +39,9 @@ void soundClipPlay(void* sc_file, uint32_t buffers) {
     }
   }
 
-  snd_pcm_drain(outhandle);
+  memset(pcm_buffer, 0, pcm_buff_size);
+  
+  snd_pcm_drop(outhandle);
   snd_pcm_close(outhandle);
 }
  
