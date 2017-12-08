@@ -117,18 +117,15 @@ static void testGyro() {
     //printf("data of interrupt status: %x\n", data);
     int interrupted = 0;
 
-   /* while(1){
+    while(1){
 	
-            int16_t x_data = getGyroX();
-            int16_t y_data = getGyroY();
-            int16_t xlx_data = getAccelX();
-            int16_t xly_data = getAccelY();
-            int16_t xlz_data = getAccelZ();
-            int16_t z_data = getGyroZ();
-	    printf("\rGYROX: %d \tGYROY: %d\tGYROZ: %d\tACCELX: %d\tACCELY: %d\tACCELZ: %d", x_data, y_data, z_data, xlx_data, xly_data, xlz_data);
+            double x_data = getXRotation();
+            double y_data = getYRotation();
+            double z_data = getZRotation();
+	    printf("\rGYROX: %d \tGYROY: %d\tGYROZ: %d", x_data, y_data, z_data);
 
-    }*/
-    initLEDs();
+    }
+    /*
     gyroClearInterrupt();
     while (1) {
         if (gyroInterruptPoll()) {
@@ -140,7 +137,7 @@ static void testGyro() {
             int16_t xlx_data = getAccelX();
             int16_t xly_data = getAccelY();
             int16_t xlz_data = getAccelZ();
-            int16_t z_data = getGyroZ();*/
+            int16_t z_data = getGyroZ();
 	   // printf("GYROX: %d \tGYROY: %d\tGYROZ: %d\tACCELX: %d\tACCELY: %d\tACCELZ: %d\n", x_data, y_data, z_data, xlx_data, xly_data, xlz_data);
 	    //printf("GYROZ: %d\tACCELZ: %d\n", xlz_data, z_data);
 	    int dir = getTiltDirection();
@@ -159,12 +156,12 @@ static void testGyro() {
             printf("gyro read x %d\n", x_data);
             printf("gyro read y %d\n", y_data);
             printf("accel read x %d\n", xlx_data);
-            printf("accel read y %d\n", xly_data);*/
+            printf("accel read y %d\n", xly_data);
 	    usleep(100000);
 	    gyroClearInterrupt();
 	    setLED(PCA9685_ALL_CALL, 0, 0x3ff);
         }
-    }
+    }*/
 
     //I2cReadByte(LSM6DS3H_I2C_BUS, LSM6DS3H_FUNC_SRC, &data);
     //printf("data of interrupt status: %x\n", data);
@@ -181,13 +178,15 @@ static int testCamera() {
 
 int main ( int argc, char* argv[] ) {
   printf("test\n");
-  //testGyro();
+  testGyro();
   //testLEDFanServo();
   //testCamera();
+  /*
   initLEDs();
   initAuxGPIO();
   loopbackSetup();
   loopback();
+  */
   //
   /*
   servofanStart();
