@@ -202,7 +202,8 @@ void webDataCallback( int type, char* value) {
     break;
 
   case 9:
-    kernel_halt();
+    sprintf(command, "halt");
+    system(command);
     // Bye Bye
     break;
 
