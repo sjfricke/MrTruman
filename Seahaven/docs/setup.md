@@ -113,8 +113,7 @@ We need to make sure PulseAudio is off because we are using ALSA
 			- `ExecStart=-/sbin/agetty --noclear -a root %I $TERM`
 - Launch Chrome to full screen
   	- `set -i 's/"exited_cleanly": false/"exited_cleanly": true/' /root/.config/chromium/Default/Preferences`
-	- `xinit /usr/bin/chromium http://localhost:6419 --kiosk --no-sandbox --disable-popup-blocking --disable-infobars --disable-session-crashed-bubble --disable-tab-switcher
-`
+	- `xinit /usr/bin/chromium http://localhost:6419 --kiosk --no-sandbox --disable-popup-blocking --disable-infobars --disable-session-crashed-bubble --disable-tab-switcher --incognito --disable-overlay-scrollbar`
 - Setup bash script on startup 
   - Edit `/etc/rc.local`
   - ```
@@ -125,16 +124,15 @@ We need to make sure PulseAudio is off because we are using ALSA
     if [ $startOnBoot = true ]
     then
 	cd /root/MrTruman/Seahaven
-	./Seahaven&
-	xinit /usr/bin/chromium http://localhost:6419 --no-sandbox
+	./Seahaven
     fi
   }
 
-  sleep 5 && startMrTruman &
+  sleep 2 && startMrTruman &
 
   ```
   - change `startOnBoot=false` to prevent auto booting
-  - do `sleep 5` so we give time to let it fully boot
+  - do `sleep 2` so we give time to let it fully boot
   
 ## Rebuilding and booting Linux
 
