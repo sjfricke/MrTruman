@@ -4,6 +4,7 @@
 #include "hardware/LSM6DS3H.h"
 #include "hardware/PCA9685.h"
 #include "audio/loopback.h"
+#include "audio/sound_clip.h"
 
 #include <stdio.h>
 #include <unistd.h>

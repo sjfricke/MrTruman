@@ -223,8 +223,9 @@ void HardwareSetup() {
   voiceDictionarySetup();
 
   initAuxGPIO();
- // loopbackSetup();
-
+  loopbackSetup();
+  soundClipSetup();
+  
   // Calls LSM6DS3h_start and Gryo GPIO
   enableGyroTilt();
   usleep(1000); // Just waiting
@@ -298,7 +299,7 @@ int main ( int argc, char* argv[] ) {
 
 	broadcastString("5", "1");
 	printf("\nSPEAKER IS READY IN ANIMAION\n");  
-	loopbackSetup();
+	setupHandles();
 	loopback();
 	loopbackTerminate();
 	// Turn off lights or back to on state

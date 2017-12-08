@@ -171,9 +171,9 @@ int main(int argc, char **argv) {
   
   // play files
   usleep(1000);
-  soundClipPlay(sc_thud_couch, scb_thud_couch);
-  usleep(10000);
-  soundClipPlay(sc_thud_truman, scb_thud_truman);
+  //  soundClipPlay(sc_thud_couch, scb_thud_couch);
+  //usleep(10000);
+  soundClipPlay(sc_camera, scb_camera);
   usleep(100000);
   soundClipCleanup();
   return 0;

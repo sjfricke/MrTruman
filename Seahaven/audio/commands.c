@@ -38,13 +38,14 @@ int commandDetect(char const* voice_str)
   if ((strstr(voice_str, c_lights) != NULL)) {
 
     // Play the notification sounds
-      if (fork()==0) {
+    /*      if (fork()==0) {
 	    // Take picture
 	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_notification.wav");
 	    system(command);
 	    kill(getpid(), SIGKILL);
     	}
-
+    */
+    soundClipPlay(sc_notification, scb_notification);
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
  

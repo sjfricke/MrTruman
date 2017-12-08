@@ -8,6 +8,7 @@
 // TODO not need a ../ path
 #include "../server/server.h"
 #include "../status.h"
+#include "sound_clip.h"
 
 // Assuming values match with int index of animation spec
 typedef enum {
