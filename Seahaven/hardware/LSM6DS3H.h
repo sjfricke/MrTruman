@@ -41,8 +41,11 @@
 #define GYRO_ENABLE_EMB_FUNC 0x3C // 0b0011 1100
 // Edge triggered, turn off high perf mode for accel
 #define GYRO_EDGE_TRIG 0x90 // 0b1001 0000
-// output gyro at 208Hz at full scale selection at 500 dps (needed?)
+// output gyro at 208Hz at full scale selection at 500 dps
 #define GYRO_SPD 0x54 // 0b0101 0100
+
+#define GYRO_GAIN 17.5; // sensitivity
+#define GYRO_DT 208; //Hz
 
 // GPIO
 #define GYRO_INTERRUPT_PIN 27
@@ -56,6 +59,9 @@ int enableGyroTilt();     // Enables Gyro with embedded tilt function
 int disableGyro();        // Turn off access to Gyro
 int gyroInterruptPoll();  // Poll the gyro for an interrupt
 int gyroClearInterrupt(); // Clear the interrupt on the gyro tilt
+double getXRotation();
+double getYRotation();
+double getZRotation();
 int16_t getGyroX();
 int16_t getGyroY();
 int16_t getGyroZ();

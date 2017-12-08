@@ -29,6 +29,63 @@ int getTiltDirection(){
   return 0;
 }
 
+double getXRotation() {
+    int16_t gyro_raw;
+    double gyro_angle = 0.0;
+    double rate_gyro;
+    for (int i = 0; i < 20; i++)
+    {
+        gyro_raw = getGyroX();
+    
+        //Convert Gyro raw to degrees per second
+        rate_gyro = (float) gyro_raw * GYRO_GAIN;
+    
+        //Calculate the angles from the gyro
+        gyro_angle += rate_gyro * GYRO_DT;
+    
+        usleep(100);
+    }
+    return gyro_angle;
+}
+
+double getYRotation() {
+    int16_t gyro_raw;
+    double gyro_angle = 0.0;
+    double rate_gyro;
+    for (int i = 0; i < 20; i++)
+    {
+        gyro_raw = getGyroY();
+    
+        //Convert Gyro raw to degrees per second
+        rate_gyro = (float) gyro_raw * GYRO_GAIN;
+    
+        //Calculate the angles from the gyro
+        gyro_angle += rate_gyro * GYRO_DT;
+    
+        usleep(100);
+    }
+    return gyro_angle;
+}
+
+double getZRotation() {
+    int16_t gyro_raw;
+    double gyro_angle = 0.0;
+    double rate_gyro;
+    for (int i = 0; i < 20; i++)
+    {
+        gyro_raw = getGyroZ();
+    
+        //Convert Gyro raw to degrees per second
+        rate_gyro = (float) gyro_raw * GYRO_GAIN;
+    
+        //Calculate the angles from the gyro
+        gyro_angle += rate_gyro * GYRO_DT;
+    
+        usleep(100);
+    }
+    return gyro_angle;
+}
+
 // Read the temperature from the gyroscope
 double getTemp(){
   int16_t tempcode;
