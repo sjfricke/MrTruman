@@ -33,3 +33,7 @@ clean:
 	rm server/*.o
 	rm Seahaven
 	rm TestSeahaven
+
+# Audio test make
+audioTest:
+	$(CC) -Wall -Werror audio/play.c -lpthread -lasound -o TestSeahaven
