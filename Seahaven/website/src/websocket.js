@@ -72,7 +72,7 @@ function wsOnMessage(event) {
   case 8:
     if (s_animationOn || s_talkAnim) { wsBusy(); }
     else {
-      document.getElementById("speechText").style.top = (message.value.indexOf("<br>") >= 0) ? "275px" : "287px";
+      document.getElementById("speechText").style.top = (message.value.indexOf("<br>") >= 0) ? "56%" : "58.8%";
       document.getElementById("speechText").innerHTML = message.value;
       talkAnimation();
     }

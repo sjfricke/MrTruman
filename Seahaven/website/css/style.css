@@ -1,5 +1,6 @@
 ﻿body {
     margin: 0px;
+    overflow: hidden;
 }
 
 canvas {
@@ -13,10 +14,10 @@ selector { cursor: none; }
 #temp {
     position: absolute;
     top: 74%;
-    left: 4.15%;
+    left: 3.98%;
     z-index: 2;
     color: white;
-    font-size: 11px;
+    font-size: 10px;
     font-family: monospace;
 }
 
@@ -26,7 +27,7 @@ selector { cursor: none; }
 
 #speechImg {    
     position: absolute;
-    top: 58%;
+    top: 53%;
     left: 400px;
     z-index: 3;
 }
@@ -34,7 +35,7 @@ selector { cursor: none; }
 #speechText {
     position: absolute;
     z-index: 4;
-    top: 275px;
+    top: 56%;
     width: 187px;
     left: 406px;
     text-align: center;
@@ -45,7 +46,7 @@ selector { cursor: none; }
 }
 
 #menu {
-	width: 200px;
+    width: 200px;
     height: 132px;
     position: absolute;
     top: 100px;
