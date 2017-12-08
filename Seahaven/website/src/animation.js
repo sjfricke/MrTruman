@@ -505,8 +505,8 @@ function tiltFall(delta) {
     }
     // check if we should increase score
     if (nestTemp.innerHTML.includes("&nbsp;")) {
-        nestTemp.innerHTML = "&nbsp"+ oppTiltCnt;
-        gameScoreEl.innerHTML = gameScore.toFixed(3);
+        nestTemp.innerHTML = "&nbsp" + oppTiltCnt;
+        gameScoreEl.innerHTML = "Score: " + gameScore.toFixed(3);
     }
 }
 
