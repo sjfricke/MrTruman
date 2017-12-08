@@ -5,6 +5,7 @@ const m_vSlider = document.getElementById("volumeSlider");
 const m_vBall = document.getElementById("volumeBall");
 const m_vFill = document.getElementById("volumeFill");
 const m_wall = document.getElementById("wall");
+const m_power = document.getElementById("power");
 const m_filter = document.getElementById("filter");
 const m_xMax_show = 580;
 const m_yMax_show = 355;
@@ -19,6 +20,8 @@ function setMenuEvents() {
     m_wall.addEventListener("touchend", wallEnd);
     m_filter.addEventListener("touchstart", buttonStart);
     m_filter.addEventListener("touchend", filterEnd);
+    m_power.addEventListener("touchstart", buttonStart);
+    m_power.addEventListener("touchend", powerEnd);
     m_vSlider.addEventListener("touchstart", checkValidSlider);
     m_vSlider.addEventListener("touchend", uncheckValidSlider);
     m_vSlider.addEventListener("input", adjustVSlider);
@@ -40,7 +43,8 @@ function menuOpen(event) {
 	m_icon.style.visibility = "visible";
 	m_volume.style.visibility = "visible";
 	setTimeout(function(){m_wall.style.visibility = "visible";},30);
-	setTimeout(function(){m_filter.style.visibility = "visible";},60);
+    setTimeout(function(){m_filter.style.visibility = "visible";},60);
+    setTimeout(function(){m_power.style.visibility = "visible";},90);
 
 	s_menuOpen = true;
 }
@@ -56,7 +60,8 @@ function menuClose(event, hardReset) {
 	m_icon.style.visibility = "hidden";
 	m_volume.style.visibility = "hidden";
 	m_wall.style.visibility = "hidden";
-	m_filter.style.visibility = "hidden";
+    m_filter.style.visibility = "hidden";
+    m_power.style.visibility = "hidden";
 	s_menuOpen = false;
 }
 
@@ -100,6 +105,11 @@ function filterEnd(event) {
 		renderer.app.stage.filters = [ asciiFilter ]; 
 		renderer.app.renderer.clearBeforeRender = true;
 	}
+}
+
+function powerEnd(event) {
+	buttonEnd(m_power);
+	wsPowerOff();
 }
 
 function checkValidSlider(event) {

@@ -41,7 +41,8 @@ double getTemp(){
   tempcode = sample/4.0;
   double celcius = (tempcode/16.0)+25;
   double fahrenheit = celcius*(9.0/5.0) + 32;
-  return fahrenheit;
+  // remove offset value to get more accurate temp
+  return fahrenheit - 16;
 }
 
 uint8_t readGyroReg(uint8_t addr){

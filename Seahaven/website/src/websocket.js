@@ -159,6 +159,9 @@ function wsTiltCouchWall() {
 function wsVolume(value) {
   webSocket.send("8:" + value);
 }
+function wsPowerOff() {
+  webSocket.send("9:0");
+}
 
 /////////////////////////////////////
 // for testing to callback echo ws //

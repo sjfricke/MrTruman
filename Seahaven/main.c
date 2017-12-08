@@ -201,6 +201,11 @@ void webDataCallback( int type, char* value) {
     animation_on = FALSE;
     break;
 
+  case 9:
+    kernel_halt();
+    // Bye Bye
+    break;
+
   default:
     printf("Not a valid type! [%d]\n", type);
     break;
