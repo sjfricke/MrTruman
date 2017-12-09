@@ -73,7 +73,10 @@ Each event has two parts `<type> <value>`
 - `7`
 - `8` - Value of audio
   - Range is 1 - 100
-
+- `9` - System reboot/turnoff
+  - `0` - Halt
+  - `1` - Reboot
+  
 ## State Machine
 
 ![State Machine](Animation_State_Machine.png)

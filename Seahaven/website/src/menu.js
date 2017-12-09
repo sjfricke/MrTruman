@@ -6,10 +6,14 @@ const m_vBall = document.getElementById("volumeBall");
 const m_vFill = document.getElementById("volumeFill");
 const m_wall = document.getElementById("wall");
 const m_power = document.getElementById("power");
+const m_halt = document.getElementById("halt");
+const m_reboot = document.getElementById("reboot");
 const m_filter = document.getElementById("filter");
-const m_xMax_show = 580;
-const m_yMax_show = 355;
+const m_xMax_show = 570;
+const m_yMax_show = 358;
 var s_menuOpen = false;
+var s_powerOpen = false;
+var powerTimeout;
 var m_xMin, m_xMax, m_yMin, m_yMax;
 var filterStatus = 0;
 var invaildSlider = false;
@@ -19,16 +23,20 @@ function setMenuEvents() {
     m_wall.addEventListener("touchstart", buttonStart);
     m_wall.addEventListener("touchend", wallEnd);
     m_filter.addEventListener("touchstart", buttonStart);
+    m_filter.addEventListener("touchstart", powerTimer);
     m_filter.addEventListener("touchend", filterEnd);
-    m_power.addEventListener("touchstart", buttonStart);
-    m_power.addEventListener("touchend", powerEnd);
     m_vSlider.addEventListener("touchstart", checkValidSlider);
     m_vSlider.addEventListener("touchend", uncheckValidSlider);
     m_vSlider.addEventListener("input", adjustVSlider);
 }
 
 function menuHandler(event) {
-	(s_menuOpen) ? menuClose(event) : menuOpen(event);
+	if (s_powerOpen) {
+		m_power.style.visibility = "hidden";
+		s_powerOpen = false;
+	} else {
+		(s_menuOpen) ? menuClose(event) : menuOpen(event);
+	}	
 }
 
 function menuOpen(event) {
@@ -44,7 +52,6 @@ function menuOpen(event) {
 	m_volume.style.visibility = "visible";
 	setTimeout(function(){m_wall.style.visibility = "visible";},30);
     setTimeout(function(){m_filter.style.visibility = "visible";},60);
-    setTimeout(function(){m_power.style.visibility = "visible";},90);
 
 	s_menuOpen = true;
 }
@@ -61,7 +68,6 @@ function menuClose(event, hardReset) {
 	m_volume.style.visibility = "hidden";
 	m_wall.style.visibility = "hidden";
     m_filter.style.visibility = "hidden";
-    m_power.style.visibility = "hidden";
 	s_menuOpen = false;
 }
 
@@ -76,6 +82,8 @@ function buttonStart(event) {
 }
 
 function buttonEnd(element) {
+	clearTimeout(powerTimeout);
+
 	if (invaildSlider) {
 		m_wall.style.background = "#448AFF";
 		m_wall.style.color = "white";
@@ -86,6 +94,7 @@ function buttonEnd(element) {
 	menuClose(0, true);
 }
 
+
 function wallEnd(event) {
 	buttonEnd(m_wall);
 	changeWall();
@@ -93,6 +102,8 @@ function wallEnd(event) {
 
 function filterEnd(event) {
 	buttonEnd(m_filter);
+	if (s_powerOpen) { return; }
+
 	filterStatus++;
 	if (filterStatus > 2) {filterStatus = 0;}
 
@@ -105,11 +116,6 @@ function filterEnd(event) {
 		renderer.app.stage.filters = [ asciiFilter ]; 
 		renderer.app.renderer.clearBeforeRender = true;
 	}
-}
-
-function powerEnd(event) {
-	buttonEnd(m_power);
-	wsPowerOff();
 }
 
 function checkValidSlider(event) {
@@ -131,7 +137,13 @@ function adjustVSlider(event) {
 	m_vFill.style.width = (event.srcElement.value * 0.8) + "%";
 }
 
-window.addEventListener("touchstart", menuDebug, false);
+function powerTimer(event) {
+	powerTimeout = setTimeout(function(){
+		m_power.style.visibility = "visible";
+		s_powerOpen = true;
+	}, 4000);
+}
+//window.addEventListener("touchstart", menuDebug, false);
 
 function menuDebug(event) {
 	log("menu", "", event.touches[0].pageX, event.touches[0].pageY, event.touches[0].target);

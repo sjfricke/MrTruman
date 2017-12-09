@@ -9,13 +9,6 @@ static char* c_chitchat = "WHAT";
 static char* c_jump = "JUMP";
 
 static char command[256];
-/*
-char* _green = "green";
-char* _blue = "blue";
-char* _yellow = "yellow";
-char* testType = "0";
-char* testValue = "0";
-*/
 
 int commandDetect(char const* voice_str)
 {  	

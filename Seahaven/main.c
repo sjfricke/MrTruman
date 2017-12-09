@@ -96,15 +96,8 @@ void webDataCallback( int type, char* value) {
 	setLED(PCA9685_BLUE_ADDRESS, .99, 0x3ff);
 	setLED(PCA9685_GREEN_ADDRESS, .99, 0x3ff);
 
-    // Play the camera shutter sounds
-//      if (fork()==0) {
-	    // Take picture
-	    //
-      	soundClipPlay(sc_camera, scb_camera);
-//	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_camera.wav");
-//	    system(command);
-//	    kill(getpid(), SIGKILL);
-//    	}
+   // Play the camera shutter sounds
+  soundClipPlay(sc_camera, scb_camera);
 
 	usleep(150000);
 	
@@ -149,24 +142,10 @@ void webDataCallback( int type, char* value) {
     }
     else if (val == 1) {
       // truman hit wall
-//      if (fork()==0) {
-      // Take picture
-      //
       	soundClipPlay(sc_thud_truman, scb_thud_truman);
-//      sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_thud_truman.wav");
-  //    system(command);
-//      kill(getpid(), SIGKILL);
-//      }
     } else if (val == 2) {
       // couch hit wall
-//      if (fork()==0) {
-      // Take picture
-
       	soundClipPlay(sc_thud_couch, scb_thud_couch);
-    //  sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_thud_couch.wav");
-     // system(command);
-//      kill(getpid(), SIGKILL);
-//      }
     }
     break;
     
@@ -174,7 +153,6 @@ void webDataCallback( int type, char* value) {
   case 6:
     animation_on = FALSE;
     break;
-
   //unused
   case 7:
     animation_on = FALSE;
@@ -190,9 +168,17 @@ void webDataCallback( int type, char* value) {
     break;
 
   case 9:
-    sprintf(command, "halt");
-    system(command);
-    // Bye Bye
+    val = atoi(value);
+    if (val == 0) {
+      sprintf(command, "halt");
+      system(command);
+      // Bye Bye
+    }
+    else if (val == 1) {
+      sprintf(command, "reboot");
+      system(command);
+      // Bye Bye
+    }    
     break;
 
   default:
