@@ -68,7 +68,7 @@ function setup() {
             type: 'add',
             name: 'picture',
             path: resPath.picture,
-            pt: new PIXI.Point(0.25, 0.26),            
+            pt: new PIXI.Point(0.28125, 0.26),            
             anchorY: -.61,
             scale: .8
         },
@@ -76,7 +76,7 @@ function setup() {
             type: 'add',
             name: 'frame',
             path: resPath.frame,
-            pt: new PIXI.Point(0.25, 0.26),
+            pt: new PIXI.Point(0.28125, 0.26),
             anchorY: 0,
             scale: 1.0
         },        
@@ -96,14 +96,14 @@ function setup() {
             type: 'add',
             name: 'couch',
             path: resPath.couch,
-            pt: new PIXI.Point(0.25, 1),
+            pt: new PIXI.Point(0.28125, 1),
             scale: 1.5
         },
         {
             type: 'addSpritesheet',
             name: 'speaker1',
             path: resPath.speakerAnimated,
-            pt: new PIXI.Point(0.45, 1.5),
+            pt: new PIXI.Point(0.4625, 1.5),
             count: 6,
             loop: true,  
             framePrefix : "speaker1",
@@ -114,7 +114,7 @@ function setup() {
             type: 'addSpritesheet',
             name: 'speaker2',
             path: resPath.speakerAnimated,
-            pt: new PIXI.Point(0.05, 1.5),
+            pt: new PIXI.Point(0.1, 1.5),
             count: 6,
             loop: true,            
             framePrefix : "speaker1",

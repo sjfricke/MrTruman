@@ -27,6 +27,7 @@ var s_request       = false;
 var s_idleMode      = false;
 var s_walkX         = 400;
 var s_couchOn       = false;
+var s_couchAnim     = false;
 var s_fireOn        = false;
 var s_fireAnim      = false;
 var s_speakersUp    = false;
@@ -69,7 +70,7 @@ function animationEnd(entry) {
     if (entry.animation.name == "walk") {
         walkComplete();
     } else if (entry.animation.name == "couchOff") {
-        s_couchOn = false;
+        s_couchOn = s_couchAnim = false;
         if (s_idleMode && !s_fidgetAnim && !s_talkAnim) { idleMode(); }
     } else if (entry.animation.name == "speak") {
         document.getElementById("speech").style.visibility = "hidden";
@@ -134,7 +135,6 @@ function walk(direction, distance, toPos) {
 }
 
 function walkAnimation(delta) {
-    //    log("delta","",delta);
     player.position.x += walkRate * delta * (player.scale.x > 0 ? 1 : -1);
 
     if (Math.abs(player.position.x - s_walkX) < 5) {
@@ -144,15 +144,12 @@ function walkAnimation(delta) {
             player.position.x = s_walkX;        
             player.state.clearTrack(0);
             player.state.addAnimation(0, 'stand', false, 0);  
-            if (s_couchOn) { 
-                walkTicker.stop();
-                couchAnimation(); 
-            } else if (s_fidgetAnim) {
+            if (s_fidgetAnim) {
                 walkTicker.stop();
                 fidgetStart(); // fidget only happens out of idle mode 
             } else if (s_talkAnim) {
                 walkTicker.stop();
-                talkStart(); // fidget only happens out of idle mode 
+                talkStart(); // talk only happens out of idle mode 
             }
             else {
                 idleMode();
@@ -197,7 +194,8 @@ function idleMode() {
     if (player.position.x == 200) {
         if (Math.random() < 0.6) {
             s_couchOn = true;
-            walk(0, 0, 175);
+            walkTicker.stop();
+            couchAnimation(); 
         } else { 
             walk(1, 200);
         }
@@ -215,6 +213,7 @@ function idleMode() {
 }
 
 function couchAnimation() {
+    s_couchAnim = true;
     player.scale.x = pScaleRight;
     player.state.addAnimation(0, "couchJump", false, 0);
     player.state.addAnimation(0, "couchIdle", false, 0);
@@ -275,15 +274,16 @@ function speakerAnimation() {
     s_idleMode = false; 
         
     // get out of speakers
-    if (player.position.x < 100 ) {
+    if (player.position.x <= 130 ) {
         walk(0,0,150);
-    } else if (player.position.x > 300 && player.position.x < 420) {
-        walk(0,0,250);
+    } else if (player.position.x >= 325 && player.position.x < 375) {
+        walk(0,0,300);
+    } else if (player.position.x >= 375 && player.position.x <= 425) {
+        walk(0,0,450);
     } else {
 	wsSpeakersReady();
         if (!s_speakersUp) {
             speakersOff(); // be safe, no guarntee
-            document.getElementById("temp").style.visibility = "hidden";
             renderer.app.ticker.add(speakersUp);
             player.state.addAnimation(0, "musicOn", false, 0);
             player.state.addAnimation(0, "musicPlay", true, 0);            
@@ -325,8 +325,7 @@ function speakersDown(delta) {
     } else {
         renderer.app.ticker.remove(speakersDown);
         speaker1.position.y = speaker2.position.y = speakerStartY;
-        s_speakersUp = false;        
-        document.getElementById("temp").style.visibility = "visible";
+        s_speakersUp = false;
         wsSpeakersDown();
     }
 }
@@ -398,8 +397,8 @@ function pictureTrigger() {
         return;
     }
 
-    if (player.position.x < 225 || player.position.x > 275) {
-        walk(0,0,250);
+    if (player.position.x < 250 || player.position.x > 300) {
+        walk(0,0,275);
         return;
     }
 
