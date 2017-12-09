@@ -31,6 +31,16 @@ selector { cursor: none; }
     font-family: monospace;
 }
 
+#gameScoreLose {
+    position: absolute;
+    top: 68%;
+    left: 58%;
+    z-index: 3;
+    color: red;
+    font-size: 16px;
+    font-family: monospace;
+}
+
 #speech {
     visibility: hidden;
 }

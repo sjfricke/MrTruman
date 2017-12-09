@@ -3,10 +3,13 @@ var webSocket;
 var oppTiltCnt = 0;
 var startX = 400;
 var gameScore = 0.000;
+var gameScoreLoseTime;
+var gameScoreLoseAmt;
 var chatCallback = 0;
 
 const nestTemp = document.getElementById("temp");
 const gameScoreEl = document.getElementById("gameScore");
+const gameScoreLose = document.getElementById("gameScoreLose");
 const speechText = document.getElementById("speechText");
 
 // decides what do when message arrives
@@ -85,6 +88,7 @@ function wsOnMessage(event) {
         player.state.setAnimation(0, "fallHold", false);
         oppTiltCnt++;
         nestTemp.innerHTML = (oppTiltCnt < 10) ? "0" + oppTiltCnt : oppTiltCnt;
+        tiltReduceScore();
         startX = player.position.x;
       }
       s_tiltRightLast = s_tiltRight;

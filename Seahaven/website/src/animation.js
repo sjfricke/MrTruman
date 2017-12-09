@@ -541,6 +541,15 @@ function tiltRecovery() {
     s_tiltGame = false;
 }
 
+// used to punish quick tilters
+function tiltReduceScore() {
+    clearTimeout(gameScoreLoseTime);
+    gameScoreLoseAmt = Math.min(50, (oppTiltCnt-1) * 10);
+    gameScore -= gameScoreLoseAmt;
+    gameScoreLose.innerHTML = "-" + gameScoreLoseAmt + " points";
+    gameScoreLoseTime = setTimeout(function(){gameScoreLose.innerHTML = "";}, 1000);
+}
+
 /*************************
 *       Fidget           *
 *************************/
