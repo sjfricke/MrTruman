@@ -154,8 +154,10 @@ void webDataCallback( int type, char* value) {
     val = atoi(value);
     if (val == 0) {
       soundClipPlay(sc_misunderstand, scb_misunderstand);
+      usleep(2000000); // 2 sec
     } else if (value == 1) {
       soundClipPlay(sc_chat, scb_chat);
+      usleep(2000000); // 2 sec
     } else if (value == 2) {
       soundClipPlay(sc_not_hot, scb_not_hot);
     } else if (value == 3) {
