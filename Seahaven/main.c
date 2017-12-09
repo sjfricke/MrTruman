@@ -155,16 +155,16 @@ void webDataCallback( int type, char* value) {
     if (val == 0) {
       soundClipPlay(sc_misunderstand, scb_misunderstand);
       usleep(2000000); // 2 sec
-    } else if (value == 1) {
+    } else if (val == 1) {
       soundClipPlay(sc_chat, scb_chat);
       usleep(2000000); // 2 sec
-    } else if (value == 2) {
+    } else if (val == 2) {
       soundClipPlay(sc_not_hot, scb_not_hot);
-    } else if (value == 3) {
+    } else if (val == 3) {
       soundClipPlay(sc_quick_maths, scb_quick_maths);
-    } else if (value == 4) {
+    } else if (val == 4) {
       soundClipPlay(sc_skraa, scb_skraa);
-    } else if (value == 5) {
+    } else if (val == 5) {
 
     }
 
