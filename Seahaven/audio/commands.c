@@ -85,8 +85,8 @@ int commandDetect(char const* voice_str)
 
   // Chat bubble
   else if ((strstr(voice_str, "WHAT") != NULL) && (strstr(voice_str, "UP") != NULL)) {
-    broadcastString("8", "Hello! My name<br>is <b>Mr. Truman!</b>");
-    soundClipPlay(sc_chat, scb_chat);
+    broadcastSpeech("1", "Hello! My name<br>is <b>Mr. Truman!</b>");
+    animation_on = TRUE;
     return 0;
   }
 
@@ -95,18 +95,25 @@ int commandDetect(char const* voice_str)
     return 0;
   }
 
+  else if((strstr(voice_str, "ARE") != NULL) && (strstr(voice_str, "YOU") != NULL) && (strstr(voice_str, "HOT") != NULL)){
+    broadcastSpeech("2", "<b>NEVER</b> hot...");
+    animation_on = TRUE; 
+    return 0;
+  }
+
   else if((strstr(voice_str, "DO") != NULL) && (strstr(voice_str, "MATH") != NULL)){
-    soundClipPlay(sc_quick_maths, scb_quick_maths);
+    broadcastSpeech("3", "2 + 2 = 4 - 1 = 3<br><b>QUICK MATHS</b>");
+    animation_on = TRUE; 
     return 0;
   }
 
   else if(strstr(voice_str, "RAP") != NULL){
-    soundClipPlay(sc_skraa, scb_skraa);
+    broadcastSpeech("4", "skrrrahh pap pap ka-ka-ka<br>Skidiki-pap-pap<br>pu-pu-pudrrrr-boom");
+    animation_on = TRUE; 
     return 0;
   }
 
-  printf("No command listed found\n");
-  broadcastString("8", "???");
-  soundClipPlay(sc_misunderstand, scb_misunderstand);
+  broadcastSpeech("8", "???");
+  animation_on = TRUE;  
   return -1;
 }

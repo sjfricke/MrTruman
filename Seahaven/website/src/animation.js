@@ -71,11 +71,17 @@ function animationEnd(entry) {
         walkComplete();
     } else if (entry.animation.name == "couchOff") {
         s_couchOn = s_couchAnim = false;
-        if (s_idleMode && !s_fidgetAnim && !s_talkAnim) { idleMode(); }
+        if (s_lightAnim) { walk(0,0,525); }
+        else if (s_fireAnim) { walk(0,0,680); }
+        else if (s_talkAnim) { talkStart(); }
+        else if (s_fidgetAnim) { fidgetStart(); }
+        else if (s_idleMode) { idleMode(); }
     } else if (entry.animation.name == "speak") {
         document.getElementById("speech").style.visibility = "hidden";
-        s_talkAnim = false;
-        if (s_idleMode && !s_fidgetAnim) { idleMode(); }
+        speechText.style.fontSize = "18px";
+        speechText.style.lineHeight = "25px";
+        s_talkAnim = s_animationOn = false;
+        idleMode();
     } else if (entry.animation.name == "fidget") {
         s_fidgetAnim = false;
         if (s_idleMode && !s_talkAnim) { idleMode(); }
@@ -223,8 +229,8 @@ function couchAnimation() {
 }
 
 function couchKill() {
-    player.state.clearTrack(0);
-    player.state.addAnimation(0, "couchOff", false, 0);
+    // player.state.clearTrack(0);
+    player.state.setAnimation(0, "couchOff", false, 0);
     player.state.addAnimation(0, "stand", false, 0);
 }
 
@@ -236,9 +242,11 @@ function lightAnimation() {
     s_animationOn = true;
     s_lightAnim = true;
     if (s_couchOn) { couchKill(); }
-    else if (s_fidgetAnim) { fidgetKill(); }
-    else if (s_talkAnim) { talkKill(); }
-    walk(0,0,525);
+    else {
+        if (s_fidgetAnim) { fidgetKill(); }
+        // else if (s_talkAnim) { talkKill(); }
+        walk(0,0,525);
+    }
 }
 
 function toggleLightSwitch() {
@@ -266,7 +274,7 @@ function speakerAnimation() {
     s_animationOn = true;   
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }
-    else if (s_talkAnim) { talkKill(); }
+    // else if (s_talkAnim) { talkKill(); }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -338,9 +346,11 @@ function fireAnimation() {
     s_animationOn = true;
     s_fireAnim = true;
     if (s_couchOn) { couchKill(); }
-    else if (s_fidgetAnim) { fidgetKill(); }
-    else if (s_talkAnim) { talkKill(); }
-    walk(0,0, 680);
+    else {
+        if (s_fidgetAnim) { fidgetKill(); }
+        // else if (s_talkAnim) { talkKill(); }
+        walk(0,0, 680);
+    }   
 }
 
 function fireOn() {
@@ -367,7 +377,7 @@ function pictureAnimation() {
 
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }
-    else if (s_talkAnim) { talkKill(); }
+    // else if (s_talkAnim) { talkKill(); }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -425,7 +435,7 @@ function tiltAnimation() {
 
     if (s_couchOn) { couchKill(); }
     else if (s_fidgetAnim) { fidgetKill(); }  
-    else if (s_talkAnim) { talkKill(); }
+    // else if (s_talkAnim) { talkKill(); }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -538,16 +548,16 @@ function fidgetAnimation() {
     s_fidgetAnim = true;
     if (s_couchOn) { 
         couchKill();
-        fidgetStart();
-    } else if (s_talkAnim) { 
-        talkKill();
-        fidgetStart();
-    }
+    } 
+    // else if (s_talkAnim) { 
+    //     talkKill();
+    //     fidgetStart();
+    // }
     // else walk animation will catch trigger
 }
 
 function fidgetStart() {
-    player.state.addAnimation(0, "fidget", true, 0);
+    player.state.setAnimation(0, "fidget", true, 0);
 }
 
 function fidgetKill() {
@@ -562,7 +572,6 @@ function talkAnimation() {
 
     if (s_couchOn) { 
         couchKill();
-        talkStart();
     } else if (s_fidgetAnim) { 
         fidgetKill();
         talkStart();
@@ -571,30 +580,20 @@ function talkAnimation() {
 }
 
 function talkStart() {
+    s_animationOn = true;
+
     player.scale.x = (player.position.x < 400) ?  pScaleRight : pScaleLeft;
 
-    player.state.addAnimation(0, "speak", true, 0);
+    player.state.setAnimation(0, "speak", true, 0);
+    
+    wsChatReady(); // Might move if timing is off stiil
 
     document.getElementById("speechImg").style.transform = "scaleX("+ ((player.scale.x > 0) ? 1 : -1) + ")";
     document.getElementById("speechImg").style.left = ((player.position.x) + ((player.scale.x > 0) ? 0 : -200)) + "px"
-    document.getElementById("speechText").style.left = ((player.position.x) + ((player.scale.x > 0) ? 6 : -194)) + "px"
+    speechText.style.left = ((player.position.x) + ((player.scale.x > 0) ? 6 : -194)) + "px"
     document.getElementById("speech").style.visibility = "visible";
-
-    setTimeout(function(){ if (s_talkAnim) {talkKill();} }, 3000);
 }
 
 function talkKill() {
-    player.state.addAnimation(0, "stand", false, 0);
-}
-
-/*************************
-*         Wall           *
-*************************/
-function changeWall() {
-    let wall = renderer.getElemByID("wall");
-
-    currentWall++;
-    if (currentWall > 4) { currentWall = 0 }
-
-    wall.texture = wallTextures[currentWall];
+    player.state.setAnimation(0, "stand", false, 0);
 }

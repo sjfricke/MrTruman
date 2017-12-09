@@ -143,6 +143,16 @@ function powerTimer(event) {
 		s_powerOpen = true;
 	}, 4000);
 }
+
+function changeWall() {
+    let wall = renderer.getElemByID("wall");
+
+    currentWall++;
+    if (currentWall > 4) { currentWall = 0 }
+
+    wall.texture = wallTextures[currentWall];
+}
+
 //window.addEventListener("touchstart", menuDebug, false);
 
 function menuDebug(event) {

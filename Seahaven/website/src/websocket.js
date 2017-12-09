@@ -4,9 +4,11 @@ var prevTiltDir = null;
 var oppTiltCnt = 0;
 var startX = 400;
 var gameScore = 0.000;
+var chatCallback = 0;
 
 const nestTemp = document.getElementById("temp");
 const gameScoreEl = document.getElementById("gameScore");
+const speechText = document.getElementById("speechText");
 
 // decides what do when message arrives
 function wsOnMessage(event) {
@@ -24,6 +26,9 @@ function wsOnMessage(event) {
 	  (s_lightOn) ? wsTurnLightsOn() :  wsTurnLightsOff();
       }
       break;
+  case 2:
+    talkKill();
+    break;
   case 3:
       if ((message.value == 0 && !s_fireOn) ||
           (message.value == 1 && s_fireOn)  ||
@@ -94,10 +99,18 @@ function wsOnMessage(event) {
   case 8:
     if (s_animationOn || s_talkAnim) { wsBusy(); }
     else {
-      document.getElementById("speechText").style.top = (message.value.indexOf("<br>") >= 0) ? "56%" : "58.8%";
-      document.getElementById("speechText").innerHTML = message.value;
+      chatCallback = message.value;
+      speechText.style.top = (message.chat.indexOf("<br>") >= 0) ? "56%" : "58.8%";
+      speechText.innerHTML = message.chat;
+
+      if (message.value == 4) {
+        speechText.style.fontSize = "15px";
+        speechText.style.lineHeight = "19px";
+      }
+
       talkAnimation();
     }
+    
     break;
   case 9:
     if (s_animationOn) { wsBusy(); }
@@ -155,6 +168,9 @@ function wsTiltTrumanWall() {
 function wsTiltCouchWall() {
   webSocket.send("5:2");
 }
+function wsChatReady() {
+  webSocket.send("6:" + chatCallback);
+}
 function wsVolume(value) {
   webSocket.send("8:" + value);
 }
@@ -169,13 +185,13 @@ function wsReboot() {
 // for testing to callback echo ws //
 /////////////////////////////////////
 function test0() {
-    webSocket.send('{"type":7,"value":0.707}');
+    webSocket.send('{"type":4,"value":0}');
 }
 
 function test1() {
-    webSocket.send('{"type":7,"value":-0.707}');
+    webSocket.send('{"type":4,"value":1}');
 }
 
 function test2() {
-    webSocket.send('{"type":7,"value":0.0}');
+    webSocket.send('{"type":4,"value":2}');
 }

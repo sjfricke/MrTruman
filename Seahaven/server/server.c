@@ -49,6 +49,13 @@ void broadcastString(char* type, char* value)
   broadcast(broadcast_string);
 }
 
+void broadcastSpeech(char* type, char* value)
+{
+  char broadcast_string[37 + strlen(type) + strlen(value)];
+  sprintf(broadcast_string, "{\"type\":\"8\",\"value\":\"%s\",\"chat\":\"%s\"}", type, value);
+  broadcast(broadcast_string);
+}
+
 void broadcast(char* broadcast_string)
 {
   ws_message *message = messageNew();

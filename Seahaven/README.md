@@ -16,9 +16,7 @@ Each event has two parts `<type> <value>`
   - `0` - Turn on
   - `1` - Turn off
   - `2` - Toggle Lights
-- `2` - Change lights color animation
-  - Value given as RGB with commas 
-  - Ex.) `0,255,0` would be green
+- `2` - Tell Truman to stop talking
 - `3` - Fireplace animation
   - `0` - Turn on
   - `1` - Turn off
@@ -41,10 +39,10 @@ Each event has two parts `<type> <value>`
     -  Pi/2 is tilt left
     - Sending 0 is how Web knows everything is back to level
 - `8` - Chatting with Mr T.
-  - Send string of what he should say.
+  - Send string of what he should say. Also need number for callback in main
   - **NOTES**
     - Only 2 lines max
-    - Each line is 16 character max
+    - Each line is 16 character max (spaces are less, its not a even value for width)
     - use `<br>` to seperate line
       - Example: `How are you<br>on this day`
 - `9` - Toggle fidget spinner
@@ -69,7 +67,12 @@ Each event has two parts `<type> <value>`
   - `0` - animation back to ideal mode
   - `1` - truman hit wall
   - `2` - couch hit wall
-- `6`
+- `6` When speaking animation is ready, what to send
+  - `0` - misunderstand.wav
+  - `1` - chat.wav
+  - `2` - not_hot.wav
+  - `3` - quick_math.wav
+  - `4` - skraa.wav
 - `7`
 - `8` - Value of audio
   - Range is 1 - 100

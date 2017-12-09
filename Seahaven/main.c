@@ -149,10 +149,27 @@ void webDataCallback( int type, char* value) {
     }
     break;
     
- //unused
+ // when to play speech bubble sounds
   case 6:
+    val = atoi(value);
+    if (val == 0) {
+      soundClipPlay(sc_misunderstand, scb_misunderstand);
+    } else if (value == 1) {
+      soundClipPlay(sc_chat, scb_chat);
+    } else if (value == 2) {
+      soundClipPlay(sc_not_hot, scb_not_hot);
+    } else if (value == 3) {
+      soundClipPlay(sc_quick_maths, scb_quick_maths);
+    } else if (value == 4) {
+      soundClipPlay(sc_skraa, scb_skraa);
+    } else if (value == 5) {
+
+    }
+
+    broadcastString("2", "0"); // ends animation bubble
     animation_on = FALSE;
     break;
+    
   //unused
   case 7:
     animation_on = FALSE;
