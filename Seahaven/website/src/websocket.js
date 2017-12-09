@@ -13,7 +13,7 @@ function wsOnMessage(event) {
 
    // Message looks like => { "type" : 1, "value" : 0 }
   var message = JSON.parse(event.data);
-  log("websocket", "Key - Value", message.type, message.value);
+  //log("websocket", "Key - Value", message.type, message.value);
   switch(parseInt(message.type)) {
   case 1:
       if ((message.value == 0 && !s_lightOn) ||
@@ -62,28 +62,27 @@ function wsOnMessage(event) {
     break;
   case 7:
     if (s_animationOn && !s_tiltAnim) {
-	(message.value == 0) ? wsTiltDone() : wsBusy(); // prevent noice from host side
+      (message.value == 0) ? wsTiltDone() : wsBusy(); // prevent noice from host side
     } else if (message.value == 0) {
-      tiltRecovery();
-      // reset game nest_temp goes back to 88 degrees
-      oppTiltCnt = 0;
-      prevTiltDir = null;
-      nestTemp.innerHTML = "88&#176;";
-      gameScoreEl.innerHTML = "";
+      tiltRecovery();        
     } else {      
       s_tiltRight = (message.value < 0) ? true : false;
+
+      if (!s_tiltGame) {
+        s_tiltGame = true;
+        nestTemp.style.left = "4.3%";
+      }
+
       // see if we are tilting in opp dir
-      if (prevTiltDir != s_tiltRight) {
+      if (prevTiltDir !== s_tiltRight) {
           oppTiltCnt++;
           startX = player.position.x;
       }
       prevTiltDir = s_tiltRight;
 
-      // see if we should start game or update
-      if (oppTiltCnt > 1 || nestTemp.innerHTML.includes("&nbsp;")) {
-        nestTemp.innerHTML = "&nbsp;" + oppTiltCnt;
-      }
+      nestTemp.innerHTML = (oppTiltCnt < 10) ? "0" + oppTiltCnt : oppTiltCnt;
       tiltValue = message.value;
+
       if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
       else if (s_tiltRightLast != s_tiltRight) { 
           s_tiltWall = s_tiltWallCouch = false;
@@ -161,6 +160,9 @@ function wsVolume(value) {
 }
 function wsPowerOff() {
   webSocket.send("9:0");
+}
+function wsReboot() {
+  webSocket.send("9:1");
 }
 
 /////////////////////////////////////

@@ -39,6 +39,7 @@ var s_tiltRightLast = false;
 var s_tiltWall      = false;
 var s_tiltWallCouch = false;
 var s_tiltAnim      = false;
+var s_tiltGame      = false;
 var s_fidgetAnim    = false;
 var s_talkAnim      = false;
 var s_pictureUp     = false;
@@ -433,7 +434,8 @@ function tiltAnimation() {
     s_idleMode = false; 
     player.scale.x = s_tiltRight ? pScaleLeft : pScaleRight;
     player.state.addAnimation(0, "fallStart", false, 0);
-    setTimeout(function(){ renderer.app.ticker.add(tiltFall);}, 300);
+    // setTimeout(function(){ renderer.app.ticker.add(tiltFall);}, 300);
+    renderer.app.ticker.add(tiltFall);
 }
 
 // rather have a single boolean check per frame then a change direction fucntion
@@ -497,15 +499,15 @@ function tiltFall(delta) {
         }
     }
     // punish player for lots of tilts
-    gameScore += Math.abs(startX - player.position.x)/(100*oppTiltCnt);
-    // should we reset game?
+    gameScore += Math.abs(startX - player.position.x)/(10*oppTiltCnt);
+
     if (s_tiltWall == true || s_tiltWallCouch == true) {
-        oppTiltCnt = 0;
+        oppTiltCnt = 0; // reset score
         gameScore = 0.000;
+        nestTemp.innerHTML = "00";
     }
-    // check if we should increase score
-    if (nestTemp.innerHTML.includes("&nbsp;")) {
-        nestTemp.innerHTML = "&nbsp" + oppTiltCnt;
+    // update score
+    if (s_tiltGame) {
         gameScoreEl.innerHTML = "Score: " + gameScore.toFixed(3);
     }
 }
@@ -519,6 +521,15 @@ function tiltRecovery() {
     couch.position.x = 200;
 
     picture.rotation = frame.rotation = 0;
+
+    // reset game nest_temp goes back to 88 degrees    
+    oppTiltCnt = 0;
+    prevTiltDir = null;
+    startX = 0;
+    nestTemp.style.left = "3.98%";
+    nestTemp.innerHTML = "88&#176;";
+    gameScoreEl.innerHTML = "";
+    s_tiltGame = false;
 }
 
 /*************************

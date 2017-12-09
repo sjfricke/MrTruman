@@ -3,28 +3,14 @@ document.addEventListener("keydown", testFunctions, false);
 function testFunctions(e) {
 	var keyCode = e.keyCode;
 	switch(keyCode) {
-		case 81: // Q
-			wsTurnLightsOn();
-			break;
-		case 87: // W
-			wsTurnLightsOff();
-			break;
-		case 69: // E
-			fireOn();
-			break;
-      	case 82: // R
-            fireOff();
-			break;
 		case 65: // A
-			startLightOnAnimation();
+			test0();
 			break;
 		case 83: // S
-			startLightOffAnimation();
+			test1();
 			break;
 		case 68: // D
-			getNewPhoto();
-			break;
-		case 70: // F
+			test2();
 			break;
 
 	}
