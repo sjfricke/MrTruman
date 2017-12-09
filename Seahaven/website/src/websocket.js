@@ -115,6 +115,11 @@ function wsOnMessage(event) {
     else { (s_fidgetAnim) ? fidgetKill() : fidgetAnimation(); }
       break;
 
+  case 10:
+    player.filters = [ glowFilter ]  
+    setTimeout(function(){ player.filters = [];}, 5000);
+    break;
+
   default:
 	  warn("WebSocket", "No case for data: %0", message);
   }
