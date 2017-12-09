@@ -18,18 +18,11 @@ left-arm
   orig: 35 ,29
   offset: 0,0
   index: -1
-left-hand
+camera
   rotate: false
-  xy: 379 ,33
-  size: 35 ,38
-  orig: 35 ,38
-  offset: 0,0
-  index: -1
-fidgetHand
-  rotate: false
-  xy: 333 ,128
-  size: 35 ,38
-  orig: 35 ,38
+  xy: 1 ,135
+  size: 94 ,73
+  orig: 94 ,73
   offset: 0,0
   index: -1
 matchbox
@@ -39,11 +32,11 @@ matchbox
   orig: 70 ,41
   offset: 0,0
   index: -1
-camera
+null
   rotate: false
-  xy: 1 ,135
-  size: 94 ,73
-  orig: 94 ,73
+  xy: 416 ,68
+  size: 1 ,1
+  orig: 1 ,1
   offset: 0,0
   index: -1
 fidget
@@ -53,18 +46,25 @@ fidget
   orig: 36 ,33
   offset: 0,0
   index: -1
-null
-  rotate: false
-  xy: 416 ,68
-  size: 1 ,1
-  orig: 1 ,1
-  offset: 0,0
-  index: -1
 bucket
   rotate: false
   xy: 348 ,201
   size: 46 ,50
   orig: 46 ,50
+  offset: 0,0
+  index: -1
+left-hand
+  rotate: false
+  xy: 333 ,128
+  size: 35 ,38
+  orig: 35 ,38
+  offset: 0,0
+  index: -1
+fidgetHand
+  rotate: false
+  xy: 379 ,33
+  size: 35 ,38
+  orig: 35 ,38
   offset: 0,0
   index: -1
 left-foot
@@ -179,18 +179,18 @@ matchLit
   orig: 12 ,37
   offset: 0,0
   index: -1
-match
-  rotate: false
-  xy: 383 ,73
-  size: 8 ,31
-  orig: 8 ,31
-  offset: 0,0
-  index: -1
 splash
   rotate: false
   xy: 482 ,1
   size: 20 ,25
   orig: 20 ,25
+  offset: 0,0
+  index: -1
+match
+  rotate: false
+  xy: 383 ,73
+  size: 8 ,31
+  orig: 8 ,31
   offset: 0,0
   index: -1
 headphones
