@@ -2,8 +2,11 @@
 #include "loopback.h"
 #include <stdlib.h>
 
-void *buffer;
-int buff_size;
+int pcm_buff_size = 7526;
+snd_pcm_uframes_t frames, framesout;
+
+void *  pcm_buffer[7526];
+
 
 static void soundClipLoad(const char* file, void** sc_buff, uint32_t* scb_buff) {
   FILE* fp;
@@ -14,13 +17,13 @@ static void soundClipLoad(const char* file, void** sc_buff, uint32_t* scb_buff) 
   fseek(fp, 0, SEEK_END);
   f_len = ftell(fp);
   fseek(fp, 0, SEEK_SET);
-  *sc_buff = malloc(pcm_buff_size - (f_len % pcm_buff_size));
+  *sc_buff = calloc(f_len + pcm_buff_size - (f_len % pcm_buff_size), sizeof(char));
   if (sc_buff == NULL) {
     printf("ERROR: malloc %s\n", file);
     fclose(fp);
     return;
   }
-  *scb_buff = 1+(f_len + (pcm_buff_size - (f_len % pcm_buff_size))) / pcm_buff_size;
+  *scb_buff = (f_len + (pcm_buff_size - (f_len % pcm_buff_size))) / pcm_buff_size;
   printf("[%d] [%d] [%d] [%d]\n", f_len, pcm_buff_size,(pcm_buff_size - (f_len % pcm_buff_size)), *scb_buff); 
   fread(*sc_buff, f_len, 1, fp);
 
@@ -31,13 +34,11 @@ void soundClipPlay(void* sc_file, uint32_t buffers) {
   int wr = 0;
 
   unsigned int pcm, tmp;
-	int rate, channels, seconds;
 	snd_pcm_hw_params_t *paramsout;
   snd_pcm_t *outhandle;
 
-	rate = 44100;
-	channels = 1;
-	seconds = 100;
+	int rate = 44100;
+	int channels = 1;
 
 	/* Open the PCM device in playback mode */
 	if (pcm = snd_pcm_open(&outhandle, "plughw:0,1",
@@ -75,33 +76,22 @@ void soundClipPlay(void* sc_file, uint32_t buffers) {
 	/* Allocate buffer to hold single period */
 	snd_pcm_hw_params_get_period_size(paramsout, &framesout, 0);
 	snd_pcm_hw_params_get_period_time(paramsout, &tmp, NULL);
-
-	////////////////////////////////////////////////
-
-	buff_size = frames * channels * 2;   /* 2 bytes/sample, 2 channels */
-
-  buffer = (void *) malloc(buff_size);
-
   
   for(uint32_t i = 0; i < buffers; i++) {
   
     memset(pcm_buffer, 0, pcm_buff_size);
     memcpy(pcm_buffer, sc_file + (pcm_buff_size * i), pcm_buff_size);
 
-    if ((wr = snd_pcm_writei(outhandle, pcm_buffer, framesout)) == -EPIPE) {
-      printf("XRUN.\n");
-      snd_pcm_prepare(outhandle);
-    } else if (wr < 0) {
+    wr = snd_pcm_writei(outhandle, pcm_buffer, framesout);
+     if (wr < 0) {
       printf("WRITE ERR %s\n", snd_strerror(wr));
-			closeHandles();
-			setupHandles();
-			printf("Re initialized: Lets retry that\n");
+	printf("Re initialized: Lets retry that\n");
     }
   }
 
-  snd_pcm_drain(outhandle);
+  snd_pcm_drop(outhandle);
   snd_pcm_close(outhandle);
-  free(buffer);
+ // free(pcm_buffer);
 }
  
 void soundClipCleanup() {

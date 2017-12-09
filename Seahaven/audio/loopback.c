@@ -229,15 +229,16 @@ static void loopOutputSetup() {
 	snd_pcm_hw_params_get_period_time(paramsout, &tmp, NULL);
 
 	////////////////////////////////////////////////
-	printf("PCM name: '%s'\n", snd_pcm_name(outhandle));
-	printf("PCM state: %s\n", snd_pcm_state_name(snd_pcm_state(outhandle)));
-	printf("rate: %d bps\n", tmp);
-	printf("seconds: %d\n", seconds);	
-	printf("channels: %i ", tmp);
-	printf("FRAMES: %d\n",framesout);
-	printf("Other frames: %d\n",frames);
+//	printf("PCM name: '%s'\n", snd_pcm_name(outhandle));
+//	printf("PCM state: %s\n", snd_pcm_state_name(snd_pcm_state(outhandle)));
+//	printf("rate: %d bps\n", tmp);
+//	printf("seconds: %d\n", seconds);	
+//	printf("channels: %i ", tmp);
+//	printf("FRAMES: %d\n",framesout);
+//	printf("Other frames: %d\n",frames);
 
 	buff_size = frames * channels * 2;   /* 2 bytes/sample, 2 channels */
+	printf("BUFF SIZE %d\n", buff_size);
 	printf("size is %d\n", buff_size);
 
 }

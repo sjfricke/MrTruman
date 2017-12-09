@@ -38,19 +38,17 @@ int commandDetect(char const* voice_str)
   if ((strstr(voice_str, c_lights) != NULL)) {
 
     // Play the notification sounds
-    /*      if (fork()==0) {
-	    // Take picture
-	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_notification.wav");
-	    system(command);
-	    kill(getpid(), SIGKILL);
-    	}
-    */
     soundClipPlay(sc_notification, scb_notification);
+
+
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
- 
+
+	
     if((detectOn != NULL) || (detectOff != NULL)){
       (detectOn != NULL) ? broadcastString("1", "0") : broadcastString("1", "1");
+
+	usleep(1000);
       animation_on = TRUE;
     }
 
@@ -66,12 +64,7 @@ int commandDetect(char const* voice_str)
   else if (strstr(voice_str, c_fire) != NULL) {
 
     // Play the notification sounds
-      if (fork()==0) {
-	    // Take picture
-	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_notification.wav");
-	    system(command);
-	    kill(getpid(), SIGKILL);
-    	}
+    soundClipPlay(sc_notification, scb_notification);
 
     char* detectOn = strstr(voice_str, "ON");
     char* detectOff = strstr(voice_str, "OFF");
@@ -89,13 +82,8 @@ int commandDetect(char const* voice_str)
   */
   else if ((strstr(voice_str, c_picture) != NULL) || (strstr(voice_str, c_photo) != NULL)) {
 
+      soundClipPlay(sc_notification, scb_notification);
       // Play the notification sounds
-      if (fork()==0) {
-	    // Take picture
-	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_notification.wav");
-	    system(command);
-	    kill(getpid(), SIGKILL);
-    	}
 
     broadcastString("4", "0");
     animation_on = TRUE;
@@ -105,8 +93,7 @@ int commandDetect(char const* voice_str)
   // Chat bubble
   else if ((strstr(voice_str, "WHAT") != NULL) && (strstr(voice_str, "UP") != NULL)) {
     broadcastString("8", "Hello! My name<br>is <b>Mr. Truman!</b>");
-    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_chat.wav");
-    system(command);
+    soundClipPlay(sc_chat, scb_chat);
     return 0;
   }
 
@@ -116,20 +103,17 @@ int commandDetect(char const* voice_str)
   }
 
   else if((strstr(voice_str, "DO") != NULL) && (strstr(voice_str, "MATH") != NULL)){
-    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_quick_maths.wav");
-    system(command);
+    soundClipPlay(sc_quick_maths, scb_quick_maths);
     return 0;
   }
 
   else if(strstr(voice_str, "RAP") != NULL){
-    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_skraa.wav");
-    system(command);
+    soundClipPlay(sc_skraa, scb_skraa);
     return 0;
   }
 
   printf("No command listed found\n");
   broadcastString("8", "???");
-  sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_misunderstand.wav");
-  system(command);
+  soundClipPlay(sc_misunderstand, scb_misunderstand);
   return -1;
 }

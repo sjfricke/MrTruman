@@ -19,14 +19,8 @@ void webDataCallback( int type, char* value) {
     usleep(100000); // 100ms
     if(val == 1){
 
-       soundClipPlay(sc_lights_on, scb_lights_on);
       // Play the lights on sounds
-//      if (fork()==0) {
-	    // Take picture
-      //	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_on.wav");
-      //    system(command);
-//	    kill(getpid(), SIGKILL);
-//    	}
+      soundClipPlay(sc_lights_on, scb_lights_on);
 
     	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
 	    setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
@@ -36,12 +30,6 @@ void webDataCallback( int type, char* value) {
 
       // Play the lights off sounds
       soundClipPlay(sc_lights_off, scb_lights_off);
-//      if (fork()==0) {
-	    // Take picture
-      //    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_lights_off.wav");
-      //    system(command);
-//	    kill(getpid(), SIGKILL);
-//    	}
 
     	setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
 	    setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
@@ -62,21 +50,15 @@ void webDataCallback( int type, char* value) {
       fanOff();
       animation_on = FALSE;
     } else if (val == 2) {
-      // Play the fire on sound
-//      if (fork()==0) {
+	
         usleep(500000); // 500ms
-        sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_fire_on.wav");
-        system(command);
-//        kill(getpid(), SIGKILL);
-//      }
+      // Play the fire on sound
+      soundClipPlay(sc_fire_on, scb_fire_on);
+
     } else if (val == 3) {
       // Play the fire off sound
-//      if (fork()==0) {
         usleep(500000); // 500ms
-  	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_fire_off.wav");
-  	    system(command);
-//  	    kill(getpid(), SIGKILL);
-//    	}
+      soundClipPlay(sc_fire_off, scb_fire_off);
     }
     break;
 
@@ -117,8 +99,10 @@ void webDataCallback( int type, char* value) {
     // Play the camera shutter sounds
 //      if (fork()==0) {
 	    // Take picture
-	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_camera.wav");
-	    system(command);
+	    //
+      	soundClipPlay(sc_camera, scb_camera);
+//	    sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_camera.wav");
+//	    system(command);
 //	    kill(getpid(), SIGKILL);
 //    	}
 
@@ -167,16 +151,20 @@ void webDataCallback( int type, char* value) {
       // truman hit wall
 //      if (fork()==0) {
       // Take picture
-      sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_thud_truman.wav");
-      system(command);
+      //
+      	soundClipPlay(sc_thud_truman, scb_thud_truman);
+//      sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_thud_truman.wav");
+  //    system(command);
 //      kill(getpid(), SIGKILL);
 //      }
     } else if (val == 2) {
       // couch hit wall
 //      if (fork()==0) {
       // Take picture
-      sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_thud_couch.wav");
-      system(command);
+
+      	soundClipPlay(sc_thud_couch, scb_thud_couch);
+    //  sprintf(command, "aplay -D plughw:0,1 ./audio/sounds/truman_thud_couch.wav");
+     // system(command);
 //      kill(getpid(), SIGKILL);
 //      }
     }
@@ -231,7 +219,9 @@ void HardwareSetup() {
   voiceDictionarySetup();
 
   initAuxGPIO();
-  loopbackSetup();
+  //loopbackSetup();
+
+  // Load all the clips into memory for 5MB of fast access dankness (V important)
   soundClipSetup();
   
   // Calls LSM6DS3h_start and Gryo GPIO
