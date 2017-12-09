@@ -1,6 +1,5 @@
 // global WebSocket pointer
 var webSocket;
-var prevTiltDir = null;
 var oppTiltCnt = 0;
 var startX = 400;
 var gameScore = 0.000;
@@ -72,26 +71,21 @@ function wsOnMessage(event) {
       tiltRecovery();        
     } else {      
       s_tiltRight = (message.value < 0) ? true : false;
-
-      if (!s_tiltGame) {
-        s_tiltGame = true;
-        nestTemp.style.left = "4.3%";
-      }
-
-      // see if we are tilting in opp dir
-      if (prevTiltDir !== s_tiltRight) {
-          oppTiltCnt++;
-          startX = player.position.x;
-      }
-      prevTiltDir = s_tiltRight;
-
-      nestTemp.innerHTML = (oppTiltCnt < 10) ? "0" + oppTiltCnt : oppTiltCnt;
-      tiltValue = message.value;
+      tiltValue = message.value;     
 
       if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
+      else if (!s_tiltGame) {
+        s_tiltGame = true;
+        nestTemp.style.left = "4.3%";
+        oppTiltCnt = 1;
+        nestTemp.innerHTML = "01";
+      }  
       else if (s_tiltRightLast != s_tiltRight) { 
-          s_tiltWall = s_tiltWallCouch = false;
-          player.state.setAnimation(0, "fallHold", false);
+        s_tiltWall = s_tiltWallCouch = false;
+        player.state.setAnimation(0, "fallHold", false);
+        oppTiltCnt++;
+        nestTemp.innerHTML = (oppTiltCnt < 10) ? "0" + oppTiltCnt : oppTiltCnt;
+        startX = player.position.x;
       }
       s_tiltRightLast = s_tiltRight;
     }

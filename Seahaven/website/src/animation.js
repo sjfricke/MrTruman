@@ -73,8 +73,10 @@ function animationEnd(entry) {
         s_couchOn = s_couchAnim = false;
         if (s_lightAnim) { walk(0,0,525); }
         else if (s_fireAnim) { walk(0,0,680); }
+        else if (s_tiltAnim) { }
         else if (s_talkAnim) { talkStart(); }
         else if (s_fidgetAnim) { fidgetStart(); }
+        else if (s_pictureAnim) { pictureStart(); }
         else if (s_idleMode) { idleMode(); }
     } else if (entry.animation.name == "speak") {
         document.getElementById("speech").style.visibility = "hidden";
@@ -84,14 +86,14 @@ function animationEnd(entry) {
         idleMode();
     } else if (entry.animation.name == "fidget") {
         s_fidgetAnim = false;
-        if (s_idleMode && !s_talkAnim) { idleMode(); }
+        if (s_idleMode) { idleMode(); }
     } else if (entry.animation.name == "pictureStart") {
         s_pictureUp = true;
         wsPictureReady();
     } else if (entry.animation.name == "pictureTake") {
         pictureTrigger();
     } else if (entry.animation.name == "pictureChange") {
-        s_pictureAnim = s_animationOn = false;
+        s_pictureAnim = s_animationOn = s_pictureTaken = false;
         pictureChange();
         wsPictureDone();
         idleMode();
@@ -149,24 +151,15 @@ function walkAnimation(delta) {
         if (s_idleMode) {            
             player.position.x = s_walkX;        
             player.state.clearTrack(0);
-            player.state.addAnimation(0, 'stand', false, 0);  
-            if (s_fidgetAnim) {
-                walkTicker.stop();
-                fidgetStart(); // fidget only happens out of idle mode 
-            } else if (s_talkAnim) {
-                walkTicker.stop();
-                talkStart(); // talk only happens out of idle mode 
-            }
-            else {
-                idleMode();
-            }
+            player.state.addAnimation(0, 'stand', false, 0);              
+            idleMode();
         } else {
             // ugly, I know, timer and animation event callback can't synch
             walkTicker.stop();
             player.position.x = s_walkX;        
             player.state.clearTrack(0);
             // certain animation don't want the stand trasmission
-            if (!s_speakersAnim && !s_pictureAnim && !s_tiltAnim) {
+            if (!s_speakersAnim) {
                 player.state.addAnimation(0, 'stand', false, 0); 
             }
         }           
@@ -182,10 +175,8 @@ function walkComplete() {
         player.scale.x = pScaleRight;
         player.state.addAnimation(0, (s_fireOn) ? 'fireOff' : 'fireOn', false, 0);
         (s_fireOn) ? wsFireOffSound() : wsFireOnSound();
-    } else if (s_pictureAnim) {
-        (s_pictureTaken) ? pictureTrigger() : pictureAnimation();
-    } else if (s_tiltAnim) {
-        tiltAnimation();
+    } else if (s_pictureTaken) {
+         pictureTrigger();
     } else if (s_speakersAnim) {
         speakerAnimation();
     }
@@ -213,8 +204,14 @@ function idleMode() {
         walk(-1, 200);
     }
     else {
-        // get back to middle for idle
-        walk(0, 0, 400);
+        // get back to main 3 for idle
+        if (player.position.x < 300) {
+            walk(0, 0, 200);
+        } else if (player.position.x > 500) {
+            walk(0, 0, 600);
+        } else {
+            walk(0, 0, 400);
+        }
     }
 }
 
@@ -243,8 +240,7 @@ function lightAnimation() {
     s_lightAnim = true;
     if (s_couchOn) { couchKill(); }
     else {
-        if (s_fidgetAnim) { fidgetKill(); }
-        // else if (s_talkAnim) { talkKill(); }
+        s_fidgetAnim = false; // force check
         walk(0,0,525);
     }
 }
@@ -273,8 +269,9 @@ function speakerAnimation() {
     s_speakersAnim = true;    
     s_animationOn = true;   
     if (s_couchOn) { couchKill(); }
-    else if (s_fidgetAnim) { fidgetKill(); }
-    // else if (s_talkAnim) { talkKill(); }
+    else if (s_fidgetAnim) {
+        s_idleMode = s_fidgetAnim = false; // force check 
+    }
     else if (s_idleMode) {
         s_idleMode = false;
         return; // need to finish walk animation to prevent stuck
@@ -347,8 +344,7 @@ function fireAnimation() {
     s_fireAnim = true;
     if (s_couchOn) { couchKill(); }
     else {
-        if (s_fidgetAnim) { fidgetKill(); }
-        // else if (s_talkAnim) { talkKill(); }
+        s_fidgetAnim = false; // force check
         walk(0,0, 680);
     }   
 }
@@ -373,18 +369,19 @@ function fireOff() {
 function pictureAnimation() {
     s_pictureTaken = false; // need since picture has two post-walk animations
     s_pictureAnim = true;
-    s_animationOn = true;   
-
-    if (s_couchOn) { couchKill(); }
-    else if (s_fidgetAnim) { fidgetKill(); }
-    // else if (s_talkAnim) { talkKill(); }
-    else if (s_idleMode) {
-        s_idleMode = false;
-        return; // need to finish walk animation to prevent stuck
-    }
+    s_animationOn = true;    
     s_idleMode = false; 
 
-    player.state.addAnimation(0, "pictureStart", false, 0);
+    s_fidgetAnim = false; // force check
+    if (s_couchOn) { couchKill(); }
+    else {
+        walkTicker.stop();
+        pictureStart();
+    }
+}
+
+function pictureStart() {
+    player.state.setAnimation(0, "pictureStart", false, 0);
     player.state.addAnimation(0, "pictureHold", false, 0); // purly cause listener won't trigger
 }
 
@@ -429,23 +426,20 @@ function pictureChange() {
 *      Tilt/Gyro         *
 *************************/
 function tiltAnimation() {
-    s_tiltAnim = true;
-    s_animationOn = true;
+    s_tiltAnim = s_animationOn = true;
     s_tiltWall = s_tiltWallCouch = false;   
 
+    s_fidgetAnim = false;
+    s_idleMode = false;
     if (s_couchOn) { couchKill(); }
-    else if (s_fidgetAnim) { fidgetKill(); }  
-    // else if (s_talkAnim) { talkKill(); }
-    else if (s_idleMode) {
-        s_idleMode = false;
-        return; // need to finish walk animation to prevent stuck
-    }
-    s_idleMode = false; 
+    walkTicker.stop();
+   
     player.scale.x = s_tiltRight ? pScaleLeft : pScaleRight;
-    player.state.addAnimation(0, "fallStart", false, 0);
+    player.state.setAnimation(0, "fallStart", false, 0);
     // setTimeout(function(){ renderer.app.ticker.add(tiltFall);}, 300);
     renderer.app.ticker.add(tiltFall);
 }
+
 
 // rather have a single boolean check per frame then a change direction fucntion
 // beause that still needs a boolean check to know if there was a change... this works below well
@@ -456,6 +450,7 @@ function tiltFall(delta) {
         player.scale.x = pScaleLeft;
         if (player.position.x < 720) {
             player.position.x += fallRatePlayer * delta;
+            s_tiltWall = false;
         } else if (!s_tiltWall) {
             wsTiltTrumanWall();
             s_tiltWall = true;
@@ -466,6 +461,7 @@ function tiltFall(delta) {
         // Couch
         if (couch.position.x < 687) {
             couch.position.x += fallRateCouch * delta;
+            s_tiltWallCouch = false;
         } else if (!s_tiltWallCouch) {
             wsTiltCouchWall();
             s_tiltWallCouch = true;
@@ -484,6 +480,7 @@ function tiltFall(delta) {
         player.scale.x = pScaleRight;
         if (player.position.x > 80) {
             player.position.x -= fallRatePlayer * delta;
+            s_tiltWall = false;
         } else if (!s_tiltWall) {
             wsTiltTrumanWall();
             s_tiltWall = true;
@@ -494,6 +491,7 @@ function tiltFall(delta) {
         // Couch
         if (couch.position.x > 114) {
             couch.position.x -= fallRateCouch * delta;
+            s_tiltWallCouch = false;
         } else if (!s_tiltWallCouch) {
             wsTiltCouchWall();
             s_tiltWallCouch = true;
@@ -507,34 +505,36 @@ function tiltFall(delta) {
             picture.rotation = frame.rotation = 0.707;
         }
     }
-    // punish player for lots of tilts
-    gameScore += Math.abs(startX - player.position.x)/(10*oppTiltCnt);
-
-    if (s_tiltWall == true || s_tiltWallCouch == true) {
-        oppTiltCnt = 0; // reset score
-        gameScore = 0.000;
-        nestTemp.innerHTML = "00";
-    }
+    
     // update score
     if (s_tiltGame) {
+        // punish player for lots of tilts
+        gameScore += Math.abs(startX - player.position.x) / 100;
+
+        if (s_tiltWall == true || s_tiltWallCouch == true) {
+            oppTiltCnt = 0; // reset score
+            gameScore = 0.000;
+            nestTemp.innerHTML = "00";
+        }
+
         gameScoreEl.innerHTML = "Score: " + gameScore.toFixed(3);
     }
 }
 
 function tiltRecovery() {
-    //renderer.app.ticker.remove(s_tiltRight ? tiltFallRight : tiltFallLeft);
     renderer.app.ticker.remove(tiltFall);
     player.state.setAnimation(0, "fallEnd", false);
     player.state.addAnimation(0, "stand", false, 0);
 
+    // reset furniture
     couch.position.x = 200;
-
     picture.rotation = frame.rotation = 0;
 
     // reset game nest_temp goes back to 88 degrees    
     oppTiltCnt = 0;
-    prevTiltDir = null;
+    s_tiltRightLast = null;
     startX = 0;
+    gameScore = 0;
     nestTemp.style.left = "3.98%";
     nestTemp.innerHTML = "88&#176;";
     gameScoreEl.innerHTML = "";
@@ -548,12 +548,11 @@ function fidgetAnimation() {
     s_fidgetAnim = true;
     if (s_couchOn) { 
         couchKill();
-    } 
-    // else if (s_talkAnim) { 
-    //     talkKill();
-    //     fidgetStart();
-    // }
-    // else walk animation will catch trigger
+    } else {
+        // walking
+        walkTicker.stop();
+        fidgetStart(); 
+    }
 }
 
 function fidgetStart() {
@@ -573,10 +572,13 @@ function talkAnimation() {
     if (s_couchOn) { 
         couchKill();
     } else if (s_fidgetAnim) { 
-        fidgetKill();
+        s_fidgetAnim = false; // force check
+        talkStart();
+    } else { // in walk
+        s_fidgetAnim = false; // force check
+        walkTicker.stop();
         talkStart();
     }
-    // else walk animation will catch trigger
 }
 
 function talkStart() {
