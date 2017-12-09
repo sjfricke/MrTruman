@@ -19,13 +19,6 @@
 uint8_t VOLCHANGED;
 uint8_t VOLCURRENT;
 
-void *pcm_buffer;
-int pcm_buff_size;
-
-snd_pcm_t *inhandle;
-snd_pcm_t *outhandle;
-snd_pcm_uframes_t frames, framesout;
-
 // used to actually run music
 // make sure to call loopbackSetup() first
 int loopback();
@@ -36,10 +29,6 @@ void loopbackSetup();
 // Really wont ever call this
 void loopbackTerminate();
 
-void loopOutputSetup();
-
-// re enables handles
-void setupHandles();
-
 static void loopInputSetup();
-
+static void loopOutputSetup();
+static void setupHandles();

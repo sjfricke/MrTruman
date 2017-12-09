@@ -307,7 +307,7 @@ int main ( int argc, char* argv[] ) {
 
 	broadcastString("5", "1");
 	printf("\nSPEAKER IS READY IN ANIMAION\n");  
-	setupHandles();
+	loopbackSetup();
 	loopback();
 	loopbackTerminate();
 	// Turn off lights or back to on state
