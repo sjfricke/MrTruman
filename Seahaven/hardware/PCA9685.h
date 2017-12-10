@@ -44,8 +44,8 @@
 #define ALL_LED_OFF_H_VAL 0x04
 #define MODE1_VAL 0x01 // enable all_on, use internal clock
 
-#define STATE_SERVO_EXTENDED "1"
-#define STATE_SERVO_RETRACTED "0"
+#define STATE_SERVO_EXTENDED '1'
+#define STATE_SERVO_RETRACTED '0'
 #define SERVO_STATE_FILE "servo_state.truman"
 
 // Constants
@@ -99,4 +99,6 @@ int turnOffLEDs();
 int setLED(uint8_t rgb, double duty, uint16_t mask); // Set color to specific
 int turnOffLEDPWM(uint8_t rgb);
 
+void checkServoStateFile();
+char checkServoState();
 #endif

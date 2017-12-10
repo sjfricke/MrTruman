@@ -12,9 +12,9 @@ char checkServoState() {
 }
 
 // write state to file
-void persistServoState(char* state) {
+void persistServoState(char state) {
   FILE *servo_state_file = fopen(SERVO_STATE_FILE, "w");
-  fputc(*state, servo_state_file);
+  fputc(state, servo_state_file);
   fclose(servo_state_file);
 }
 
@@ -72,7 +72,7 @@ int servoStop()
 
 int servoExtend()
 {
-  if (checkServoState == STATE_SERVO_EXTENEDED) {
+  if (checkServoState() == STATE_SERVO_EXTENDED) {
       return 0;
   }
 
@@ -136,13 +136,13 @@ printf("rotation done");
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x0);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
-  persistServoState(STATE_SERVO_EXTENEDED);
+  persistServoState(STATE_SERVO_EXTENDED);
   return 0;
 }
 
 int servoRetract()
 {
-  if (checkServoState == STATE_SERVO_RETRACTED) {
+  if (checkServoState() == STATE_SERVO_RETRACTED) {
     return 0;
   }
 
