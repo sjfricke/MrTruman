@@ -25,7 +25,7 @@ function testFunctions(e) {
 			webSocket.send('{"type":7,"value":-0.707}');
 			break;
 		case 70: // F
-			webSocket.send('{"type":9,"value":3}');
+			webSocket.send('{"type":11,"value":3}');
 			break;
 
 	}

@@ -17,7 +17,7 @@ function wsOnMessage(event) {
 
    // Message looks like => { "type" : 1, "value" : 0 }
   var message = JSON.parse(event.data);
-  //log("websocket", "Key - Value", message.type, message.value);
+
   switch(parseInt(message.type)) {
   case 1:
       if ((message.value == 0 && !s_lightOn) ||
@@ -51,7 +51,8 @@ function wsOnMessage(event) {
     }
       break;
   case 5:
-    if (message.value == 0 && !s_speakersUp) { 
+log("websocket", "Key - Value", message.type, message.value);
+      if (message.value == 0 && !s_speakersUp) { 
       (s_animationOn) ? wsBusy() : speakerAnimation();
     } else if (message.value == 1 && s_speakersUp) { 
       speakersOn();

@@ -14,17 +14,10 @@ static uint16_t aux_pin;
 void *buffer;
 int buff_size;
 
-//extern uint8_t VOLCHANGED;
-//extern uint8_t VOLCURRENT;
-uint8_t local_volume;
-uint8_t audio_plugged_in;
-uint8_t animation_on;
-
-
 static void closeHandles() {
-	snd_pcm_drain(inhandle);
+	snd_pcm_drop(inhandle);
 	snd_pcm_close(inhandle);
-	snd_pcm_drain(outhandle);
+	snd_pcm_drop(outhandle);
 	snd_pcm_close(outhandle);
 }
 
@@ -117,13 +110,6 @@ static int change_LED_from_sample(int16_t sample, int scale) {
 		broadcastString("5","1");
 	}
 	audio_threshold = TRUE;	
-
-/*	if(BROADCASTCOLORS){
-	    char* broadcaststr = (char*)malloc(200*sizeof(char));
-		sprintf(broadcaststr, "%d,%d,%d", r_comp, g_comp, b_comp);
-		broadcastString("2", broadcaststr);
-		free(broadcaststr);
-	}*/
 
 	return 0;
 }
@@ -328,7 +314,7 @@ int loopback() {
 	pthread_t tid;
 	int wr=0;
 	local_volume = VOLCURRENT;
-	char* volcommand = (char*)malloc(200*sizeof(char));
+	char* volcommand = (char*)malloc(256*sizeof(char));
 	// Now Playing
 //	broadcastString("5", "1");
 	aux_in = 1;
@@ -337,12 +323,8 @@ int loopback() {
 	// loop the entire time the aux cord is plugged in
 	while ((aux_in = GpioGetValue(aux_pin)) == 1) {
 		// If the volume has been changed, acknowledge it by changing the volume and clearing the changed flag.
-		/*if(VOLCHANGED){
-			VOLCHANGED = 0;
-		    sprintf(volcommand, "amixer cset iface=MIXER,name='RX3 Digital Volume' %d", VOLCURRENT);
-			system(volcommand);
-		}*/
-		snd_pcm_readi(inhandle, buffer, frames);
+
+	  snd_pcm_readi(inhandle, buffer, frames);
 		wr = snd_pcm_writei(outhandle, buffer, framesout);	
 		if (wr < 0) {
 			printf("WRITE ERR %s\n", snd_strerror(wr));
@@ -358,7 +340,6 @@ int loopback() {
 	//printf("Aux unplugged, see ya next time\n");
 	pthread_join(tid, NULL);
 	audio_plugged_in = FALSE;
-//	animation_on = FALSE;
 	return 0;
 
 }

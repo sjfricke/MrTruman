@@ -188,6 +188,12 @@ void webDataCallback( int type, char* value) {
 
   case 9:
     val = atoi(value);
+
+    checkServoStateFile();
+    if (checkServoState() == STATE_SERVO_EXTENDED) {
+      // retract servo
+      servoRetract();
+    }
     if (val == 0) {
       sprintf(command, "halt");
       system(command);
@@ -280,87 +286,86 @@ int main ( int argc, char* argv[] ) {
     usleep(1000);
   }
 
-    while(1) {
+  // half a second for texutres and stuff to load on browser
+  usleep(500000);
 
-      // Sleep a millisecond cuz come on, who is it really hurting?
-      if(animation_on){ usleep(1000); continue;}
+  while(1) {
 
-      // We check for the audio plug and gyro in voiceCommand and immediately return from it upon
-      // either event, so that voiceCommand(); won't end up blocking.
-      voiceCommand();    
+    // Sleep a millisecond cuz come on, who is it really hurting?
+    if(animation_on){ usleep(1000); continue;}
 
-      if (audio_plugged_in) {
-	sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
-	system(command);
-	sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
-	system(command);
-	animation_on = TRUE;
-	speaker_animation_ready = FALSE;
+    // We check for the audio plug and gyro in voiceCommand and immediately return from it upon
+    // either event, so that voiceCommand(); won't end up blocking.
+    voiceCommand();    
 
-	broadcastString("5", "0");
+    if (audio_plugged_in) {
+      sprintf(command, "amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP2'");
+      system(command);
+      sprintf(command, "amixer cset iface=MIXER,name='ADC2 Volume' 3");
+      system(command);
+      animation_on = TRUE;
+      speaker_animation_ready = FALSE;
 
-	while(!speaker_animation_ready);
+      broadcastString("5", "0");
 
-  servoExtend();
+      while(!speaker_animation_ready);
+
+      servoExtend();
       
 
-	broadcastString("5", "1");
-	printf("\nSPEAKER IS READY IN ANIMAION\n");  
-	loopbackSetup();
-	loopback();
-	loopbackTerminate();
-	// Turn off lights or back to on state
-	if (lights_on == TRUE) {
-	  setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-	  setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-	  setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-	} else {
-	  setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
-	  setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
-	  setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
-	}
-
-  servoRetract();
-
+      broadcastString("5", "1");
+      printf("\nSPEAKER IS READY IN ANIMAION\n");  
+      loopbackSetup();
+      loopback();
+      loopbackTerminate();
+      // Turn off lights or back to on state
+      if (lights_on == TRUE) {
+	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+      } else {
+	setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
       }
 
-      if (gyro_tripped) {
-	// blocks until gyro is set back to no tilt for 3 secs straight
-	int dir;
-	animation_on = TRUE;
-
-	while (gyro_tripped == TRUE) {
-	  // time to wait between tilt detect
-	  // this will also prevent any noice from having animtion go, will have 3 sec delay though
-	  usleep(50000); // 50ms
-
-	  dir = getTiltDirection(); // 1 for right, -1 for left
-	  if (dir == 1) {
-	    broadcastString("7", "-0.707");
-	  } else if (dir == -1) {
-	    broadcastString("7", "0.707");
-	  } else {
-	    usleep(1000000); // 1sec of 3
-	    if (0 != getTiltDirection()) { continue; }
-
-	    usleep(1000000); // 2sec of 3
-	    if (0 != getTiltDirection()) { continue; }
-
-	    usleep(1000000); // 3sec of 3
-	    if (0 != getTiltDirection()) { continue; }
-
-	    // Truman to get back to his feet
-	    gyro_tripped = FALSE;
-	    gyroClearInterrupt();
-	    broadcastString("7", "0");
-	  }
-	}
-      } 
-
-      usleep(10000); // 10ms
-    
+      servoRetract();
     }
-    //  }
-  // hardwareTests();
-  printf("main\n");
+
+    if (gyro_tripped) {
+      // blocks until gyro is set back to no tilt for 3 secs straight
+      int dir;
+      animation_on = TRUE;
+
+      while (gyro_tripped == TRUE) {
+	// time to wait between tilt detect
+	// this will also prevent any noice from having animtion go, will have 3 sec delay though
+	usleep(50000); // 50ms
+
+	dir = getTiltDirection(); // 1 for right, -1 for left
+	if (dir == 1) {
+	  broadcastString("7", "-0.707");
+	} else if (dir == -1) {
+	  broadcastString("7", "0.707");
+	} else {
+	  usleep(1000000); // 1sec of 3
+	  if (0 != getTiltDirection()) { continue; }
+
+	  usleep(1000000); // 2sec of 3
+	  if (0 != getTiltDirection()) { continue; }
+
+	  usleep(1000000); // 3sec of 3
+	  if (0 != getTiltDirection()) { continue; }
+
+	  // Truman to get back to his feet
+	  gyro_tripped = FALSE;
+	  gyroClearInterrupt();
+	  broadcastString("7", "0");
+	}
+      }
+    } 
+
+    usleep(10000); // 10ms
+    
+  }
 }
