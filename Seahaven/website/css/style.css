@@ -67,8 +67,8 @@ selector { cursor: none; }
 
 #gameHighScore {
     position: absolute;
-    top: 19%;
-    left: 18%;
+    top: 16%;
+    left: 14%;
     color: cornflowerblue;
     border-radius: 5px;
     padding: 5px;

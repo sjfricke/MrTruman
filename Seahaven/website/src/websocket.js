@@ -11,6 +11,7 @@ const nestTemp = document.getElementById("temp");
 const gameScoreEl = document.getElementById("gameScore");
 const gameScoreLose = document.getElementById("gameScoreLose");
 const gameHighScore = document.getElementById("gameHighScore");
+gameHighScore.innerHTML = "High Score: " + highscore;
 const speechText = document.getElementById("speechText");
 
 // decides what do when message arrives
@@ -74,7 +75,7 @@ log("websocket", "Key - Value", message.type, message.value);
       (message.value == 0) ? wsTiltDone() : wsBusy(); // prevent noice from host side
     } else if (message.value == 0) {
       tiltRecovery();        
-    } else if (Math.abs(message.value) == 0.707) {      
+    } else {      
       s_tiltRight = (message.value == -0.707) ? true : false;
       tiltValue = message.value;     
 
@@ -95,8 +96,6 @@ log("websocket", "Key - Value", message.type, message.value);
         startX = player.position.x;
       }
       s_tiltRightLast = s_tiltRight;
-    } else {
-        gameHighScore.innerHTML = "High Score: " + message.value;
     }
     break;
   case 8:
@@ -202,8 +201,8 @@ function wsPowerOff() {
 function wsReboot() {
   webSocket.send("9:1");
 }
-function wsUpdateHighScore(score) {
-    webSocket.send("10:" + score);
+function wsUpdateHighScore() {
+    webSocket.send("10:" + highscore.toFixed(3));
 }
 
 /////////////////////////////////////

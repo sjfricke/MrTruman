@@ -64,7 +64,7 @@ var speaker1, speaker2, speakerStartY;
 var couch;
 var tiltValue = 0;
 
-var maxScore = 0;
+var oldHighscore = highscore;
 
 const walkTicker = new PIXI.ticker.Ticker();
 
@@ -537,7 +537,7 @@ function tiltFall(delta) {
     if (s_tiltGame) {
         // punish player for lots of tilts
         gameScore += Math.abs(startX - player.position.x) / 100;
-        maxScore = Math.max(gameScore, maxScore);
+        highscore = Math.max(gameScore, highscore);
 
         if (s_tiltWall == true || s_tiltWallCouch == true) {
             oppTiltCnt = 0; // reset score
@@ -546,7 +546,7 @@ function tiltFall(delta) {
         }
         gameScoreEl.style.visibility = "visible";
         gameScoreEl.innerHTML = "Score: " + gameScore.toFixed(3);
-        gameHighScore.innerHTML = "High Score: " + maxScore.toFixed(3);
+        gameHighScore.innerHTML = "High Score: " + highscore.toFixed(3);
     }
 }
 
@@ -572,7 +572,10 @@ function tiltRecovery() {
     s_tiltGame = false;
 
     // update score
-    wsUpdateHighScore(maxScore.toFixed(3));
+    if (highscore > oldHighscore) {
+        oldHighscore = highscore;
+        wsUpdateHighScore();
+    }
 }
 
 // used to punish quick tilters
