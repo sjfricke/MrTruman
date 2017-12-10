@@ -16,6 +16,11 @@ int commandDetect(char const* voice_str)
 
   printf("DEBUG - Said: %s\n", voice_str);
 
+  // Got help?
+  if(strstr(voice_str, "HELP") != NULL){
+    soundClipPlay(sc_notification, scb_notification);
+    broadcastString("11", "0");
+  }
   // to prevent unwanted playing of commands
   // "Truman" is key word to activate anything
   if(strstr(voice_str, "TRUMAN") == NULL){
@@ -100,6 +105,11 @@ int commandDetect(char const* voice_str)
   else if(strstr(voice_str, "RAP") != NULL){
     broadcastSpeech("4", "skrrrahh pap pap ka-ka-ka<br>Skidiki-pap-pap<br>pu-pu-pudrrrr-boom");
     animation_on = TRUE; 
+    return 0;
+  }
+
+  else if(strstr(voice_str, "SUPER") != NULL && (strstr(voice_str, "SAYIAN") != NULL)) {
+    broadcastString("10", "0");
     return 0;
   }
 

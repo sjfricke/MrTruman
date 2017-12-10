@@ -52,4 +52,8 @@ do math
 do
 math
 rap
+help
+super sayian
+super
+sayian
 
