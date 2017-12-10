@@ -35,9 +35,10 @@ Each event has two parts `<type> <value>`
 - `7` - Gyro animation
   - Value is of rotation in degrees between -Pi/2 and Pi/2 where 0 is level
     - **NOTE**: You need the leading zero so `0.707`, NOT `.707`
-    - -Pi/2 is tilt right
-    -  Pi/2 is tilt left
+    - -Pi/2 (-0.707) is tilt right
+    -  Pi/2 (0.707) is tilt left
     - Sending 0 is how Web knows everything is back to level
+    - Values not matching above are assumed to be the current high score
 - `8` - Chatting with Mr T.
   - Send string of what he should say. Also need number for callback in main
   - **NOTES**
@@ -80,6 +81,8 @@ Each event has two parts `<type> <value>`
 - `9` - System reboot/turnoff
   - `0` - Halt
   - `1` - Reboot
+-`10` - Update game highscore
+  - The high score is attached value
   
 ## State Machine
 
