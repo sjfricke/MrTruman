@@ -28,6 +28,7 @@ var s_idleMode      = false;
 var s_walkX         = 400;
 var s_couchOn       = false;
 var s_couchAnim     = false;
+var s_couchKilling  = false;
 var s_fireOn        = false;
 var s_fireAnim      = false;
 var s_speakersUp    = false;
@@ -70,7 +71,7 @@ function animationEnd(entry) {
     if (entry.animation.name == "walk") {
         walkComplete();
     } else if (entry.animation.name == "couchOff") {
-        s_couchOn = s_couchAnim = false;
+        s_couchOn = s_couchAnim = s_couchKilling = false;
         if (s_lightAnim) { walk(0,0,525); }
         else if (s_fireAnim) { walk(0,0,680); }
         else if (s_tiltAnim) { }
@@ -83,6 +84,7 @@ function animationEnd(entry) {
         speechText.style.fontSize = "18px";
         speechText.style.lineHeight = "25px";
         s_talkAnim = s_animationOn = false;
+        s_couchOn = s_couchAnim = false; // dirty fix, not solved, patching bug of double speak
         idleMode();
     } else if (entry.animation.name == "fidget") {
         s_fidgetAnim = false;
@@ -226,6 +228,7 @@ function couchAnimation() {
 }
 
 function couchKill() {
+    s_couchKilling = true;
     // player.state.clearTrack(0);
     player.state.setAnimation(0, "couchOff", false, 0);
     player.state.addAnimation(0, "stand", false, 0);

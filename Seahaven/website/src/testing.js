@@ -4,7 +4,7 @@ function testFunctions(e) {
 	var keyCode = e.keyCode;
 	switch(keyCode) {
 		case 81: // Q
-			webSocket.send('{"type":8,"value":2,"chat":"asdfasdf"}');
+			webSocket.send('{"type":8,"value":3,"chat":"asdfasdf"}');
 			break;
 		case 87: // W
 			webSocket.send('{"type":2,"value":2}');
