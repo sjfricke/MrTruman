@@ -3,6 +3,7 @@
 extern server_t* g_server;
 
 static char command[256];
+uint16_t speech_marker = 0;
 
 void webDataCallback( int type, char* value) {
   int val;
@@ -154,24 +155,7 @@ void webDataCallback( int type, char* value) {
     // when to play speech bubble sounds
   case 6:
     val = atoi(value);
-    if (val == 0) {
-      soundClipPlay(sc_misunderstand, scb_misunderstand);
-      usleep(2000000); // 2 sec
-    } else if (val == 1) {
-      soundClipPlay(sc_chat, scb_chat);
-      usleep(2000000); // 2 sec
-    } else if (val == 2) {
-      soundClipPlay(sc_not_hot, scb_not_hot);
-    } else if (val == 3) {
-      soundClipPlay(sc_quick_maths, scb_quick_maths);
-    } else if (val == 4) {
-      soundClipPlay(sc_skraa, scb_skraa);
-    } else if (val == 5) {
-
-    }
-
-    broadcastString("2", "0"); // ends animation bubble
-    animation_on = FALSE;
+    speech_marker = val+1;
     break;
     
     //unused
@@ -315,6 +299,30 @@ int main ( int argc, char* argv[] ) {
 
   while(1) {
 
+    if(speech_marker != 0){
+      if (speech_marker == 1) {
+        speech_marker = 1;
+        soundClipPlay(sc_misunderstand, scb_misunderstand);
+        usleep(2000000); // 2 sec
+      } else if (speech_marker == 2) {
+        soundClipPlay(sc_chat, scb_chat);
+        usleep(2000000); // 2 sec
+      } else if (speech_marker == 3) {
+        soundClipPlay(sc_not_hot, scb_not_hot);
+      } else if (speech_marker == 4) {
+        soundClipPlay(sc_quick_maths, scb_quick_maths);
+      } else if (speech_marker == 5) {
+        soundClipPlay(sc_skraa, scb_skraa);
+      } else if (speech_marker == 6) {
+
+      }
+
+      speech_marker = 0;
+      broadcastString("2", "0"); // ends animation bubble
+      animation_on = FALSE;
+    
+    }
+    
     // Sleep a millisecond cuz come on, who is it really hurting?
     if(animation_on){ usleep(1000); continue;}
 
