@@ -320,6 +320,9 @@ int loopback() {
 	aux_in = 1;
 	aux_pin = GpioDB410cMapping(23);
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
+
+	snd_pcm_drain();
+
 	// loop the entire time the aux cord is plugged in
 	while ((aux_in = GpioGetValue(aux_pin)) == 1) {
 		// If the volume has been changed, acknowledge it by changing the volume and clearing the changed flag.

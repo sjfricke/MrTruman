@@ -22,7 +22,7 @@ static void soundClipLoad(const char* file, void** sc_buff, uint32_t* scb_buff) 
     fclose(fp);
     return;
   }
-  *scb_buff = (f_len + (pcm_buff_size - (f_len % pcm_buff_size))) / pcm_buff_size;
+  *scb_buff = 1+(f_len + (pcm_buff_size - (f_len % pcm_buff_size))) / pcm_buff_size;
   printf("[%d] [%d] [%d] [%d]\n", f_len, pcm_buff_size,(pcm_buff_size - (f_len % pcm_buff_size)), *scb_buff); 
   fread(*sc_buff, f_len, 1, fp);
 
@@ -88,7 +88,7 @@ void soundClipPlay(void* sc_file, uint32_t buffers) {
     }
   }
 
-  snd_pcm_drop(outhandle);
+  snd_pcm_drain(outhandle);
   snd_pcm_close(outhandle);
  // free(pcm_buffer);
 }
