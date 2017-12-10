@@ -33,10 +33,15 @@
         <button id="reboot" ontouchstart="wsReboot();">REBOOT</button>
     </div>
     <div id="helpBox" style="display:none;">
-        <p>Hi, I'm Mr. Truman, your embedded friend. I was created by Eric Heinz, Spencer Fricke, and some other dude.</p>
-        <p>Here are some things you should try with me:</p>
-        <ul>
-            <li>I can be controlled by voice commands! Try saying "Truman" with:</li>
+
+        <div id="helpBoxHeader">
+            Hi, I'm <b>Mr. Truman</b>, your embedded friend. <br>I was created by Eric Heinz, Spencer Fricke, and <b>Mek</b>.
+            <br><br>Here are some things you should try:
+        </div>
+       
+        <div id="helpBoxList">
+            I can be controlled with <b>voice commands</b>!
+            <br>Try saying <b>"Truman"</b> with:<br>
             <ul>
                 <li>What's up?</li>
                 <li>Turn the lights on/off</li>
@@ -44,19 +49,22 @@
                 <li>Rap</li>
                 <li>Are you hot?</li>
                 <li>Do math</li>
-                <li>Super sayian</li>
+                <li>Super Saiyan</li>
             </ul>
-        </ul>
-        <ul>
-            <li>I can also be controlled though other types of inputs. Try:</li>
+        </div>
+ 
+        <div id="helpBoxExtra">
+            I can also be controlled though other types of inputs.
             <ul>
                 <li>Plugging in your phone to play music</li>
                 <li>Tilting my house</li>
-                <ul>
-                    <li>If you are up for a challenge, don't let me hit the wall!</li>
-                </ul>
+                
+                <li>If you are up for a challenge, don't let me hit the wall!</li>
+            
             </ul>
-        </ul>
+        </div>
+    
+
     </div>
     <script type="text/javascript">
         document.body.style.cursor = 'none';
