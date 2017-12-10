@@ -1,1 +1,1 @@
-var highscore = 250.000;
+var highscore = 647.132;

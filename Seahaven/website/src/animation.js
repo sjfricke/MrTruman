@@ -622,7 +622,8 @@ function fidgetKill() {
 *************************/
 function talkAnimation() {
     s_talkAnim = true;
-
+    s_idleMode = false;
+    
     if (s_couchOn) { 
         couchKill();
     } else if (s_fidgetAnim) { 

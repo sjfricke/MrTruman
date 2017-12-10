@@ -175,12 +175,6 @@ void webDataCallback( int type, char* value) {
   case 9:
     val = atoi(value);
 
-    checkServoStateFile();
-    if (checkServoState() == STATE_SERVO_EXTENDED) {
-      // retract servo
-      servoRetract();
-    }
-
     if (val == 0) {
       setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
 	setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);

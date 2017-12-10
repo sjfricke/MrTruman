@@ -321,7 +321,13 @@ int loopback() {
 	aux_pin = GpioDB410cMapping(23);
 	pthread_create(&tid, NULL, analyze_buffer, (void *)buffer);
 
-	snd_pcm_drain();
+	//snd_pcm_reset(outhandle);
+	int availframes = snd_pcm_avail(outhandle);
+//	if(availframes > 0){
+		//snd_pcm_prepare(outhandle);
+		//snd_pcm_writei(outhandle, buffer, availframes);
+		//snd_pcm_drop(outhandle);
+//	}
 
 	// loop the entire time the aux cord is plugged in
 	while ((aux_in = GpioGetValue(aux_pin)) == 1) {

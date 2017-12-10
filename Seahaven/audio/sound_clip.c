@@ -22,7 +22,7 @@ static void soundClipLoad(const char* file, void** sc_buff, uint32_t* scb_buff) 
     fclose(fp);
     return;
   }
-  *scb_buff = 1+(f_len + (pcm_buff_size - (f_len % pcm_buff_size))) / pcm_buff_size;
+  *scb_buff = (f_len + (pcm_buff_size - (f_len % pcm_buff_size))) / pcm_buff_size;
   printf("[%d] [%d] [%d] [%d]\n", f_len, pcm_buff_size,(pcm_buff_size - (f_len % pcm_buff_size)), *scb_buff); 
   fread(*sc_buff, f_len, 1, fp);
 
@@ -82,13 +82,18 @@ void soundClipPlay(void* sc_file, uint32_t buffers) {
     memcpy(pcm_buffer, sc_file + (pcm_buff_size * i), pcm_buff_size);
 
     wr = snd_pcm_writei(outhandle, pcm_buffer, framesout);
-     if (wr < 0) {
+     if ((wr < 0) || (wr == -EPIPE)) {
+//	     snd_pcm_drop(outhandle);
+//	     snd_pcm_prepare(outhandle);
       printf("WRITE ERR %s\n", snd_strerror(wr));
-	printf("Re initialized: Lets retry that\n");
     }
   }
 
-  snd_pcm_drain(outhandle);
+  //usleep(4000);
+  //snd_pcm_drop(outhandle);
+
+  usleep(4000);
+  snd_pcm_drop(outhandle);
   snd_pcm_close(outhandle);
  // free(pcm_buffer);
 }
