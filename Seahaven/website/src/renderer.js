@@ -86,7 +86,8 @@ class Renderer {
             scale = data.scale,
             hideAlpha = data.hideAlpha,
             anchorX = data.anchorX,
-            anchorY = data.anchorY;
+            anchorY = data.anchorY,
+            hide = data.hide;
 
         if (!this.checkload(id, imgPath, pos)) { return; }
 
@@ -105,6 +106,7 @@ class Renderer {
             that.elems[id].position.y = pos.y * window.outerHeight;
 
             if (hideAlpha) { that.elems[id].alpha = 0; }
+            if (hide) { that.elems[id].hide = true; }
 
             if (scale !== undefined && typeof scale === 'number' && scale > 0) {
                 that.elems[id].scale.x = scale;

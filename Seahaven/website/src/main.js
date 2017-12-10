@@ -11,6 +11,7 @@ var appData;
 // textures
 var lightOnTexture, lightOffTexture;
 var wallTextures = new Array(5);
+var newPicture;
 
 function start() {
     setWebSocket();
@@ -66,20 +67,20 @@ function setup() {
         },
         {
             type: 'add',
+            name: 'frame',
+            path: resPath.frame,
+            pt: new PIXI.Point(0.28125, 0.26),
+            anchorY: 0,
+            scale: 1.0
+        },
+        {
+            type: 'add',
             name: 'picture',
             path: resPath.picture,
             pt: new PIXI.Point(0.28125, 0.26),            
             anchorY: -.61,
             scale: .8
         },
-        {
-            type: 'add',
-            name: 'frame',
-            path: resPath.frame,
-            pt: new PIXI.Point(0.28125, 0.26),
-            anchorY: 0,
-            scale: 1.0
-        },        
         {           
             type: 'addSpritesheet',
             name: 'fireAnimated',
@@ -128,6 +129,15 @@ function setup() {
             pt: new PIXI.Point(renderer.getW() / 2, renderer.getH()),
             scale: pScaleRight
         },
+        {
+            type: 'add',
+            name: 'newPicture',
+            path: resPath.picture,
+            pt: new PIXI.Point(0.29375, 0.67083),            
+            anchorY: -.61,
+            scale: .16,
+            hideAlpha: true
+        },
         {           
             type: 'addSpritesheet',
             name: 'flashAnimated',
@@ -162,6 +172,7 @@ function loadedSetup() {
     
     couch = renderer.getElemByID("couch");
     picture = renderer.getElemByID("picture");
+    newPicture = renderer.getElemByID("newPicture");
     frame = renderer.getElemByID("frame");
 
     speaker1 = renderer.getElemByID('speaker1');

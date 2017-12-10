@@ -18,6 +18,7 @@
     pictureHold
     pictureStart
     pictureTake
+    pictureWalk
     speak
     walk
 */
@@ -44,8 +45,6 @@ var s_tiltAnim      = false;
 var s_tiltGame      = false;
 var s_fidgetAnim    = false;
 var s_talkAnim      = false;
-var s_pictureUp     = false;
-var s_pictureTaken  = false;
 var s_pictureAnim   = false;
 var s_pictureIndex  = 2;
 
@@ -54,6 +53,7 @@ const fallRatePlayer = 3;
 const fallRateCouch = 1.5;
 const fallRatePic =  0.02;
 const speakerRate = 0.00004;
+const picRate = 0.04;
 
 var player;
 const pScaleRight = 0.5;
@@ -92,13 +92,12 @@ function animationEnd(entry) {
         s_fidgetAnim = false;
         if (s_idleMode) { idleMode(); }
     } else if (entry.animation.name == "pictureStart") {
-        s_pictureUp = true;
         wsPictureReady();
     } else if (entry.animation.name == "pictureTake") {
-        pictureTrigger();
+        player.state.setAnimation(0, 'pictureWalk', true);
+        renderer.app.ticker.add(pictureWalk);
     } else if (entry.animation.name == "pictureChange") {
-        s_pictureAnim = s_animationOn = s_pictureTaken = false;
-        pictureChange();
+        s_pictureAnim = s_animationOn = false;                      
         wsPictureDone();
         idleMode();
     } else if (entry.animation.name == "fireOn") {
@@ -179,9 +178,8 @@ function walkComplete() {
         player.scale.x = pScaleRight;
         player.state.addAnimation(0, (s_fireOn) ? 'fireOff' : 'fireOn', false, 0);
         (s_fireOn) ? wsFireOffSound() : wsFireOnSound();
-    } else if (s_pictureTaken) {
-         pictureTrigger();
-    } else if (s_speakersAnim) {
+    }
+     else if (s_speakersAnim) {
         speakerAnimation();
     }
 }
@@ -372,7 +370,6 @@ function fireOff() {
 *       Picture          *
 *************************/
 function pictureAnimation() {
-    s_pictureTaken = false; // need since picture has two post-walk animations
     s_pictureAnim = true;
     s_animationOn = true;    
     s_idleMode = false; 
@@ -386,7 +383,7 @@ function pictureAnimation() {
 }
 
 function pictureStart() {
-    player.state.setAnimation(0, "pictureStart", false, 0);
+    player.state.setAnimation(0, "pictureStart", false);
     player.state.addAnimation(0, "pictureHold", false, 0); // purly cause listener won't trigger
 }
 
@@ -395,36 +392,58 @@ function pictureFlash() {
     flash.position.x = player.position.x + ((player.scale.x > 0) ? 31 : -31);
     flash.alpha = 1;
     flash.gotoAndPlay(0);
-
 }
 
 function pictureTrigger() {
-    s_pictureTaken = true;
-
-    if (s_pictureUp) {        
-        s_pictureUp = false;
-        renderer.getElemByID("flashAnimated").alpha = 0;
-        player.state.setAnimation(0, "pictureTake", false);
-        player.state.addAnimation(0, "stand", false, 0);
-        return;
-    }
-
-    if (player.position.x < 250 || player.position.x > 300) {
-        walk(0,0,275);
-        return;
-    }
-
-    player.scale.x = pScaleLeft;
-    player.state.setAnimation(0, "pictureChange", false);
+    pictureChange();
+    renderer.getElemByID("flashAnimated").alpha = 0;
+    player.state.setAnimation(0, "pictureTake", false);
     player.state.addAnimation(0, "stand", false, 0);
+    player.scale.x = (player.position.x - 275 < 0) ?  pScaleRight : pScaleLeft;
+}    
+ 
+
+function pictureWalk(delta) {
+    player.position.x += walkRate * delta * (player.scale.x > 0 ? 1 : -1);
+
+    if (Math.abs(player.position.x - 275) < 5) {
+        player.position.x = 275;
+        renderer.app.ticker.remove(pictureWalk);
+        pictureReplace()
+    }
 }
 
 function pictureChange() { 
 
     (new PIXI.loaders.Loader()).add('newPicture', resPath.cameraImage + s_pictureIndex + ".jpg").
         load(function (loader, res) {
-            picture.texture = res.newPicture.texture;
+            newPicture.texture = res.newPicture.texture;
+            newPicture.position.x = 235;
+            newPicture.position.y = 322;
+            newPicture.scale.x = newPicture.scale.y = .16;
         });
+}
+
+function pictureReplace() {
+    player.scale.x = pScaleLeft;
+    player.state.setAnimation(0, "pictureChange", false);
+    setTimeout(function(){
+        newPicture.alpha = 1;
+        renderer.app.ticker.add(pictureScale);
+    }, 1000);
+    player.state.addAnimation(0, "stand", false, 0);
+}
+
+function pictureScale(delta) {
+    if (newPicture.scale.x < .80 && newPicture.position.y > 260) {
+        newPicture.scale.x = newPicture.scale.y += .23 * picRate;
+        newPicture.position.y -= 25 * picRate;
+        newPicture.position.x -= 5 * picRate;
+    } else {
+        newPicture.alpha = 0;
+        picture.texture = newPicture.texture;  
+        renderer.app.ticker.remove(pictureScale);
+    }
 }
 
 /*************************

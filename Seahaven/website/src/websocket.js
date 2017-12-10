@@ -42,13 +42,13 @@ function wsOnMessage(event) {
       }
       break;
   case 4:
-    if (message.value == 0 && !s_pictureUp) { 
+    if (message.value == 0) { 
       (s_animationOn) ? wsBusy() : pictureAnimation();
-    } else if (message.value == 1 && s_pictureUp) { 
+    } else if (message.value == 1) { 
       pictureFlash();
     } else if (message.value >= 2) { 
       s_pictureIndex = message.value;
-      pictureTrigger();
+      pictureTrigger();      
     }
       break;
   case 5:

@@ -16,13 +16,13 @@ function testFunctions(e) {
             webSocket.send('{"type":1,"value":1}');
 			break;
 		case 65: // A
-			webSocket.send('{"type":7,"value":0}');
+			webSocket.send('{"type":4,"value":0}');
 			break;
 		case 83: // S
-			webSocket.send('{"type":7,"value":0.707}');
+			webSocket.send('{"type":4,"value":1}');
 			break;
 		case 68: // D
-			webSocket.send('{"type":7,"value":-0.707}');
+			webSocket.send('{"type":4,"value":2}');
 			break;
 		case 70: // F
 			webSocket.send('{"type":11,"value":3}');
