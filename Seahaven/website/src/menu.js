@@ -12,7 +12,7 @@ const m_filter = document.getElementById("filter");
 const m_help = document.getElementById("help");
 const m_helpBox = document.getElementById("helpBox");
 const m_xMax_show = 570;
-const m_yMax_show = 358;
+const m_yMax_show = 315;
 var s_menuOpen = false;
 var s_powerOpen = false;
 var powerTimeout;

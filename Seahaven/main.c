@@ -316,8 +316,7 @@ int main ( int argc, char* argv[] ) {
 	  setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
 	}
 
-  servoRetract();
-
+	servoRetract();
       }
 
       if (gyro_tripped) {
