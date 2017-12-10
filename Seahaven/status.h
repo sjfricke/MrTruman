@@ -4,6 +4,7 @@
 #define FALSE 0
 
 uint8_t animation_on;
+uint8_t browser_connected;
 uint8_t audio_plugged_in;
 uint8_t local_volume;
 uint8_t gyro_tripped;

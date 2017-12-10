@@ -103,7 +103,7 @@ int commandDetect(char const* voice_str)
   }
 
   else if(strstr(voice_str, "RAP") != NULL){
-    broadcastSpeech("4", "skrrrahh pap pap ka-ka-ka<br>Skidiki-pap-pap<br>pu-pu-pudrrrr-boom");
+    broadcastSpeech("4", "skrrrahh pap pap ka-ka-ka<br><br>");
     animation_on = TRUE; 
     return 0;
   }
