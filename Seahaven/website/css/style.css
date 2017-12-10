@@ -32,7 +32,7 @@ selector { cursor: none; }
     top: 65%;
     left: 56%;
     z-index: 2;
-    color: greenyellow;
+    color: green;
     font-size: 16px;
     font-family: monospace;
 }
@@ -42,7 +42,7 @@ selector { cursor: none; }
     top: 68%;
     left: 58%;
     z-index: 3;
-    color: red;
+    color: crimson;
     font-size: 16px;
     font-family: monospace;
 }
