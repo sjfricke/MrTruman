@@ -86,7 +86,7 @@ int commandDetect(char const* voice_str)
   }
 
   else if((strstr(voice_str, "FIDGET") != NULL) && (strstr(voice_str, "SPINNER") != NULL)){
-    broadcastString("9", "0");
+    broadcastString("9", "1");
     return 0;
   }
 

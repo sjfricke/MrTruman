@@ -118,8 +118,13 @@ log("websocket", "Key - Value", message.type, message.value);
     
     break;
   case 9:
-    if (s_animationOn) { wsBusy(); }
-    else { (s_fidgetAnim) ? fidgetKill() : fidgetAnimation(); }
+      if (s_animationOn || !s_idleMode || s_fidgetAnim ||
+	  (s_couchOn && message.value != 1)) { wsBusy(); }
+      //else { (s_fidgetAnim) ? fidgetKill() : fidgetAnimation(); }
+      else {
+	  fidgetAnimation();
+	  setTimeout(function(){fidgetKill();}, 3000);
+      }
       break;
 
   case 10:

@@ -214,10 +214,17 @@ void webDataCallback( int type, char* value) {
 
 void* pollTemperature(void* x) {
   double currentTemp;
+  int fidgetCount = 0;
   while(1) {
     currentTemp = getTemp();
     broadcastInt("6", (int)currentTemp);
     usleep(2000000); // 2 sec
+
+    fidgetCount++;
+    if (fidgetCount > 3) {
+      fidgetCount = 0;
+      broadcastInt("9",0);
+    }
   }
 }
 
@@ -276,14 +283,14 @@ int main ( int argc, char* argv[] ) {
   audio_threshold = FALSE;
   browser_connected = FALSE;
 
+  while (browser_connected == FALSE) {
+    usleep(1000);
+  }
+
   // Kick off temperature thread
   int rc = pthread_create(&tempThread, NULL, pollTemperature, NULL);
   if (rc) {
     printf("ERROR: Can't create temperature thread");
-  }
-
-  while (browser_connected == FALSE) {
-    usleep(1000);
   }
 
   while(1) {

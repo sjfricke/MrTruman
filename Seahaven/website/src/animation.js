@@ -28,6 +28,7 @@ var s_request       = false;
 var s_idleMode      = false;
 var s_walkX         = 400;
 var s_couchOn       = false;
+var s_couchLast     = false;
 var s_couchAnim     = false;
 var s_couchKilling  = false;
 var s_fireOn        = false;
@@ -191,11 +192,13 @@ function idleMode() {
 
     // logic to move around randomly
     if (player.position.x == 200) {
-        if (Math.random() < 0.6) {
+        if (s_couchLast && Math.random() < 0.7) {
             s_couchOn = true;
+	    s_couchLast = true;
             walkTicker.stop();
             couchAnimation(); 
-        } else { 
+        } else {
+	    s_couchLast = false;
             walk(1, 200);
         }
     }
@@ -435,10 +438,10 @@ function pictureReplace() {
 }
 
 function pictureScale(delta) {
-    if (newPicture.scale.x < .80 && newPicture.position.y > 260) {
-        newPicture.scale.x = newPicture.scale.y += .23 * picRate;
-        newPicture.position.y -= 25 * picRate;
-        newPicture.position.x -= 5 * picRate;
+    if (newPicture.scale.x < .57 && newPicture.position.y > 260) {
+        newPicture.scale.x = newPicture.scale.y += .29 * picRate;
+        newPicture.position.y -= 22 * picRate;
+        newPicture.position.x -= 12 * picRate;
     } else {
         newPicture.alpha = 0;
         picture.texture = newPicture.texture;  
@@ -606,7 +609,9 @@ function fidgetStart() {
 }
 
 function fidgetKill() {
-    player.state.addAnimation(0, "stand", false, 0);
+    if (s_fidgetAnim) {
+	player.state.addAnimation(0, "stand", false, 0);
+    }
 }
 
 /*************************
