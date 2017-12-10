@@ -4,6 +4,8 @@ TestSeahaven
 # camera photos
 website/res/img/camera_image*.*jpg
 
+servo_state.truman
+
 # Node test server
 node_modules
 
