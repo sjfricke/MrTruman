@@ -130,8 +130,10 @@ function wsOnMessage(event) {
   }
 }
 
-
 function wsBusy() {
+  // webSocket.send("0:0");
+}
+function wsAllReadyToStart() {
   webSocket.send("0:0");
 }
 function wsTurnLightsOff() {

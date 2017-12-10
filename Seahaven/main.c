@@ -8,9 +8,9 @@ void webDataCallback( int type, char* value) {
   int val;
   switch(type) {
 
-  // PLACEHOLDER Callback 
+  // When Ready call
   case 0:
-    // Returns case 0 of animation is busy
+    browser_connected = TRUE;
     break;
 
   // LIGHTS Callback  
@@ -268,6 +268,7 @@ int main ( int argc, char* argv[] ) {
   lights_on = FALSE;
   photo_index = 2; // 0 and 1 are reserved
   audio_threshold = FALSE;
+  browser_connected = FALSE;
 
   // Kick off temperature thread
   int rc = pthread_create(&tempThread, NULL, pollTemperature, NULL);
@@ -275,6 +276,9 @@ int main ( int argc, char* argv[] ) {
     printf("ERROR: Can't create temperature thread");
   }
 
+  while (browser_connected == FALSE) {
+    usleep(1000);
+  }
 
     while(1) {
 
