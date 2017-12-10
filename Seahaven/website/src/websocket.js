@@ -1,13 +1,15 @@
 // global WebSocket pointer
 var webSocket;
-var prevTiltDir = null;
 var oppTiltCnt = 0;
 var startX = 400;
 var gameScore = 0.000;
+var gameScoreLoseTime;
+var gameScoreLoseAmt;
 var chatCallback = 0;
 
 const nestTemp = document.getElementById("temp");
 const gameScoreEl = document.getElementById("gameScore");
+const gameScoreLose = document.getElementById("gameScoreLose");
 const speechText = document.getElementById("speechText");
 
 // decides what do when message arrives
@@ -72,26 +74,22 @@ function wsOnMessage(event) {
       tiltRecovery();        
     } else {      
       s_tiltRight = (message.value < 0) ? true : false;
-
-      if (!s_tiltGame) {
-        s_tiltGame = true;
-        nestTemp.style.left = "4.3%";
-      }
-
-      // see if we are tilting in opp dir
-      if (prevTiltDir !== s_tiltRight) {
-          oppTiltCnt++;
-          startX = player.position.x;
-      }
-      prevTiltDir = s_tiltRight;
-
-      nestTemp.innerHTML = (oppTiltCnt < 10) ? "0" + oppTiltCnt : oppTiltCnt;
-      tiltValue = message.value;
+      tiltValue = message.value;     
 
       if (!s_tiltAnim) { tiltAnimation(); } //only one starting of tilt
+      else if (!s_tiltGame) {
+        s_tiltGame = true;
+        nestTemp.style.left = "4.3%";
+        oppTiltCnt = 1;
+        nestTemp.innerHTML = "01";
+      }  
       else if (s_tiltRightLast != s_tiltRight) { 
-          s_tiltWall = s_tiltWallCouch = false;
-          player.state.setAnimation(0, "fallHold", false);
+        s_tiltWall = s_tiltWallCouch = false;
+        player.state.setAnimation(0, "fallHold", false);
+        oppTiltCnt++;
+        nestTemp.innerHTML = (oppTiltCnt < 10) ? "0" + oppTiltCnt : oppTiltCnt;
+        tiltReduceScore();
+        startX = player.position.x;
       }
       s_tiltRightLast = s_tiltRight;
     }
@@ -116,6 +114,16 @@ function wsOnMessage(event) {
     if (s_animationOn) { wsBusy(); }
     else { (s_fidgetAnim) ? fidgetKill() : fidgetAnimation(); }
       break;
+
+  case 10:
+    player.filters = [ glowFilter ]  
+    setTimeout(function(){ player.filters = [];}, 5000);
+    break;
+
+  case 11:
+    displayHelp();
+    setTimeout(function(){ helpBoxClose();}, 10000);
+    break;
 
   default:
 	  warn("WebSocket", "No case for data: %0", message);

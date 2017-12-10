@@ -46,6 +46,7 @@ Each event has two parts `<type> <value>`
     - use `<br>` to seperate line
       - Example: `How are you<br>on this day`
 - `9` - Toggle fidget spinner
+- `10` - Super Saiyan Mode
 
 ## Web-to-Host Calls
 - `0` - Busy with Animation - try again later

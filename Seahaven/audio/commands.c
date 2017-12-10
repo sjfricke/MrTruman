@@ -16,11 +16,19 @@ int commandDetect(char const* voice_str)
 
   printf("DEBUG - Said: %s\n", voice_str);
 
+  // Got help?
+  if(strstr(voice_str, "HELP") != NULL){
+    soundClipPlay(sc_notification, scb_notification);
+    broadcastString("11", "0");
+  }
   // to prevent unwanted playing of commands
   // "Truman" is key word to activate anything
   if(strstr(voice_str, "TRUMAN") == NULL){
     return 0;
   }
+
+  char* detectOn = strstr(voice_str, "ON");
+  char* detectOff = strstr(voice_str, "OFF");
 
   /* 
     Light switch animation
@@ -30,22 +38,15 @@ int commandDetect(char const* voice_str)
   */ 
   if ((strstr(voice_str, c_lights) != NULL)) {
 
-    // Play the notification sounds
-    soundClipPlay(sc_notification, scb_notification);
-
-
-    char* detectOn = strstr(voice_str, "ON");
-    char* detectOff = strstr(voice_str, "OFF");
-
-	
     if((detectOn != NULL) || (detectOff != NULL)){
+      // Play the notification sounds
+      soundClipPlay(sc_notification, scb_notification);
       (detectOn != NULL) ? broadcastString("1", "0") : broadcastString("1", "1");
-
-	usleep(1000);
+	    usleep(1000);
       animation_on = TRUE;
+      return 0;
     }
 
-    return 0;
   }
 
   /*
@@ -56,31 +57,25 @@ int commandDetect(char const* voice_str)
   */
   else if (strstr(voice_str, c_fire) != NULL) {
 
-    // Play the notification sounds
-    soundClipPlay(sc_notification, scb_notification);
-
-    char* detectOn = strstr(voice_str, "ON");
-    char* detectOff = strstr(voice_str, "OFF");
-
     if((detectOn != NULL) || (detectOff != NULL)){
+      // Play the notification sounds
+      soundClipPlay(sc_notification, scb_notification);
     	(detectOn != NULL) ? broadcastString("3", "0") : broadcastString("3", "1");
       animation_on = TRUE;
+      return 0;
     }
-    
-    return 0;
+
   }
 
   /*
     Taking pictures animation
   */
   else if ((strstr(voice_str, c_picture) != NULL) || (strstr(voice_str, c_photo) != NULL)) {
-
-      soundClipPlay(sc_notification, scb_notification);
       // Play the notification sounds
-
-    broadcastString("4", "0");
-    animation_on = TRUE;
-    return 0;
+      soundClipPlay(sc_notification, scb_notification);
+      broadcastString("4", "0");
+      animation_on = TRUE;
+      return 0;
   }
 
   // Chat bubble
@@ -113,7 +108,13 @@ int commandDetect(char const* voice_str)
     return 0;
   }
 
+  else if(strstr(voice_str, "SUPER") != NULL && (strstr(voice_str, "SAYIAN") != NULL)) {
+    broadcastString("10", "0");
+    return 0;
+  }
+
   broadcastSpeech("0", "???");
   animation_on = TRUE;  
   return -1;
+  
 }

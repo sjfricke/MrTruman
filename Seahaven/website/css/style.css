@@ -31,6 +31,16 @@ selector { cursor: none; }
     font-family: monospace;
 }
 
+#gameScoreLose {
+    position: absolute;
+    top: 68%;
+    left: 58%;
+    z-index: 3;
+    color: red;
+    font-size: 16px;
+    font-family: monospace;
+}
+
 #speech {
     visibility: hidden;
 }
@@ -166,4 +176,15 @@ selector { cursor: none; }
     border-radius: 10px;
     background: #0D47A1;
     z-index: 8;
+}
+
+#helpBox {
+    position: absolute;
+    z-index: 1;
+    background: rgba(255,255,255,0.80);
+    font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color: firebrick;
+    width: 50%;
+    left: 25%;
+    padding: 15px;
 }
