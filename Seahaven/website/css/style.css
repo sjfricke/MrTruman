@@ -177,3 +177,14 @@ selector { cursor: none; }
     background: #0D47A1;
     z-index: 8;
 }
+
+#helpBox {
+    position: absolute;
+    z-index: 1;
+    background: rgba(255,255,255,0.80);
+    font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color: firebrick;
+    width: 50%;
+    left: 25%;
+    padding: 15px;
+}

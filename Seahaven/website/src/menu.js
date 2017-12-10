@@ -9,6 +9,8 @@ const m_power = document.getElementById("power");
 const m_halt = document.getElementById("halt");
 const m_reboot = document.getElementById("reboot");
 const m_filter = document.getElementById("filter");
+const m_help = document.getElementById("help");
+const m_helpBox = document.getElementById("helpBox");
 const m_xMax_show = 570;
 const m_yMax_show = 358;
 var s_menuOpen = false;
@@ -28,6 +30,9 @@ function setMenuEvents() {
     m_vSlider.addEventListener("touchstart", checkValidSlider);
     m_vSlider.addEventListener("touchend", uncheckValidSlider);
     m_vSlider.addEventListener("input", adjustVSlider);
+    m_help.addEventListener("touchstart", buttonStart);
+    m_help.addEventListener("touchstart", displayHelp);
+    m_help.addEventListener("touchend", helpEnd);
 }
 
 function menuHandler(event) {
@@ -35,8 +40,17 @@ function menuHandler(event) {
 		m_power.style.visibility = "hidden";
 		s_powerOpen = false;
 	} else {
-		(s_menuOpen) ? menuClose(event) : menuOpen(event);
-	}	
+		if (s_menuOpen) {
+            menuClose(event);
+        } else {
+            // open menu when we aren't closing the help box
+            if (m_helpBox.style.display != "none") {
+                helpBoxClose();
+            } else {
+                menuOpen(event);
+            }
+        };
+    }
 }
 
 function menuOpen(event) {
@@ -49,9 +63,10 @@ function menuOpen(event) {
 	menu.style.top = (m_yMin - 16) + "px";
 
 	m_icon.style.visibility = "visible";
-	m_volume.style.visibility = "visible";
+    m_volume.style.visibility = "visible";
 	setTimeout(function(){m_wall.style.visibility = "visible";},30);
     setTimeout(function(){m_filter.style.visibility = "visible";},60);
+    setTimeout(function(){m_help.style.visibility = "visible";},90);
 
 	s_menuOpen = true;
 }
@@ -68,6 +83,7 @@ function menuClose(event, hardReset) {
 	m_volume.style.visibility = "hidden";
 	m_wall.style.visibility = "hidden";
     m_filter.style.visibility = "hidden";
+    m_help.style.visibility = "hidden";
 	s_menuOpen = false;
 }
 
@@ -91,7 +107,15 @@ function buttonEnd(element) {
 		element.style.background = "#448AFF";
 		element.style.color = "white";
 	}	
-	menuClose(0, true);
+    menuClose(0, true);
+}
+
+function helpEnd() {
+    buttonEnd(m_help);
+}
+
+function helpBoxClose() {
+    m_helpBox.style.display = "none";
 }
 
 
@@ -135,6 +159,9 @@ function adjustVSlider(event) {
     wsVolume(event.srcElement.value);
 	m_vBall.style.left = (event.srcElement.value * 1.48) + "px";
 	m_vFill.style.width = (event.srcElement.value * 0.8) + "%";
+}
+function displayHelp() {
+    m_helpBox.style.display = "inherit";
 }
 
 function powerTimer(event) {

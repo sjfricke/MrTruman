@@ -120,6 +120,11 @@ function wsOnMessage(event) {
     setTimeout(function(){ player.filters = [];}, 5000);
     break;
 
+  case 11:
+    displayHelp();
+    setTimeout(function(){ helpBoxClose();}, 10000);
+    break;
+
   default:
 	  warn("WebSocket", "No case for data: %0", message);
   }

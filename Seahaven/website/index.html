@@ -26,10 +26,37 @@
         </div>
         <div id="wall" class="buttonText">CHANGE WALL</div>
         <div id="filter" class="buttonText">MIX THINGS UP</div>
+        <div id="help" class="buttonText">HELP</div>
     </div>
     <div id="power">
         <button id="halt" ontouchstart="wsPowerOff();">HALT</button>
         <button id="reboot" ontouchstart="wsReboot();">REBOOT</button>
+    </div>
+    <div id="helpBox" style="display:none;">
+        <p>Hi, I'm Mr. Truman, your embedded friend. I was created by Eric Heinz, Spencer Fricke, and some other dude.</p>
+        <p>Here are some things you should try with me:</p>
+        <ul>
+            <li>I can be controlled by voice commands! Try saying "Truman" with:</li>
+            <ul>
+                <li>What's up?</li>
+                <li>Turn the lights on/off</li>
+                <li>Turn fire on/off</li>
+                <li>Rap</li>
+                <li>Are you hot?</li>
+                <li>Do math</li>
+                <li>Super sayian</li>
+            </ul>
+        </ul>
+        <ul>
+            <li>I can also be controlled though other types of inputs. Try:</li>
+            <ul>
+                <li>Plugging in your phone to play music</li>
+                <li>Tilting my house</li>
+                <ul>
+                    <li>If you are up for a challenge, don't let me hit the wall!</li>
+                </ul>
+            </ul>
+        </ul>
     </div>
     <script type="text/javascript">
         document.body.style.cursor = 'none';
