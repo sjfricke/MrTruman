@@ -103,8 +103,11 @@ log("websocket", "Key - Value", message.type, message.value);
       speechText.innerHTML = message.chat;
 
       if (message.value == 4) {
-        speechText.style.fontSize = "15px";
+        speechText.style.fontSize = "12px";
         speechText.style.lineHeight = "19px";
+	  setTimeout(function(){speechText.innerHTML = "skrrrahh pap pap ka-ka-ka<br>Skidiki-pap-pap<br>"},4000);
+	  setTimeout(function(){speechText.innerHTML = "skrrrahh pap pap ka-ka-ka<br>Skidiki-pap-pap<br>pu-pu-pudrrrr-boom"},6000);
+	  
       }
 
       talkAnimation();
