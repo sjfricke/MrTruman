@@ -44,7 +44,7 @@ function menuHandler(event) {
             menuClose(event);
         } else {
             // open menu when we aren't closing the help box
-            if (m_helpBox.style.display != "none") {
+            if (m_helpBox.style.visibility == "visible") {
                 helpBoxClose();
             } else {
                 menuOpen(event);
@@ -115,7 +115,7 @@ function helpEnd() {
 }
 
 function helpBoxClose() {
-    m_helpBox.style.display = "none";
+    m_helpBox.style.visibility = "hidden";
 }
 
 
@@ -161,7 +161,7 @@ function adjustVSlider(event) {
 	m_vFill.style.width = (event.srcElement.value * 0.8) + "%";
 }
 function displayHelp() {
-    m_helpBox.style.display = "inherit";
+    m_helpBox.style.visibility = "visible";
 }
 
 function powerTimer(event) {

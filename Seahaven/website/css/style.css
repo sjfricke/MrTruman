@@ -38,7 +38,7 @@ selector { cursor: none; }
     font-size: 16px;
     background: white;
     font-family: monospace;
-    display: none;
+    visibility: hidden;
 }
 
 #gameScoreLose {
@@ -52,7 +52,7 @@ selector { cursor: none; }
     background-color: white;
     border-radius: 5px;
     padding: 5px;
-    display: none;
+    visibility: hidden;
 }
 
 .move {
@@ -76,7 +76,7 @@ selector { cursor: none; }
     font-size: 21px;
     z-index: 1;
     font-family: monospace;
-    display: none;
+    visibility: hidden;
 }
 
 #speech {

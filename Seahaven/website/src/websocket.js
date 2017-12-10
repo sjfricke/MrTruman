@@ -84,7 +84,7 @@ log("websocket", "Key - Value", message.type, message.value);
         nestTemp.style.left = "4.3%";
         oppTiltCnt = 1;
         nestTemp.innerHTML = "01";
-        gameHighScore.style.display = "inherit";
+        gameHighScore.style.visibility = "visible";
       }  
       else if (s_tiltRightLast != s_tiltRight) { 
         s_tiltWall = s_tiltWallCouch = false;

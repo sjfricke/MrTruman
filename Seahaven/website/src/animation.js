@@ -192,7 +192,7 @@ function idleMode() {
 
     // logic to move around randomly
     if (player.position.x == 200) {
-        if (s_couchLast && Math.random() < 0.7) {
+        if (!s_couchLast && Math.random() < 0.7) {
             s_couchOn = true;
 	    s_couchLast = true;
             walkTicker.stop();
@@ -544,7 +544,7 @@ function tiltFall(delta) {
             gameScore = 0.000;
             nestTemp.innerHTML = "00";
         }
-        gameScoreEl.style.display = "inherit";
+        gameScoreEl.style.visibility = "visible";
         gameScoreEl.innerHTML = "Score: " + gameScore.toFixed(3);
         gameHighScore.innerHTML = "High Score: " + maxScore.toFixed(3);
     }
@@ -556,7 +556,7 @@ function tiltRecovery() {
     player.state.addAnimation(0, "stand", false, 0);
 
     // reset furniture
-    couch.position.x = 200;
+    couch.position.x = 225;
     picture.rotation = frame.rotation = 0;
 
     // reset game nest_temp goes back to 88 degrees    
@@ -566,9 +566,9 @@ function tiltRecovery() {
     gameScore = 0;
     nestTemp.style.left = "3.98%";
     nestTemp.innerHTML = "88&#176;";
-    gameScoreEl.style.display = "none";
-    gameScoreLose.style.display = "none";
-    gameHighScore.style.display = "none";
+    gameScoreEl.style.visibility = "hidden";
+    gameScoreLose.style.visibility = "hidden";
+    gameHighScore.style.visibility = "hidden";
     s_tiltGame = false;
 
     // update score
@@ -580,11 +580,11 @@ function tiltReduceScore() {
     clearTimeout(gameScoreLoseTime);
     gameScoreLoseAmt = Math.min(50, (oppTiltCnt-1) * 10);
     gameScore -= gameScoreLoseAmt;
-    gameScoreLose.style.display = "inherit";
+    gameScoreLose.style.visibility = "visible";
     gameScoreLose.classList.add("move");
     gameScoreLose.innerHTML = "-" + gameScoreLoseAmt + " points";
     gameScoreLoseTime = setTimeout(function(){
-        gameScoreLose.style.display = "none";
+        gameScoreLose.style.visibility = "hidden";
         gameScoreLose.classList.remove("move");
     }
     , 1000);
