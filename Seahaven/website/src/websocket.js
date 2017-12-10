@@ -11,7 +11,7 @@ const nestTemp = document.getElementById("temp");
 const gameScoreEl = document.getElementById("gameScore");
 const gameScoreLose = document.getElementById("gameScoreLose");
 const gameHighScore = document.getElementById("gameHighScore");
-gameHighScore.innerHTML = "High Score: " + highscore;
+gameHighScore.innerHTML = "High Score: " + (highscore.toFixed(3) || "250.000");
 const speechText = document.getElementById("speechText");
 
 // decides what do when message arrives

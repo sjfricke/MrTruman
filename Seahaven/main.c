@@ -6,14 +6,16 @@ static char command[256];
 
 void webDataCallback( int type, char* value) {
   int val;
+  FILE *fp; // c99 pre declaring
+  
   switch(type) {
 
-  // When Ready call
+    // When Ready call
   case 0:
     browser_connected = TRUE;
     break;
 
-  // LIGHTS Callback  
+    // LIGHTS Callback  
   case 1:
     val = atoi(value);
     usleep(100000); // 100ms
@@ -22,24 +24,24 @@ void webDataCallback( int type, char* value) {
       // Play the lights on sounds
       soundClipPlay(sc_lights_on, scb_lights_on);
 
-    	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-	    setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-	    setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-	    lights_on = TRUE;
+      setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+      setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+      setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+      lights_on = TRUE;
     } else {
 
       // Play the lights off sounds
       soundClipPlay(sc_lights_off, scb_lights_off);
 
-    	setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
-	    setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
-	    setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
+      setLED(PCA9685_RED_ADDRESS, 0, 0x3ff);
+      setLED(PCA9685_BLUE_ADDRESS, 0, 0x3ff);
+      setLED(PCA9685_GREEN_ADDRESS, 0, 0x3ff);
       lights_on = FALSE;
     }
     animation_on = FALSE;
     break;
 
-  // FAN Callback    
+    // FAN Callback    
   case 2:
     val = atoi(value);
     if(val == 0){
@@ -51,75 +53,75 @@ void webDataCallback( int type, char* value) {
       animation_on = FALSE;
     } else if (val == 2) {
 	
-        usleep(500000); // 500ms
+      usleep(500000); // 500ms
       // Play the fire on sound
       soundClipPlay(sc_fire_on, scb_fire_on);
 
     } else if (val == 3) {
       // Play the fire off sound
-        usleep(500000); // 500ms
+      usleep(500000); // 500ms
       soundClipPlay(sc_fire_off, scb_fire_off);
     }
     break;
 
-  // CAMERA Callback
+    // CAMERA Callback
   case 3:
-      val = atoi(value);
-      if(val == 0){
+    val = atoi(value);
+    if(val == 0){
 
-	// ffmpeg takes a small delay to take picture
-	// This is a dirty way of matching timing for flash of camera
-	if (fork()==0){
-	  // Take picture
-	  sprintf(command, "ffmpeg -f video4linux2 -s 160x120 -i /dev/video0 -vf vflip -frames 1 ./website/res/img/camera_image%d.jpg -y -loglevel quiet", photo_index);
+      // ffmpeg takes a small delay to take picture
+      // This is a dirty way of matching timing for flash of camera
+      if (fork()==0){
+	// Take picture
+	sprintf(command, "ffmpeg -f video4linux2 -s 160x120 -i /dev/video0 -vf vflip -frames 1 ./website/res/img/camera_image%d.jpg -y -loglevel quiet", photo_index);
+	system(command);
+
+	broadcastInt("4", photo_index);
+
+	// clean up photos after first one
+	if (photo_index > 3) {
+	  sprintf(command, "rm ./website/res/img/camera_image%d.jpg -f", photo_index - 1);
 	  system(command);
-
-	  broadcastInt("4", photo_index);
-
-	  // clean up photos after first one
-	  if (photo_index > 3) {
-	    sprintf(command, "rm ./website/res/img/camera_image%d.jpg -f", photo_index - 1);
-	    system(command);
-	  }
-	  kill(getpid(), SIGKILL);
 	}
-	
-	usleep(600000);
-
-	// Alert animation
-  broadcastString("4","1");
-
-	usleep(400000);
-	
-        // Turn on (flash)
-        setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-	setLED(PCA9685_BLUE_ADDRESS, .99, 0x3ff);
-	setLED(PCA9685_GREEN_ADDRESS, .99, 0x3ff);
-
-   // Play the camera shutter sounds
-  soundClipPlay(sc_camera, scb_camera);
-
-	usleep(150000);
-	
-	// Turn off flash or back to on state
-	if (lights_on == TRUE) {
-	  setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
-	  setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
-	  setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
-	} else {
-	  setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
-	  setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
-	  setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
-	}
-	
-      } else {
-	photo_index++; // cant do in fork or it does not get updated in this process
-        animation_on = FALSE;
+	kill(getpid(), SIGKILL);
       }
+	
+      usleep(600000);
+
+      // Alert animation
+      broadcastString("4","1");
+
+      usleep(400000);
+	
+      // Turn on (flash)
+      setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+      setLED(PCA9685_BLUE_ADDRESS, .99, 0x3ff);
+      setLED(PCA9685_GREEN_ADDRESS, .99, 0x3ff);
+
+      // Play the camera shutter sounds
+      soundClipPlay(sc_camera, scb_camera);
+
+      usleep(150000);
+	
+      // Turn off flash or back to on state
+      if (lights_on == TRUE) {
+	setLED(PCA9685_RED_ADDRESS, .99, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, .5, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, .5, 0x3ff);
+      } else {
+	setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
+      }
+	
+    } else {
+      photo_index++; // cant do in fork or it does not get updated in this process
+      animation_on = FALSE;
+    }
     
     break;
 
-  // SPEAKER/SERVO Callback  
+    // SPEAKER/SERVO Callback  
   case 4:
     val = atoi(value);
     if (val == 0) {
@@ -133,7 +135,7 @@ void webDataCallback( int type, char* value) {
     }
     break;
 
-  // GREEK Callback  
+    // GREEK Callback  
   case 5:
     val = atoi(value);
     if (val == 0) {
@@ -142,14 +144,14 @@ void webDataCallback( int type, char* value) {
     }
     else if (val == 1) {
       // truman hit wall
-      	soundClipPlay(sc_thud_truman, scb_thud_truman);
+      soundClipPlay(sc_thud_truman, scb_thud_truman);
     } else if (val == 2) {
       // couch hit wall
-      	soundClipPlay(sc_thud_couch, scb_thud_couch);
+      soundClipPlay(sc_thud_couch, scb_thud_couch);
     }
     break;
     
- // when to play speech bubble sounds
+    // when to play speech bubble sounds
   case 6:
     val = atoi(value);
     if (val == 0) {
@@ -172,7 +174,7 @@ void webDataCallback( int type, char* value) {
     animation_on = FALSE;
     break;
     
-  //unused
+    //unused
   case 7:
     animation_on = FALSE;
     break;
@@ -206,6 +208,17 @@ void webDataCallback( int type, char* value) {
     }    
     break;
 
+    // write out highscore
+  case 10:
+    fp = fopen("website/src/highscore.js", "w");
+    if (fp == NULL) {
+      printf("ERROR: can't write, leaving to prevent fault\n");
+      return;
+    }
+    fprintf(fp, "var highscore = %s;", value);
+    fclose(fp);
+    break;
+    
   default:
     printf("Not a valid type! [%d]\n", type);
     break;

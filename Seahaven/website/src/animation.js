@@ -64,7 +64,7 @@ var speaker1, speaker2, speakerStartY;
 var couch;
 var tiltValue = 0;
 
-var oldHighscore = highscore;
+var oldHighscore = highscore || 250;
 
 const walkTicker = new PIXI.ticker.Ticker();
 
