@@ -2,9 +2,38 @@
 
 static uint16_t servo_gpio;
 
+// read state from file
+char checkServoState() {
+  FILE *servo_state_file = fopen(SERVO_STATE_FILE, "r");
+  char ch;
+  ch = fgetc(servo_state_file);
+  fclose(servo_state_file);
+  return ch;
+}
+
+// write state to file
+void persistServoState(char* state) {
+  FILE *servo_state_file = fopen(SERVO_STATE_FILE, "w");
+  fputc(*state, servo_state_file);
+  fclose(servo_state_file);
+}
+
+// makes file and says servo not extended if it doesnt exist
+void checkServoStateFile() {
+    if( access( SERVO_STATE_FILE, F_OK ) == -1 ) {
+        // file doesn't exist, so lets make it
+      int fd2 = open(SERVO_STATE_FILE, O_RDWR|O_CREAT, 0777);  // Originally 777 (see comments)
+
+      if (fd2 != -1) {
+        // use file descriptor
+        close(fd2);
+      }
+      persistServoState(STATE_SERVO_RETRACTED);
+    }
+}
+
 int servofanStart()
 {
-
   // needs to set GPIO pin 12 (24 front facing) to 0 or servo wont go
   servo_gpio = GpioDB410cMapping(SERVO_GPIO_PIN);
   GpioEnablePin(servo_gpio);
@@ -13,6 +42,12 @@ int servofanStart()
 
   // Initialize I2C Bus
   PCA9685_Start();
+
+  checkServoStateFile();
+  if (checkServoState() == STATE_SERVO_EXTENDED) {
+      // retract servo
+      servoRetract();
+  }
 
   return 0;
 }
@@ -37,6 +72,9 @@ int servoStop()
 
 int servoExtend()
 {
+  if (checkServoState == STATE_SERVO_EXTENEDED) {
+      return 0;
+  }
 
   // Now initialize the chip with a reset and enable the
   // gpio enable if needed (I don't think its neccessary yet)
@@ -98,11 +136,15 @@ printf("rotation done");
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x0);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
+  persistServoState(STATE_SERVO_EXTENEDED);
   return 0;
 }
 
 int servoRetract()
 {
+  if (checkServoState == STATE_SERVO_RETRACTED) {
+    return 0;
+  }
 
   PCA9685_Start();
 
@@ -167,5 +209,6 @@ int servoRetract()
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_L, 0x0);
   I2cWriteByte(PCA9685_I2C_BUS, SERVO_OFF_H, 0x0);
 
+  persistServoState(STATE_SERVO_RETRACTED);
   return 0;
 }

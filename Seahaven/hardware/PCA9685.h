@@ -4,6 +4,7 @@
 #include "i2c.h"
 #include "gpio.h"
 #include <assert.h>
+#include <fcntl.h>
 
 // Devices
 #define PCA9685_I2C_BUS 0x01
@@ -42,6 +43,10 @@
 #define ALL_LED_OFF_L_VAL 0xCC // count
 #define ALL_LED_OFF_H_VAL 0x04
 #define MODE1_VAL 0x01 // enable all_on, use internal clock
+
+#define STATE_SERVO_EXTENDED "1"
+#define STATE_SERVO_RETRACTED "0"
+#define SERVO_STATE_FILE "servo_state.truman"
 
 // Constants
 #define TWOSECONDS_FWD (2000000 - 550000)
