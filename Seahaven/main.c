@@ -286,9 +286,6 @@ int main ( int argc, char* argv[] ) {
     usleep(1000);
   }
 
-  // half a second for texutres and stuff to load on browser
-  usleep(500000);
-
   while(1) {
 
     // Sleep a millisecond cuz come on, who is it really hurting?

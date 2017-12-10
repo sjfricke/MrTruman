@@ -178,6 +178,7 @@ function loadedSetup() {
     wallTextures[0] = renderer.getElemByID("wall").texture;
     renderer.getElemByID("wall").alpha = .65;
 
+    wsAllReadyToStart();
     run();
 }
 
