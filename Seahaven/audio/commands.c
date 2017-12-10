@@ -113,7 +113,7 @@ int commandDetect(char const* voice_str)
     return 0;
   }
 
-  broadcastSpeech("8", "???");
+  broadcastSpeech("0", "???");
   animation_on = TRUE;  
   return -1;
 }
