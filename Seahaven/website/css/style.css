@@ -33,8 +33,12 @@ selector { cursor: none; }
     left: 56%;
     z-index: 2;
     color: green;
+    border-radius: 5px;
+    padding: 5px;
     font-size: 16px;
+    background: white;
     font-family: monospace;
+    display: none;
 }
 
 #gameScoreLose {
@@ -45,6 +49,34 @@ selector { cursor: none; }
     color: crimson;
     font-size: 16px;
     font-family: monospace;
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px;
+    display: none;
+}
+
+.move {
+    position:relative;
+    -webkit-animation: diagonal 2s infinite;
+}
+  
+@-webkit-keyframes diagonal {
+    0%       { transform: translatex(0px) translatey(0px) }
+    100%      { transform: translatex(50px) translatey(50px); }
+}
+
+#gameHighScore {
+    position: absolute;
+    top: 19%;
+    left: 18%;
+    color: cornflowerblue;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: white;
+    font-size: 21px;
+    z-index: 1;
+    font-family: monospace;
+    display: none;
 }
 
 #speech {

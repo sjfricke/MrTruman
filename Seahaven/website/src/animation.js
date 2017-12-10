@@ -516,7 +516,7 @@ function tiltFall(delta) {
             gameScore = 0.000;
             nestTemp.innerHTML = "00";
         }
-
+        gameScoreEl.style.display = "inherit";
         gameScoreEl.innerHTML = "Score: " + gameScore.toFixed(3);
     }
 }
@@ -537,7 +537,8 @@ function tiltRecovery() {
     gameScore = 0;
     nestTemp.style.left = "3.98%";
     nestTemp.innerHTML = "88&#176;";
-    gameScoreEl.innerHTML = "";
+    gameScoreEl.style.display = "none";
+    gameScoreLose.style.display = "none";
     s_tiltGame = false;
 }
 
@@ -546,8 +547,14 @@ function tiltReduceScore() {
     clearTimeout(gameScoreLoseTime);
     gameScoreLoseAmt = Math.min(50, (oppTiltCnt-1) * 10);
     gameScore -= gameScoreLoseAmt;
+    gameScoreLose.style.display = "inherit";
+    gameScoreLose.classList.add("move");
     gameScoreLose.innerHTML = "-" + gameScoreLoseAmt + " points";
-    gameScoreLoseTime = setTimeout(function(){gameScoreLose.innerHTML = "";}, 1000);
+    gameScoreLoseTime = setTimeout(function(){
+        gameScoreLose.style.display = "none";
+        gameScoreLose.classList.remove("move");
+    }
+    , 1000);
 }
 
 /*************************
