@@ -196,12 +196,19 @@ void webDataCallback( int type, char* value) {
       // retract servo
       servoRetract();
     }
+
     if (val == 0) {
+      setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
       sprintf(command, "halt");
       system(command);
       // Bye Bye
     }
     else if (val == 1) {
+      setLED(PCA9685_RED_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_BLUE_ADDRESS, 0.0, 0x3ff);
+	setLED(PCA9685_GREEN_ADDRESS, 0.0, 0x3ff);
       sprintf(command, "reboot");
       system(command);
       // Bye Bye
