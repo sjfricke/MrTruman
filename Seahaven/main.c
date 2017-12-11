@@ -333,13 +333,11 @@ int main ( int argc, char* argv[] ) {
       speaker_animation_ready = FALSE;
 
       broadcastString("5", "0");
-
+      broadcastString("5", "2");
       while(!speaker_animation_ready);
 
       servoExtend();
       
-
-      broadcastString("5", "1");
       printf("\nSPEAKER IS READY IN ANIMAION\n");  
       loopbackSetup();
       loopback();

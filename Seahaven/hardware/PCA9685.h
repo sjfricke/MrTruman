@@ -49,8 +49,8 @@
 #define SERVO_STATE_FILE "servo_state.truman"
 
 // Constants
-#define TWOSECONDS_FWD (2000000 - 500000)
-#define TWOSECONDS_BCK (1755000 - 420000)
+#define TWOSECONDS_FWD (2000000 - 460000)
+#define TWOSECONDS_BCK (1755000 - 430000)
 
 // Chip level startup
 void PCA9685_Start();
