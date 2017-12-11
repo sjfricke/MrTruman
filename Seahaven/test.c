@@ -178,7 +178,7 @@ static int testCamera() {
 
 int main ( int argc, char* argv[] ) {
   printf("test\n");
-  testGyro();
+  //testGyro();
   //testLEDFanServo();
   //testCamera();
   /*
@@ -188,9 +188,9 @@ int main ( int argc, char* argv[] ) {
   loopback();
   */
   //
-  /*
+  
   servofanStart();
   servoExtend();
   sleep(1);
-  servoRetract();*/
+  servoRetract();
 }
