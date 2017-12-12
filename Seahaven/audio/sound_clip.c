@@ -112,6 +112,7 @@ void soundClipCleanup() {
   free(sc_skraa);
   free(sc_thud_couch);
   free(sc_thud_truman);
+  free(sc_i_did_not);
 }
 
 void soundClipSetup() {
@@ -130,6 +131,7 @@ void soundClipSetup() {
   soundClipLoad("audio/sounds/truman_skraa.wav",        &sc_skraa, &scb_skraa);
   soundClipLoad("audio/sounds/truman_thud_couch.wav",   &sc_thud_couch, &scb_thud_couch);
   soundClipLoad("audio/sounds/truman_thud_truman.wav",  &sc_thud_truman, &scb_thud_truman);
+  soundClipLoad("audio/sounds/truman_i_did_not.wav",    &sc_i_did_not, &scb_i_did_not);
   
   // play files
   usleep(1000);

@@ -308,7 +308,7 @@ int main ( int argc, char* argv[] ) {
       } else if (speech_marker == 5) {
         soundClipPlay(sc_skraa, scb_skraa);
       } else if (speech_marker == 6) {
-
+        soundClipPlay(sc_i_did_not, scb_i_did_not);
       }
 
       speech_marker = 0;

@@ -113,6 +113,12 @@ int commandDetect(char const* voice_str)
     return 0;
   }
 
+  else if((strstr(voice_str, "DID") != NULL) && (strstr(voice_str, "YOU") != NULL) && (strstr(voice_str, "DO") != NULL) && (strstr(voice_str, "IT") != NULL)) {
+    broadcastSpeech("5", "I did <i>nottttt</i> ....");
+    animation_on = TRUE;
+    return 0;
+  }
+
   broadcastSpeech("0", "???");
   animation_on = TRUE;  
   return -1;

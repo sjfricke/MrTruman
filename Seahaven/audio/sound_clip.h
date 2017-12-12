@@ -34,6 +34,8 @@ void*    sc_thud_couch;
 uint32_t scb_thud_couch;
 void*    sc_thud_truman;
 uint32_t scb_thud_truman;
+void*    sc_i_did_not;
+uint32_t scb_i_did_not;
 
 // This sets up PCM and also all the buffers
 void soundClipSetup();
