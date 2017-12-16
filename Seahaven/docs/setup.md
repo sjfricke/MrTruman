@@ -26,7 +26,7 @@ More info about the Audio system on the dragonboard can be found [here](https://
 
 We are using ALSA for sound which requires a few things to set up:
 
-- A series of calls to configure ALSA are needed, we might right a script, but otherwise here are what they should be
+- A series of calls to configure ALSA are needed, we might write a script, but otherwise here are what they should be
 - Mic Input
 	- `amixer -c 0 cset iface=MIXER,name='DEC1 MUX' 'ADC2'`
 	- `amixer -c 0 cset iface=MIXER,name='ADC2 MUX' 'INP3'`
@@ -85,7 +85,7 @@ We need to make sure PulseAudio is off because we are using ALSA
 - `pocketsphinx_continuous -adcdev plughw:0,2 -inmic yes`
     - Note with ALSA it will complain about buffer size being overwritten too fast, this is not an issue when running a custom program
    
-   Follow this link to upload a custom recognition file - [http://www.speech.cs.cmu.edu/tools/lmtool-new.html]
+- [how to upload a custom recognition file](http://www.speech.cs.cmu.edu/tools/lmtool-new.html)
 - `pocketsphinx_continuous -adcdev plughw:0,2 -inmic yes -dict <custom_dictionary.dic> -lm <custom_language_model.lm>`
 
 ## Camera
@@ -116,7 +116,8 @@ We need to make sure PulseAudio is off because we are using ALSA
 	- `xinit /usr/bin/chromium http://localhost:6419 --kiosk --no-sandbox --disable-popup-blocking --disable-infobars --disable-session-crashed-bubble --disable-tab-switcher --incognito --disable-overlay-scrollbar`
 - Setup bash script on startup 
   - Edit `/etc/rc.local`
-  - ```
+  
+```
   startMrTruman() {
     # Change to false  if you want to remove this from booting
     startOnBoot=true
@@ -129,11 +130,12 @@ We need to make sure PulseAudio is off because we are using ALSA
   }
 
   sleep 2 && startMrTruman &
+```
 
-  ```
-  - change `startOnBoot=false` to prevent auto booting
-  - do `sleep 2` so we give time to let it fully boot
+- change `startOnBoot=false` to prevent auto booting
+- do `sleep 2` so we give time to let it fully boot
   
+
 ## Rebuilding and booting Linux
 
 This was needed to get the **ov5647** camera sensor to work on the dragonboard since it is not by default
